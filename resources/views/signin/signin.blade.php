@@ -18,7 +18,7 @@
 
                 <div class="card">
                     <div class="card-header d-flex flex-row" >
-                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">簽到查詢</h5>
+                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">簽到退查詢</h5>
                     </div>
                     <div class="card-body">
                         <div class="col-md-6 mx-auto">
@@ -57,10 +57,10 @@
                             <table class="table  table-hover text-center text-middle" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                 <tr class="my_nav_color text-light">
-                                    <th>簽到時間</th>
+                                    <th>簽到退時間</th>
                                     <th>學生姓名</th>
                                     <th>學號</th>
-                                    <th>簽到影像</th>
+                                    <th>簽到退影像</th>
                                     <th class="hidden_object"></th>
                                 </tr>
                                 </thead>
@@ -94,7 +94,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
 
 <script>
-document.getElementById('nav_title').innerHTML="<small>簽到查詢</small>";
+document.getElementById('nav_title').innerHTML="<small>簽到退查詢</small>";
 $('.datepicker').datepicker({
 	    format: 'yyyy-mm-dd',
 	    language: 'zh-CN',

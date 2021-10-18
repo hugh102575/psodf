@@ -19,6 +19,7 @@ class LineNotify implements ShouldQueue
 
     protected $school;
     protected $student;
+    protected $sign;
     protected $image_path;
 
     /**
@@ -28,10 +29,11 @@ class LineNotify implements ShouldQueue
      */
 
 
-    public function __construct(school $school, student $student,$image_path)
+    public function __construct(school $school, student $student,$image_path,$sign)
     {
         $this->school=$school;
         $this->student=$student;
+        $this->sign=$sign;
         $this->image_path=$image_path;
     }
 
@@ -48,11 +50,16 @@ class LineNotify implements ShouldQueue
             $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $this->school->LineChannelSecret]);
             $MessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
 
-            $message="您的孩子".$this->student->name."已經到班囉!";
+            if($this->sign=="in"){
+                $message="[簽到] 您的孩子".$this->student->name."已經到班囉!";
+            }else{
+                $message="[簽退] 您的孩子".$this->student->name."已經下課囉!";
+            }
+
             $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 
             //$url=str_replace('http://','https://',url($this->image_path));
-            $ngrok="https://5c3f-61-220-205-150.ngrok.io";
+            $ngrok="https://bdf3-61-220-205-150.ngrok.io";
             $url=str_replace('http://psodf.local',$ngrok,url($this->image_path));
             $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
 

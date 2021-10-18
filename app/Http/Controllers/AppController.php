@@ -92,6 +92,7 @@ class AppController extends Controller
         $id=$request['id'];
         $student=$this->studentRepo->find($id);
         $classs=$student->classs;
+        $sign=$request['sign'];
 
         $new_img="image";
         $return=array();
@@ -114,7 +115,7 @@ class AppController extends Controller
                         if($result && $image_path){
                             $today=date('Y-m-d');
                             $now = date('Y-m-d H:i:s');
-                            LineNotify::dispatch($school,$student,$image_path);
+                            LineNotify::dispatch($school,$student,$image_path,$sign);
                             $return['status']="successed";
 
                             $signin=array();
@@ -123,6 +124,7 @@ class AppController extends Controller
                             $signin['Student_id']=$id;
                             $signin['Classs_Name']=$classs->Classs_Name;
                             $signin['Student_Name']=$student->name;
+                            $signin['sign']=$sign;
                             $signin['signin_img']=$image_path;
                             $signin['created_date']=$today;
                             $signin['created_at']=$now;

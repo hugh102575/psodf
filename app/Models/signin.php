@@ -24,6 +24,7 @@ class signin extends Model
         'Student_id',
         'Classs_Name',
         'Student_Name',
+        'sign',
         'signin_img',
         'created_date',
         'created_at',

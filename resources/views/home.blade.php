@@ -88,7 +88,7 @@
         </a>
 
         @php
-        if(preg_match('(classs.classs|classs.student|batch|signin)', Route::currentRouteName()) === 1) {
+        if(preg_match('(classs.classs|classs.student|batch)', Route::currentRouteName()) === 1) {
             $classs_dropdown=true;
         }else{
             $classs_dropdown=false;
@@ -112,12 +112,53 @@
               <span><a href="{{route('batch')}}" class="{{ (preg_match('(batch)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">梯次</a></span>
             </a>
 
-            <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('signin')}}" class="{{ (preg_match('(signin)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">簽到查詢</a></span>
-            </a>
+            {{--<a class="nav-link dropdown-toggle" href="#">
+              <span><a href="{{route('signin')}}" class="{{ (preg_match('(signin)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">簽到退查詢</a></span>
+            </a>--}}
           </li>
         </ul>
       </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#">
+          <span class="icon-holder">
+          <i class="fas fa-search"></i>
+          </span>
+          <span class="title">簽到退查詢</span>
+          <span class="arrow">
+            <i class="fas fa-angle-right"></i>
+          </span>
+        </a>
+        @php
+        if(preg_match('(signin)', Route::currentRouteName()) === 1) {
+            $sign_dropdown=true;
+        }else{
+            $sign_dropdown=false;
+        }
+        @endphp
+
+        @if($sign_dropdown)
+        <ul class="dropdown-menu stay-open">
+        @else
+        <ul class="dropdown-menu">
+        @endif
+
+
+
+          <li class="nav-item dropdown">
+
+
+            <a class="nav-link dropdown-toggle" href="#">
+              <span><a href="{{route('signin')}}" class="{{ (preg_match('(signin)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">查詢</a></span>
+            </a>
+          </li>
+        </ul>
+
+
+
+      </li>
+
+
 
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#">
