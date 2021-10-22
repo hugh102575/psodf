@@ -23,6 +23,8 @@ class LINEController extends Controller
 
     public function post(Request $request, Response $response,$id){
 
+
+
         $school=$this->schoolRepo->find($id);
 
         $this->LineChannelSecret = $school->LineChannelSecret;
