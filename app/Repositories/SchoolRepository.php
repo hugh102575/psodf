@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\School;
+use App\Models\User;
 use Auth;
 
 class SchoolRepository
@@ -14,8 +15,11 @@ class SchoolRepository
     public function update(array $data){
         $id=Auth::user()->School_id;
         $now = date('Y-m-d H:i:s');
+        $data['phone']=$data['manager_phone'];
         $data['updated_at']=$now;
         $school = School::find($id);
+        $user=User::where('School_id',$id)->first();
+        $user->update(array('name' => $data['manager_name']));
         return  $school ? $school->update($data) : false;
     }
 

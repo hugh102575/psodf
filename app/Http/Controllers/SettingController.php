@@ -241,6 +241,14 @@ class SettingController extends Controller
         curl_close($ch);
         return $result;
     }
+    public function system_update(Request $request){
+        $result=$this->schoolRepo->update($request->all());
+        if($result){
+            return redirect()->route('system')->with('success_msg', '系統設定已更新！');
+        }else{
+            return redirect()->route('system')->with('error_msg', '系統設定更新失敗！');
+        }
+    }
     public function message_store(Request $request){
         $result=$this->messageRepo->store($request->all());
         if($result){
@@ -274,16 +282,36 @@ class SettingController extends Controller
     public function message_send(Request $request){
 
         $school=Auth::user()->school;
-        
+
         $re = $request->all();
+
         $stu_array = [];
+        $status_a= array();
+        $std_name_a=array();
+        $total_a=array();
+        $processed=array();
         foreach($re as $key => $value)
         {
             if(substr($key,0,7) == "student")
             {
-                array_push($stu_array,$value);
+                //array_push($stu_array,$value);
+
+                $st_id=explode("_",$key)[1];
+                $st=$this->studentRepo->check_stuid($st_id);
+                if($st){
+                    $st_name=$st->name;
+                }
+
+                $value_d=json_decode($value);
+                foreach($value_d as $v){
+                    array_push($stu_array,$v);
+                    array_push($std_name_a,$st_name);
+                }
+
             }
         }
+
+
         $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
         $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
         $return =array();
@@ -293,14 +321,68 @@ class SettingController extends Controller
                 $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
                 $result=$bot->pushMessage($value,$push_build);
                 $return['status']=$result->getHTTPStatus();
-                return redirect()->route('message')->with('success_msg', '訊息已發送！');;
+                //return redirect()->route('message')->with('success_msg', '訊息已發送！');
             }else{
                 $return['status']=404;
-                return redirect()->route('message')->with('error_msg', '訊息發送失敗！');
+                //return redirect()->route('message')->with('error_msg', '訊息發送失敗！');
+            }
+            array_push($status_a,$return['status']);
+        }
+
+        foreach($std_name_a as $key =>$value){
+            $st_name=$value;
+            $st_merge=array("name"=>$st_name,"successed_count"=>0,"failed_count"=>0);
+            $psed=false;
+            foreach($std_name_a as $key2 =>$value2){
+                if($st_name==$value2){
+                    if (!in_array($st_name, $processed)){
+                        $status=$status_a[$key2];
+                        if($status==200){
+                            $st_merge["successed_count"]=$st_merge["successed_count"]+1;
+                        }else{
+                            $st_merge["failed_count"]=$st_merge["failed_count"]+1;
+                        }
+                    }else{
+                        $psed=true;
+                        break;
+                    }
+                }
+            }
+            if(!$psed){
+                array_push($total_a,$st_merge);
+                array_push($processed,$st_name);
             }
         }
-        //return json_encode($return);
-        
+
+        //dd($total_a);
+        $result_string_1="發送成功: ";
+        $result_string_2="發送失敗: ";
+        $s_count=0;
+        $f_count=0;
+        foreach($total_a as $key =>$value){
+            $st_name=$value['name'];
+            $sc=$value['successed_count'];
+            $fc=$value['failed_count'];
+            if($sc>0){
+                $str=$st_name."的家長"."(".strval($sc)."則)".", ";
+                $result_string_1=$result_string_1.$str;
+                $s_count++;
+            }
+            if($fc>0){
+                $str=$st_name."的家長"."(".strval($fc)."則)".", ";
+                $result_string_2=$result_string_2.$str;
+                $f_count++;
+            }
+        }
+        if($s_count>0 && $f_count==0){
+            return redirect()->route('message')->with('success_msg', $result_string_1);
+        }else if($f_count>0 && $s_count==0){
+            return redirect()->route('message')->with('error_msg', $result_string_2);
+        }else{
+            return redirect()->route('message')->with('success_msg', $result_string_1."， ".$result_string_2);
+        }
+
+
     }
 
 }

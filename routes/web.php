@@ -58,6 +58,8 @@ Route::post('/message/store', [SettingController::class, 'message_store'])->name
 Route::post('/message/update', [SettingController::class, 'message_update'])->name('message.update');
 Route::post('/message/delete', [SettingController::class, 'message_delete'])->name('message.delete');
 Route::post('/message/send', [SettingController::class, 'message_send'])->name('message.send');
+Route::get('/system', [HomeController::class, 'system'])->name('system');
+Route::post('/system', [SettingController::class, 'system_update'])->name('system.update');
 
 Route::post('/callback/{id}', [LINEController::class, 'post'])->name('lintbot_api');
 

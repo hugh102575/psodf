@@ -29,7 +29,9 @@ class school extends Model
         'LineID',
         'LineChannelSecret',
         'LineChannelAccessToken',
-        'LineChannelName'
+        'LineChannelName',
+        'thresh',
+        'phone'
     ];
 
     public function User(){

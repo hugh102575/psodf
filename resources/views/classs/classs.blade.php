@@ -468,17 +468,20 @@
                                     <td>{{ $student->STU_id }}</td>
                                     <td>{{$student->classs->Classs_Name}}</td>
                                     <td>
-                                        @if($student->parent_line==null)
-                                        尚未加入
+                                        @if($student->parent_line_multi==null)
+                                        <span class="text-danger">尚未加入</span>
                                         @else
-                                        已加入
+                                        @php
+                                        $parent_count=count(json_decode($student->parent_line_multi));
+                                        @endphp
+                                        <span class="text-success">已加入 {{$parent_count}}位</span>
                                         @endif
                                     </td>
                                     <td>
                                     @if($student->profile!=null)
                                     <img style="height: 5rem; width: 5rem;" src="{{$student->profile}}" />
                                     @else
-                                    尚未建檔
+                                    <span class="text-danger">尚未建檔</span>
                                     @endif
                                     </td>
                                     <td><pre>{{$student->memo }}</pre></td>
@@ -630,8 +633,9 @@ student_edit_btn.forEach(function(item,index){
             if(all_student[where].grade!=null){
                 document.getElementById('st_grade').value=all_student[where].grade;
             }
-            if(all_student[where].parent_line!=null){
-                document.getElementById('st_parent_line').innerHTML="<span class='text-success'>"+"已加入"+"</span>";
+            if(all_student[where].parent_line_multi!=null){
+                var parent_count=JSON.parse(all_student[where].parent_line_multi);
+                document.getElementById('st_parent_line').innerHTML="<span class='text-success'>"+"已加入 "+parent_count.length+"位"+"</span>";
             }else{
                 document.getElementById('st_parent_line').innerHTML="<span class='text-danger'>"+"尚未加入"+"</span>";
             }

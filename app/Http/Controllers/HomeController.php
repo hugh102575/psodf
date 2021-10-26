@@ -132,7 +132,10 @@ class HomeController extends Controller
         else{
             return view('message',['school_classs'=>$school_classs,'all_student'=>$all_student,'all_message'=>$all_message]);
         }
-        
+
+    }
+    public function system(){
+        return view('system');
     }
 
 }

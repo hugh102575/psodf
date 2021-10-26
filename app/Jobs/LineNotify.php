@@ -44,7 +44,7 @@ class LineNotify implements ShouldQueue
      */
     public function handle()
     {
-        if(isset($this->school->LineChannelAccessToken) && isset($this->school->LineChannelSecret))
+        /*if(isset($this->school->LineChannelAccessToken) && isset($this->school->LineChannelSecret))
         if(isset($this->student->parent_line)){
             $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($this->school->LineChannelAccessToken);
             $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $this->school->LineChannelSecret]);
@@ -59,7 +59,7 @@ class LineNotify implements ShouldQueue
             $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 
             //$url=str_replace('http://','https://',url($this->image_path));
-            $ngrok="https://c6c4-61-220-205-150.ngrok.io";
+            $ngrok="https://1d7c-111-241-75-55.ngrok.io";
             $url=str_replace('http://psodf.local',$ngrok,url($this->image_path));
             $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
 
@@ -67,6 +67,35 @@ class LineNotify implements ShouldQueue
             $MessageBuilder->add($push_build2);
 
             $result=$bot->pushMessage($this->student->parent_line,$MessageBuilder);
+
+        }*/
+
+        if(isset($this->school->LineChannelAccessToken) && isset($this->school->LineChannelSecret))
+        if(isset($this->student->parent_line_multi)){
+            $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($this->school->LineChannelAccessToken);
+            $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $this->school->LineChannelSecret]);
+            $MessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+
+            if($this->sign=="in"){
+                $message="[簽到] 您的孩子".$this->student->name."已經到班囉!";
+            }else{
+                $message="[簽退] 您的孩子".$this->student->name."已經下課囉!";
+            }
+
+            $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+
+            //$url=str_replace('http://','https://',url($this->image_path));
+            $ngrok="https://1a19-61-220-205-150.ngrok.io";
+            $url=str_replace('http://psodf.local',$ngrok,url($this->image_path));
+            $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
+
+            $MessageBuilder->add($push_build1);
+            $MessageBuilder->add($push_build2);
+
+            $parent_line_multi=json_decode($this->student->parent_line_multi);
+            foreach($parent_line_multi as $parent_line){
+                $result=$bot->pushMessage($parent_line,$MessageBuilder);
+            }
 
         }
     }

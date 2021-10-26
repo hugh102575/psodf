@@ -42,6 +42,7 @@ class AppController extends Controller
             $return['success']=true;
             $return['api_token']=$user->api_token;
             $return['school_name']=$user->school->School_Name;
+            $return['thresh']=$user->school->thresh;
         }else{
             $return['success']=false;
         }
@@ -100,7 +101,8 @@ class AppController extends Controller
         if ($request->hasFile($new_img)){
             $file = $request->file($new_img);
             if ($file->isValid()){
-                if($student && $student->parent_line){
+                //if($student && $student->parent_line){
+                if($student && $student->parent_line_multi){
                     $date = date('Y_m_d_');
                     //$record=$this->signinRepo->find_record($id,$date);
                     //if($record){

@@ -12,7 +12,7 @@
 <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-            <form action="{{ route('basic') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('basic.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
                     <div class="card-header d-flex flex-row" >
@@ -30,7 +30,29 @@
                             </div>
 
                             </div>
-                        </div>
+
+                            <div class="form-group row">
+                            <div class="col-sm-4" >
+                            <label for="manager_name" class="font-weight-bold my_nav_text">聯絡人</label>
+                            </div>
+                            <div class="col-sm-6" >
+                            <input class="form-control"  type="text" name="manager_name" id="manager_name" placeholder="請輸入聯絡人" required="required" value="{{Auth::user()->name}}" >
+                            </div>
+
+
+                            </div>
+
+                            <div class="form-group row">
+                            <div class="col-sm-4" >
+                            <label for="manager_phone" class="font-weight-bold my_nav_text">聯絡電話</label>
+                            </div>
+                            <div class="col-sm-6" >
+                            <input class="form-control"  type="text" name="manager_phone" id="manager_phone" placeholder="請輸入聯絡電話" required="required" value="{{Auth::user()->school->phone}}" >
+                            </div>
+
+
+
+                            </div>
                         <button  type="submit" class="btn my_nav_color text-light float-right">更新資料</button>
                     </div>
 

@@ -6,19 +6,22 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Repositories\SchoolRepository;
 use App\Repositories\StudentRepository;
+use App\Repositories\UserRepository;
 use App\Models\linekey;
 
 class LINEController extends Controller
 {
     protected $schoolRepo;
     protected $studentRepo;
+    protected $userRepo;
     public $LineChannelSecret;
     public $LineChannelAccessToken;
 
-    public function __construct(SchoolRepository $schoolRepo,StudentRepository $studentRepo)
+    public function __construct(SchoolRepository $schoolRepo,StudentRepository $studentRepo,UserRepository $userRepo)
     {
         $this->schoolRepo=$schoolRepo;
         $this->studentRepo=$studentRepo;
+        $this->userRepo=$userRepo;
     }
 
     public function post(Request $request, Response $response,$id){
@@ -26,7 +29,7 @@ class LINEController extends Controller
 
 
         $school=$this->schoolRepo->find($id);
-
+        $owner=$this->userRepo->owner($id);
         $this->LineChannelSecret = $school->LineChannelSecret;
         $this->LineChannelAccessToken = $school->LineChannelAccessToken;
 
@@ -41,19 +44,41 @@ class LINEController extends Controller
         foreach ($data['events'] as $event){
             $type= $event['type'];
             if($type=="follow"){
-                $message="家長您好，\n請輸入小朋友的學號";
+                /*$message="家長您好，\n請輸入小朋友的學號";
                 $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-                $result=$bot->pushMessage($userId,$push_build);
+                $result=$bot->pushMessage($userId,$push_build);*/
+                $this->default_template($bot,$userId);
+            }
+            elseif($type=="postback"){
+                $postback_data=$event['postback']['data'];
+                if($postback_data=="bind_student"){
+                    $message="家長您好，\n請輸入小朋友的學號"."\n"."(輸入數字)";
+                    $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+                    $rp_result=$bot->replyMessage($event['replyToken'],$push_build);
+                    if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
+                        $result=$bot->pushMessage($userId,$push_build);
+                    }
+                    //$result=$bot->pushMessage($userId,$push_build);
+                }else if($postback_data=="contact"){
+                    $message="<".$school->School_Name.">"."\n"."聯絡人: ".$owner->name."\n"."聯絡電話: ".$school->phone;
+                    $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+                    $rp_result=$bot->replyMessage($event['replyToken'],$push_build);
+                    if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
+                        $result=$bot->pushMessage($userId,$push_build);
+                    }
+                    //$result=$bot->pushMessage($userId,$push_build);
+                }
             }else{
                 $message = $event['message'];
                 $userMessage=$message['text'];
                 $student=$this->studentRepo->check_stuid($userMessage);
                 if($student){
-                    $add_line=$this->studentRepo->add_parent_line($student->id,$userId);
+                    //$add_line=$this->studentRepo->add_parent_line($student->id,$userId);
+                    $add_line=$this->studentRepo->add_parent_line2($student,$userId);
                     if($add_line){
                         $message="設定成功!\n".$student->name."的家長您好，"."之後小朋友到班時，本程式會自動通知您";
                     }else{
-                        $message="謝謝，".$student->name."的家長，\n"."您已經設定成功囉";
+                        $message="謝謝，".$student->name."的家長，\n"."您之前已經設定成功囉";
                     }
                     $MessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
                     $reply_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
@@ -63,17 +88,35 @@ class LINEController extends Controller
                         $result=$bot->pushMessage($userId,$reply_build);
                     }
                 }else{
-                    $MessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-                    $message="家長您好，\n請輸入小朋友的學號";
+                    if(is_numeric($userMessage)){
+                        $MessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+                    //$message="家長您好，\n請輸入小朋友的學號";
+                    $message="查無學生資料，\n請檢查輸入是否正確";
                     $reply_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
                     $MessageBuilder->add($reply_build);
                     $rp_result=$bot->replyMessage($event['replyToken'],$MessageBuilder);
                     if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
                         $result=$bot->pushMessage($userId,$reply_build);
                     }
+                    }else{
+                        $this->default_template($bot,$userId);
+                    }
+
                 }
             }
         }
 
     }
+    public function default_template($bot,$userId){
+        $actions = array();
+        $per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("綁定學生資料",'bind_student');
+        array_push($actions,$per_btn_build);
+        $per_btn_build2=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("聯絡安親班",'contact');
+        array_push($actions,$per_btn_build2);
+        $btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder(null,"請選擇操作選項",null,$actions);
+        $MessageBuild = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder("按鈕訊息回覆", $btn_build);
+        $result=$bot->pushMessage($userId,$MessageBuild);
+    }
 }
+
+

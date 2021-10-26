@@ -83,6 +83,29 @@ class StudentRepository
     public function add_parent_line($id,$userId){
         return student::where('id','=',$id)->update(array('parent_line' => $userId));
     }
+    public function add_parent_line2($student,$userId){
+        $id=$student->id;
+        $multi_line=$student->parent_line_multi;
+        $line_array=array();
+        if(isset($multi_line)){
+            $multi_line_d=json_decode($multi_line,true);
+
+            if (in_array($userId, $multi_line_d)){
+                return false;
+            }else{
+                foreach($multi_line_d as $pline){
+                    array_push($line_array,$pline);
+                }
+                array_push($line_array,$userId);
+                return student::where('id','=',$id)->update(array('parent_line_multi' => json_encode($line_array)));
+            }
+
+        }else{
+            array_push($line_array,$userId);
+            return student::where('id','=',$id)->update(array('parent_line_multi' => json_encode($line_array)));
+        }
+
+    }
 
 
 

@@ -104,10 +104,14 @@ var query_signin=document.getElementById('query_signin');
 query_signin.addEventListener("click", function() {
     var query_date=document.getElementById('query_date').value;
     var query_classs=document.getElementById('query_classs').value;
-    if(query_date.length==0){
-        alert("請選擇查詢日期")
+    if(query_classs.length==0){
+        alert("請選擇查詢班級")
     }else{
-        window.location.href = "/signin"+"/"+query_classs+"/"+query_date+"/result";
+        if(query_date.length==0){
+            alert("請選擇查詢日期")
+        }else{
+            window.location.href = "/signin"+"/"+query_classs+"/"+query_date+"/result";
+        }
     }
 });
 </script>

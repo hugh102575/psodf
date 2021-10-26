@@ -74,6 +74,7 @@ class RegisterController extends Controller
         $now = date('Y-m-d H:i:s');
         School::create([
             'School_Name' => $data['school'],
+            'phone' => $data['phone'],
             'create_from' => $data['email'],
             'created_at' =>  $now
         ]);

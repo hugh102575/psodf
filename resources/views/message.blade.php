@@ -135,7 +135,7 @@
                                     <div id="checkboxs">
                                     @foreach($all_student as $j => $i)
                                         @if($i->Classs_id == $value->id)
-                                        @if(is_null($i->parent_line))
+                                        {{--@if(is_null($i->parent_line))
                                         <p>
                                         <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)" disabled='disabled'>
                                         <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
@@ -143,6 +143,18 @@
                                         @else
                                         <p>
                                         <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)">
+                                        <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                        </p>
+                                        @endif--}}
+
+                                        @if(is_null($i->parent_line_multi))
+                                        <p>
+                                        <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)" disabled='disabled'>
+                                        <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                        </p>
+                                        @else
+                                        <p>
+                                        <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)">
                                         <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
                                         </p>
                                         @endif

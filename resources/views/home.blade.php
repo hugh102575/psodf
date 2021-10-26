@@ -54,7 +54,7 @@
           </span>
         </a>
             @php
-            if(preg_match('(basic)', Route::currentRouteName()) === 1) {
+            if(preg_match('(basic|system)', Route::currentRouteName()) === 1) {
                 $basic_dropdown=true;
             }else{
                 $basic_dropdown=false;
@@ -70,6 +70,10 @@
 
                     <a class="nav-link dropdown-toggle" href="#">
                     <span><a href="{{route('basic')}}" class="{{ (preg_match('(basic)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">基本資料</a></span>
+                    </a>
+
+                    <a class="nav-link dropdown-toggle" href="#">
+                    <span><a href="{{route('system')}}" class="{{ (preg_match('(system)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">系統設定</a></span>
                     </a>
                 </li>
             </ul>
@@ -204,7 +208,7 @@
           <span class="icon-holder">
           <i class="fas fa-comments"></i>
           </span>
-          <span class="title">訊息發送</span>
+          <span class="title">訊息</span>
           <span class="arrow">
             <i class="fas fa-angle-right"></i>
           </span>
@@ -229,7 +233,7 @@
 
 
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('message')}}" class="{{ (preg_match('(message)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">訊息</a></span>
+              <span><a href="{{route('message')}}" class="{{ (preg_match('(message)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">訊息發送</a></span>
             </a>
           </li>
       </ul>
@@ -291,7 +295,6 @@
                 {{ session()->get('error_msg') }}
             </div>
         @endif
-
         @yield('stage')
     </div>
     </div>
