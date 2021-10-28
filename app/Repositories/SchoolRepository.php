@@ -15,11 +15,14 @@ class SchoolRepository
     public function update(array $data){
         $id=Auth::user()->School_id;
         $now = date('Y-m-d H:i:s');
-        $data['phone']=$data['manager_phone'];
+        if(isset($data['manager_phone'])||isset($data['manager_name'])){
+            $data['phone']=$data['manager_phone'];
+            $user=User::where('School_id',$id)->first();
+            $user->update(array('name' => $data['manager_name']));
+        }
         $data['updated_at']=$now;
         $school = School::find($id);
-        $user=User::where('School_id',$id)->first();
-        $user->update(array('name' => $data['manager_name']));
+
         return  $school ? $school->update($data) : false;
     }
 

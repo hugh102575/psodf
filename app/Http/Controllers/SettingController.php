@@ -379,7 +379,8 @@ class SettingController extends Controller
         }else if($f_count>0 && $s_count==0){
             return redirect()->route('message')->with('error_msg', $result_string_2);
         }else{
-            return redirect()->route('message')->with('success_msg', $result_string_1."， ".$result_string_2);
+            //return redirect()->route('message')->with('success_msg', $result_string_1."， ".$result_string_2);
+            return redirect()->route('message')->with('success_msg', $result_string_1)->with('error_msg', $result_string_2);
         }
 
 

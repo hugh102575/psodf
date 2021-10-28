@@ -111,11 +111,19 @@ class HomeController extends Controller
         return view('signin.signin',['today'=>$today,'school_classs'=>$school_classs]);
     }
     public function signin_result($classs_id, $date){
-        $classs=$this->classsRepo->find($classs_id);
-        $classs_name=$classs->Classs_Name;
-        $student=$classs->student;
-        $signin=$this->signinRepo->get_signin($classs_id,$date);
-        return view('signin.result',['signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name]);
+        if($classs_id!="all_classs"){
+            $classs=$this->classsRepo->find($classs_id);
+            $classs_name=$classs->Classs_Name;
+            $student=$classs->student;
+            $signin=$this->signinRepo->get_signin($classs_id,$date);
+            return view('signin.result',['signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name]);
+        }else{
+            $classs_name="不分班級";
+            $student=Auth::user()->school->student;
+            $signin=Auth::user()->school->signin->where('created_date',$date);
+            $all_classs=Auth::user()->school->classs;
+            return view('signin.result',['signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name,'all_classs'=>$all_classs]);
+        }
     }
     public function message(Request $request){
         //dd($request->all());

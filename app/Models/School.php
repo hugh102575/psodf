@@ -31,7 +31,8 @@ class school extends Model
         'LineChannelAccessToken',
         'LineChannelName',
         'thresh',
-        'phone'
+        'phone',
+        'device_id'
     ];
 
     public function User(){
@@ -45,6 +46,9 @@ class school extends Model
     }
     public function student(){
         return $this->hasMany('App\Models\student','School_id','id');
+    }
+    public function signin(){
+        return $this->hasMany('App\Models\signin','School_id','id');
     }
 
 }

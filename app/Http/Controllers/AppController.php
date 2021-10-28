@@ -39,12 +39,29 @@ class AppController extends Controller
         $user=$this->userRepo->app_login($request->all());
         $return=array();
         if($user){
-            $return['success']=true;
-            $return['api_token']=$user->api_token;
-            $return['school_name']=$user->school->School_Name;
-            $return['thresh']=$user->school->thresh;
+            if($user->school->device_id!=null){
+                $device_id_db=json_decode($user->school->device_id,true);
+                if (in_array($request['device_id'], $device_id_db)){
+                //if($request['device_id']==$user->school->device_id){
+                    $return['success']=true;
+                    $return['api_token']=$user->api_token;
+                    $return['school_name']=$user->school->School_Name;
+                    $return['thresh']=$user->school->thresh;
+                    $return['error_msg']="";
+                }else{
+                    $return['success']=false;
+                    $return['error_msg']="使用非核可的裝置";
+                }
+            }else{
+                $return['success']=true;
+                $return['api_token']=$user->api_token;
+                $return['school_name']=$user->school->School_Name;
+                $return['thresh']=$user->school->thresh;
+                $return['error_msg']="";
+            }
         }else{
             $return['success']=false;
+            $return['error_msg']="帳號或密碼錯誤";
         }
         return json_encode($return);
 

@@ -28,10 +28,12 @@
                                 </div>
                                 <select id="query_classs"  class="form-select form-control"  aria-label="Default select example" required="required">
 
+
                                 @foreach($school_classs as $classs)
 
                                     <option  value="{{$classs->id}}">{{$classs->Classs_Name}}</option>
                                 @endforeach
+                                <option  value="all_classs">不分班級</option>
 
 
 

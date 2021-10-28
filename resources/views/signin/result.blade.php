@@ -45,6 +45,9 @@
 
                                     <th>學生姓名</th>
                                     <th>學號</th>
+                                    @if($classs_name=="不分班級")
+                                    <th>班級</th>
+                                    @endif
                                     <!--<th>簽到退影像</th>-->
                                     <th>簽到退時間</th>
                                 </tr>
@@ -66,6 +69,14 @@
                                 <tr>
                                    <td>{{$st->name}}</td>
                                    <td>{{$st->STU_id}}</td>
+                                    @if($classs_name=="不分班級")
+                                        @foreach($all_classs as $myc)
+                                        @if($myc->id==$st->Classs_id)
+                                        <td>{{$myc->Classs_Name}}</td>
+                                        @break
+                                        @endif
+                                        @endforeach
+                                    @endif
                                    {{--<td>@if($signin_img!=null)
                                        <img src="{{$signin_img}}"  style="height: 5rem; width: 5rem;">
                                        @endif

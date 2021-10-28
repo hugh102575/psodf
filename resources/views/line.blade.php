@@ -59,7 +59,7 @@
                     <form action="{{ route('line.update') }}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('您確定要斷開LINE@連接嗎?');">
                     @csrf
                     <div class="table-responsive">
-                        <p class="mb-3">您的webhook網址為:&nbsp;&nbsp;<span class="text-light bg-dark">{{URL::to('/')}}/callback/{{$school->id}}</span><br>請於<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>設定，若您已經設定請忽略此訊息
+                        <p class="mb-3">您的webhook網址為:&nbsp;&nbsp;<br><span class="small text-light bg-dark">{{URL::to('/')}}/callback/{{Auth::user()->api_token}}</span><br>請於<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>設定，若您已經設定請忽略此訊息
                         </p>
                         <table class="table table-bordered overflow-auto" style='table-layout:fixed;'>
 

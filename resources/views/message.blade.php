@@ -198,14 +198,14 @@
                 </div>
 
                 <div class="card-body">
-                    <div class="mb-3">
+                    {{--<div class="mb-3">
                         <span class="small">快速搜尋:</span>
                         @foreach($all_message as $bt)
                         <button class="btn btn-link show_btns shadow-none" id="show_btns_{{$loop->index+1}}" type="button"><small>{{$bt->name}}</small></button>
                         <label class="hidden_object" id="show_btns_value_{{$loop->index+1}}">{{$bt->name}}</label>
                         @endforeach
                         <button class="btn btn-link  shadow-none" type="button" id="show_all_btn"><small>全部</small></button>
-                    </div>
+                    </div>--}}
                     <div class="table-responsive">
                         <table id="message_table" class="table.dataTable table-hover text-center text-middle" id="dataTable" width="100%" cellspacing="0">
                             <thead>

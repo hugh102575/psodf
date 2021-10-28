@@ -24,12 +24,15 @@ class LINEController extends Controller
         $this->userRepo=$userRepo;
     }
 
-    public function post(Request $request, Response $response,$id){
+    public function post(Request $request, Response $response,$api_token){
 
 
 
-        $school=$this->schoolRepo->find($id);
-        $owner=$this->userRepo->owner($id);
+        //$school=$this->schoolRepo->find($id);
+        //$owner=$this->userRepo->owner($id);
+        $owner=$this->userRepo->api_token_owner($api_token);
+        $school=$this->schoolRepo->find($owner->School_id);
+
         $this->LineChannelSecret = $school->LineChannelSecret;
         $this->LineChannelAccessToken = $school->LineChannelAccessToken;
 
