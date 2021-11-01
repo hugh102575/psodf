@@ -85,7 +85,7 @@ class LineNotify implements ShouldQueue
             $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 
             //$url=str_replace('http://','https://',url($this->image_path));
-            $ngrok="https://7799-61-220-205-150.ngrok.io";
+            $ngrok="https://7862-220-132-38-167.ngrok.io";
             $url=str_replace('http://psodf.local',$ngrok,url($this->image_path));
             $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
 
