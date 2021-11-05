@@ -13,21 +13,22 @@
 
 @section('stage')
 <div class="container">
+        @if($q_type=="c")
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
 
             @if(count($signin)==0)
             <div class="alert alert-danger">
                 日期: {{$date}}<br>班級: {{$classs_name}}<br><br>查無簽到退記錄
             </div>
             @else
-            <div class="alert alert-success">
+            <div class="alert alert-info">
                 日期: {{$date}}<br>班級: {{$classs_name}}<br><br>查詢結果如下
             </div>
             @endif
                 <div class="card">
                     <div class="card-header d-flex flex-row" >
-                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">簽到退查詢</h5>
+                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">以班級查詢</h5>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
@@ -146,6 +147,71 @@
 
             </div>
         </div>
+        @endif
+        @if($q_type=="s")
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+
+            @if(count($signin)==0)
+            <div class="alert alert-danger">
+                日期: 全部<br>學號: {{$st_id}}<br>學生: {{$student->name}}<br>班級: {{$classs->Classs_Name}}<br><br>查無簽到退記錄
+            </div>
+            @else
+            <div class="alert alert-info">
+                日期: 全部<br>學號: {{$st_id}}<br>學生: {{$student->name}}<br>班級: {{$classs->Classs_Name}}<br><br>查詢結果如下
+            </div>
+            @endif
+
+            <div class="card">
+                    <div class="card-header d-flex flex-row" >
+                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人查詢</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+                            <table class="table dataTable table-hover text-center text-middle" id="signin_table" width="100%" cellspacing="0">
+                                <thead>
+                                <tr class="my_nav_color text-light">
+                                    <th>日期</th>
+                                    <th>時間</th>
+                                    <th>簽到 / 簽退</th>
+                                    <th>簽到相片</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($signin as $sn)
+                                @php
+                                $t1=date('Y-m-d', strtotime($sn->created_at));
+                                $t2=date('H:i:s', strtotime($sn->created_at));
+                                $s_type="";
+                                if($sn->sign=="in"){
+                                    $s_type="簽到";
+                                }
+                                if($sn->sign=="out"){
+                                    $s_type="簽退";
+                                }
+                                @endphp
+                                <tr>
+                                   <td>{{$t1}}</td>
+                                   <td>{{$t2}}</td>
+                                   <td>{{$s_type}}</td>
+                                   <td>
+                                    <div>
+                                    <img src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
+                                    </div>
+                                   </td>
+                                </tr>
+
+
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+        @endif
 </div>
 @endsection
 

@@ -80,7 +80,7 @@
 
 <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex flex-row">
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">梯次</h5>

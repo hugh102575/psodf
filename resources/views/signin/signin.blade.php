@@ -14,11 +14,11 @@
 @section('stage')
 <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-8">
 
-                <div class="card">
+                <div class="card mb-5">
                     <div class="card-header d-flex flex-row" >
-                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">簽到退查詢</h5>
+                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">A. 以班級查詢</h5>
                     </div>
                     <div class="card-body">
                         <div class="col-md-6 mx-auto">
@@ -75,6 +75,27 @@
 
                 </div>
 
+                <div class="card ">
+                    <div class="card-header d-flex flex-row" >
+                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">B. 以個人查詢</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-md-6 mx-auto">
+                            <div class="py-3">
+                                <div class="form-group mb-0">
+                                    <label  class="font-weight-bold my_nav_text ">學號</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" id="query_stid"  placeholder="請輸入學號" value="">
+                                        <div class="input-group-append">
+                                            <button class="input-group-text text-light my_nav_color" id="query_signin2">查詢</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 
 
@@ -112,9 +133,20 @@ query_signin.addEventListener("click", function() {
         if(query_date.length==0){
             alert("請選擇查詢日期")
         }else{
-            window.location.href = "/signin"+"/"+query_classs+"/"+query_date+"/result";
+            window.location.href = "/signin"+"/c/"+query_classs+"/"+query_date+"/result";
         }
     }
+});
+var query_signin2=document.getElementById('query_signin2');
+query_signin2.addEventListener("click", function() {
+    var query_date=document.getElementById('query_date').value;
+    var query_stid=document.getElementById('query_stid').value;
+    if(query_stid.length==0){
+        alert("請輸入學號")
+    }else{
+        window.location.href = "/signin"+"/s/"+query_stid+"/"+"all"+"/result";
+    }
+
 });
 </script>
 @endsection

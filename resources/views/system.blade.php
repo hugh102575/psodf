@@ -19,8 +19,46 @@
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">系統設定</h5>
                     </div>
                     <div class="card-body">
+                        <div class="card py-4 px-5 mb-5">
+                            <div class="form-group row">
+                            <div class="col-sm-4" >
+                            <label for="sign_mode" class="font-weight-bold my_nav_text ">簽到模式</label>
+                            </div>
+                            <div class="col-sm-6" id="sign_mode">
+                                @if(Auth::user()->school->sign_mode==1)
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sign_mode" id="flexRadioDefault1" value="mode_1" checked>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    簽到
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sign_mode" id="flexRadioDefault2" value="mode_2" >
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    簽到 / 簽退
+                                </label>
+                                </div>
+                                @endif
+                                @if(Auth::user()->school->sign_mode==2)
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sign_mode" id="flexRadioDefault1" value="mode_1">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    簽到
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sign_mode" id="flexRadioDefault2" value="mode_2" checked>
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    簽到 / 簽退
+                                </label>
+                                </div>
+                                @endif
 
-                        <div class="card py-4 px-5 mb-3">
+                            </div>
+
+                            </div>
+                        </div>
+                        <div class="card py-4 px-5 ">
                             <div class="form-group row">
                             <div class="col-sm-4" >
                             <label for="thresh" class="font-weight-bold my_nav_text ">辨識誤差值</label>
@@ -32,9 +70,9 @@
                             </div>
 
                             </div>
-                            <small class="mt-3">辨識誤差值會和最佳結果比較，愈大找得愈多但可能誤判，愈小找得愈精確(最少會找到一個)，預設值為0.1。</small>
+                            <small class="mt-3">辨識誤差值會和最佳結果比較，愈大找得愈多但可能誤判，愈小找得愈精確(至少會找到一個)，預設值為0.1。</small>
                         </div>
-                        <button  type="submit" class="btn my_nav_color text-light float-right">更新資料</button>
+                        <button  type="submit" class="mt-3 btn my_nav_color text-light float-right">更新資料</button>
                     </div>
 
                 </div>

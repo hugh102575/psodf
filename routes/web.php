@@ -52,7 +52,7 @@ Route::post('/app/login', [AppController::class, 'login']);
 Route::get('/line', [HomeController::class, 'line'])->name('line');
 Route::post('/line', [SettingController::class, 'line_update'])->name('line.update');
 Route::get('/signin', [HomeController::class, 'signin'])->name('signin');
-Route::get('/signin/{classs_id}/{date}/result', [HomeController::class, 'signin_result'])->name('signin.result');
+Route::get('/signin/{q_type}/{classs_id}/{date}/result', [HomeController::class, 'signin_result'])->name('signin.result');
 Route::get('/message', [HomeController::class, 'message'])->name('message');
 Route::post('/message/store', [SettingController::class, 'message_store'])->name('message.store');
 Route::post('/message/update', [SettingController::class, 'message_update'])->name('message.update');

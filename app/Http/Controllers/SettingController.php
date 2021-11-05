@@ -242,7 +242,7 @@ class SettingController extends Controller
         return $result;
     }
     public function system_update(Request $request){
-        $result=$this->schoolRepo->update($request->all());
+        $result=$this->schoolRepo->sys_update($request->all());
         if($result){
             return redirect()->route('system')->with('success_msg', '系統設定已更新！');
         }else{

@@ -20,7 +20,7 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="card py-4 px-5 mb-3">
+                        <div class="card py-4 px-5">
                             <div class="form-group row">
                             <div class="col-sm-4" >
                             <label for="School_Name" class="font-weight-bold my_nav_text enlarge_text">安親班名稱</label>
@@ -53,9 +53,9 @@
 
 
                             </div>
-                        <button  type="submit" class="btn my_nav_color text-light float-right">更新資料</button>
-                    </div>
 
+                    </div>
+                    <button  type="submit" class="mt-3 btn my_nav_color text-light float-right">更新資料</button>
                 </div>
             </form>
 

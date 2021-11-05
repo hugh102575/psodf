@@ -32,7 +32,8 @@ class school extends Model
         'LineChannelName',
         'thresh',
         'phone',
-        'device_id'
+        'device_id',
+        'sign_mode'
     ];
 
     public function User(){
