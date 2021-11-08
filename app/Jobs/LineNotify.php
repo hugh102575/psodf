@@ -85,12 +85,13 @@ class LineNotify implements ShouldQueue
             $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 
             //$url=str_replace('http://','https://',url($this->image_path));
-            $ngrok="https://a9c2-61-220-205-150.ngrok.io";
-            $url=str_replace('http://psodf.local',$ngrok,url($this->image_path));
+            $ngrok="https://ca04-61-220-205-150.ngrok.io";
+            $url=str_replace('http://a.local',$ngrok,url($this->image_path));
             $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
 
             $MessageBuilder->add($push_build1);
             $MessageBuilder->add($push_build2);
+            $MessageBuilder->add($push_build1);
 
             $parent_line_multi=json_decode($this->student->parent_line_multi);
             foreach($parent_line_multi as $parent_line){
