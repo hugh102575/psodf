@@ -50,7 +50,7 @@ class LINEController extends Controller
                 /*$message="家長您好，\n請輸入小朋友的學號";
                 $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
                 $result=$bot->pushMessage($userId,$push_build);*/
-                $this->default_template($bot,$userId);
+                $this->default_template($school,$bot,$userId,null);
             }
             elseif($type=="postback"){
                 $postback_data=$event['postback']['data'];
@@ -72,7 +72,8 @@ class LINEController extends Controller
                     //$result=$bot->pushMessage($userId,$push_build);
                 }
             }else{
-                $message = $event['message'];
+                $this->default_template($school,$bot,$userId,$event['replyToken']);
+                /*$message = $event['message'];
                 $userMessage=$message['text'];
                 $student=$this->studentRepo->check_stuid($userMessage);
                 if($student){
@@ -105,21 +106,31 @@ class LINEController extends Controller
                         $this->default_template($bot,$userId);
                     }
 
-                }
+                }*/
             }
         }
 
     }
-    public function default_template($bot,$userId){
+    public function default_template($school,$bot,$userId,$rp_token){
         $actions = array();
-        $per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("綁定學生資料",'bind_student');
+        $url=url("bind"."/".$school->id."/".$userId);
+        $per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("綁定學生資料",$url);
+        //$per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("綁定學生資料",'bind_student');
         array_push($actions,$per_btn_build);
         $per_btn_build2=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("聯絡安親班",'contact');
         array_push($actions,$per_btn_build2);
-        $btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder(null,"請選擇操作選項",null,$actions);
+        $btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder(null,$school->School_Name."\n"."您好，請選擇操作選項",null,$actions);
         $MessageBuild = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder("按鈕訊息回覆", $btn_build);
-        $result=$bot->pushMessage($userId,$MessageBuild);
+        if($rp_token==null){
+            $result=$bot->pushMessage($userId,$MessageBuild);
+        }else{
+            $rp_result=$bot->replyMessage($rp_token,$MessageBuild);
+            if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
+                $result=$bot->pushMessage($userId,$MessageBuild);
+            }
+        }
     }
 }
+
 
 

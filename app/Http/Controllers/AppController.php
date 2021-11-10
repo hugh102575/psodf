@@ -8,6 +8,7 @@ use App\Repositories\StudentRepository;
 use App\Repositories\BatchRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\SigninRepository;
+use App\Repositories\SchoolRepository;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\LineNotify;
 
@@ -19,14 +20,16 @@ class AppController extends Controller
     protected $batchRepo;
     protected $userRepo;
     protected $signinRepo;
+    protected $schoolRepo;
 
-    public function __construct(ClasssRepository $classsRepo,StudentRepository $studentRepo,BatchRepository $batchRepo,UserRepository $userRepo,SigninRepository $signinRepo)
+    public function __construct(ClasssRepository $classsRepo,StudentRepository $studentRepo,BatchRepository $batchRepo,UserRepository $userRepo,SigninRepository $signinRepo,SchoolRepository $schoolRepo)
     {
         $this->classsRepo=$classsRepo;
         $this->studentRepo=$studentRepo;
         $this->batchRepo=$batchRepo;
         $this->userRepo=$userRepo;
         $this->signinRepo=$signinRepo;
+        $this->schoolRepo=$schoolRepo;
     }
     public function api_test(){
         //$return_total=array();
@@ -187,6 +190,31 @@ class AppController extends Controller
             }
         }
         return json_encode($return);
+    }
+
+    public function bind($school_id,$LineID){
+        $school=$this->schoolRepo->find($school_id);
+        return view('bind',['school'=>$school,'LineID'=>$LineID]);
+    }
+    public function bind_update(Request $request){
+        //dd($request->all());
+        $userId=$request['LineID'];
+        $stid=$request['stid'];
+        $school_id=$request['school_id'];
+        $student=$this->studentRepo->check_stuid($stid);
+        if($student){
+            $add_line=$this->studentRepo->add_parent_line2($student,$userId);
+            if($add_line){
+                $message="設定成功!\n".$student->name."的家長您好，"."之後小朋友到班時，本程式會自動通知您";
+                return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('success_msg', $message);
+            }else{
+                $message="謝謝，".$student->name."的家長，\n"."您之前已經設定成功囉";
+                return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('normal_msg', $message);
+            }
+        }else{
+            $message="查無學生資料，\n請檢查輸入是否正確";
+            return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('error_msg', $message);
+        }
     }
 
 }

@@ -31,6 +31,8 @@ Auth::routes(['verify' => true]);
 Route::get('/', function () {
     return redirect('/login');
 });
+Route::get('/bind/{school_id}/{LineID}', [AppController::class, 'bind'])->name('bind');
+Route::post('/bind/update', [AppController::class, 'bind_update'])->name('bind.update');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/basic', [HomeController::class, 'basic'])->name('basic');
 Route::post('/basic', [SettingController::class, 'basic_update'])->name('basic.update');

@@ -77,21 +77,30 @@ class LineNotify implements ShouldQueue
             $MessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
 
             if($this->sign=="in"){
-                $message="[簽到] 您的孩子".$this->student->name."已經到班囉!";
+                //$message="您的孩子".$this->student->name."已經到班囉!";
+                $msg=$this->school->in_msg;
+                $msg=str_replace("@Name",$this->student->name,$msg);
+                $msg=str_replace("@School",$this->school->School_Name,$msg);
+                $msg=str_replace("@Phone",$this->school->phone,$msg);
+                $message=$msg;
             }else{
-                $message="[簽退] 您的孩子".$this->student->name."已經下課囉!";
+                //$message="您的孩子".$this->student->name."已經下課囉!";
+                $msg=$this->school->out_msg;
+                $msg=str_replace("@Name",$this->student->name,$msg);
+                $msg=str_replace("@School",$this->school->School_Name,$msg);
+                $msg=str_replace("@Phone",$this->school->phone,$msg);
+                $message=$msg;
             }
 
             $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 
-            //$url=str_replace('http://','https://',url($this->image_path));
-            $ngrok="https://ca04-61-220-205-150.ngrok.io";
-            $url=str_replace('http://a.local',$ngrok,url($this->image_path));
+            $url=str_replace('http://','https://',url($this->image_path));
+            //$ngrok="https://ca04-61-220-205-150.ngrok.io";
+            //$url=str_replace('http://a.local',$ngrok,url($this->image_path));
             $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
 
             $MessageBuilder->add($push_build1);
             $MessageBuilder->add($push_build2);
-            $MessageBuilder->add($push_build1);
 
             $parent_line_multi=json_decode($this->student->parent_line_multi);
             foreach($parent_line_multi as $parent_line){

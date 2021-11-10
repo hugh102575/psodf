@@ -33,7 +33,9 @@ class school extends Model
         'thresh',
         'phone',
         'device_id',
-        'sign_mode'
+        'sign_mode',
+        'in_msg',
+        'out_msg'
     ];
 
     public function User(){

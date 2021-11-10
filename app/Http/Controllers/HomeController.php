@@ -9,6 +9,7 @@ use App\Repositories\SigninRepository;
 use Auth;
 use Illuminate\Support\Facades\View;
 use App\Repositories\MessageRepository;
+use App\Repositories\SchoolRepository;
 
 class HomeController extends Controller
 {
@@ -21,14 +22,17 @@ class HomeController extends Controller
     protected $classsRepo;
     protected $studentRepo;
     protected $signinRepo;
+    protected $messageRepo;
+    protected $schoolRepo;
     //protected $global_test;
-    public function __construct(ClasssRepository $classsRepo,StudentRepository $studentRepo,MessageRepository $messageRepo,SigninRepository $signinRepo)
+    public function __construct(ClasssRepository $classsRepo,StudentRepository $studentRepo,MessageRepository $messageRepo,SigninRepository $signinRepo,SchoolRepository $schoolRepo)
     {
         $this->middleware(['auth','verified']);
         $this->classsRepo=$classsRepo;
         $this->studentRepo=$studentRepo;
         $this->signinRepo=$signinRepo;
         $this->messageRepo=$messageRepo;
+        $this->schoolRepo=$schoolRepo;
         //$this->global_test="global_test123123";
         //View::share("global_test",$this->global_test);
     }
@@ -40,7 +44,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('index');
+        $now = date('Y-m-d H:i:s');
+        return view('index',['now'=>$now]);
+        //return view('index');
     }
     public function classs(){
 
@@ -133,7 +139,7 @@ class HomeController extends Controller
                 $signin=Auth::user()->school->signin->where('Student_id',$student->id)->reverse()->values();;
                 return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'st_id'=>$classs_id,'classs'=>$classs]);
             }else{
-                return redirect()->route('signin')->with('error_msg', "學號有誤！");
+                return redirect()->route('signin')->with('error_msg', "查無學生資料，請檢查輸入是否正確");
             }
         }
     }

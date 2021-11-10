@@ -49,6 +49,7 @@
                                     @if($classs_name=="不分班級")
                                     <th>班級</th>
                                     @endif
+                                    <th>狀態</th>
                                     <!--<th>簽到退影像</th>-->
                                     <th>簽到退時間</th>
                                 </tr>
@@ -96,6 +97,8 @@
                                    @endif
                                    @endforeach
                                    </td>--}}
+                                   <td id="sign_hint_<?php echo $st->id; ?>">
+                                   </td>
                                    <td>
                                     @php
                                     $in_count=0;
@@ -104,17 +107,17 @@
                                     @endphp
                                    @foreach($signin as $in)
                                    @if($in->Student_id==$st->id)
-                                   @php
-                                   $count_2++;
-                                   $created_at=substr($in->created_at, 11);
-                                   if($in->sign=="in"){
-                                    $sign="簽到";
-                                    $in_count++;
-                                   }elseif($in->sign=="out"){
-                                    $sign="簽退";
-                                    $out_count++;
-                                   }
-                                   @endphp
+                                        @php
+                                        $count_2++;
+                                        $created_at=substr($in->created_at, 11);
+                                        if($in->sign=="in"){
+                                            $sign="簽到";
+                                            $in_count++;
+                                        }elseif($in->sign=="out"){
+                                            $sign="簽退";
+                                            $out_count++;
+                                        }
+                                        @endphp
                                    <div>({{$count_2}}) <span class="enlarge_text">{{$sign}}</span> {{$created_at}}<br><img src="{{$in->signin_img}}"  style="height: 5rem; width: 5rem;"><br><br></div></div>
                                    @endif
 
@@ -122,14 +125,37 @@
 
                                    @endforeach
                                    @if($count_2==0)
-                                   <div>尚未簽到</div>
+                                   {{--<div>尚未簽到</div>--}}
+                                   <script>
+                                       var st_id={!! json_encode($st->id) !!};
+                                        var sign_hint=document.getElementById('sign_hint_'+st_id);
+                                        sign_hint.innerHTML="<div class=' text-danger '>尚未簽到</div>"
+                                    </script>
                                    @endif
-                                   @if($in_count>0)
-                                   <div class="enlarge_text text-success font-weight-bold">已簽到</div>
-                                   @endif
-                                   @if($out_count>0)
-                                   <div class="enlarge_text text-success font-weight-bold">已簽退</div>
-                                   @endif
+                                   @if($in_count>0 && $out_count>0)
+                                   <script>
+                                       var st_id={!! json_encode($st->id) !!};
+                                        var sign_hint=document.getElementById('sign_hint_'+st_id);
+                                        sign_hint.innerHTML="<div class=' text-success '>已簽到<br>已簽退</div>"
+                                    </script>
+                                   @else
+                                        @if($in_count>0)
+                                        {{--<div class="enlarge_text text-success font-weight-bold">已簽到</div>--}}
+                                        <script>
+                                        var st_id={!! json_encode($st->id) !!};
+                                            var sign_hint=document.getElementById('sign_hint_'+st_id);
+                                            sign_hint.innerHTML="<div class=' text-success '>已簽到</div>"
+                                        </script>
+                                        @endif
+                                        @if($out_count>0)
+                                        {{--<div class="enlarge_text text-success font-weight-bold">已簽退</div>--}}
+                                        <script>
+                                        var st_id={!! json_encode($st->id) !!};
+                                            var sign_hint=document.getElementById('sign_hint_'+st_id);
+                                            sign_hint.innerHTML="<div class=' text-success '>已簽退</div>"
+                                        </script>
+                                        @endif
+                                    @endif
                                    </td>
                                 </tr>
 

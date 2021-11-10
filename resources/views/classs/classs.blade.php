@@ -173,7 +173,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>姓名 (必填)</td>
+                            <td>姓名 (必填)<span class="text-danger">*</span></td>
                             <td>
                             <input class="form-control"  type="text" id="st_name" name="name"  placeholder="請輸入姓名" required="required" value="" >
                             </td>
@@ -185,7 +185,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>班級 (必填)<p><small class="text-info">可在此設定轉班</small></p></td>
+                            <td>班級 (必填)<span class="text-danger">*</span><p><small class="text-info">可在此設定轉班</small></p></td>
                             <td>
                             <select id="st_Classs_id" name="Classs_id" class="form-select form-control"  aria-label="Default select example" required="required">
 

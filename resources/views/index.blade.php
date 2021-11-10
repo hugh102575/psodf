@@ -13,7 +13,8 @@
                                 {{ session('status') }}
                             </div>
                         @endif
-                        {{ __('You are logged in!') }}
+                        {{ __('You are logged in!') }}<br>
+                        現在時間: {{$now}}
                     </div>
                 </div>
             </div>
