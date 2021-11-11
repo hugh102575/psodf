@@ -82,7 +82,36 @@
                     <div class="card-body">
                         <div class="col-md-6 mx-auto">
                             <div class="py-3">
-                                <div class="form-group mb-0">
+                                <label  class="font-weight-bold my_nav_text ">查詢方式</label>
+                                <div class="form-group col-md-6">
+                                    <form name="radio_form">
+                                    <div class="form-check" >
+                                    <input class="form-check-input" type="radio" name="query_b_mode" id="flexRadioDefault1" value="mode_1" checked>
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        姓名
+                                    </label>
+                                    </div>
+                                    <div class="form-check" >
+                                    <input class="form-check-input" type="radio" name="query_b_mode" id="flexRadioDefault2" value="mode_2" >
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        學號
+                                    </label>
+                                    </div>
+                                    </form>
+                                </div>
+
+                                <div class="form-group mb-0" id="mode_1_div">
+                                    <label  class="font-weight-bold my_nav_text ">姓名</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" id="query_stName"  placeholder="請輸入姓名" value="">
+                                        <div class="input-group-append">
+                                            <button class="input-group-text text-light my_nav_color" id="query_signin3">查詢</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group mb-0 hidden_object" id="mode_2_div">
                                     <label  class="font-weight-bold my_nav_text ">學號</label>
                                     <div class="input-group mb-3">
                                         <input type="text" class="form-control" id="query_stid"  placeholder="請輸入學號" value="">
@@ -144,9 +173,45 @@ query_signin2.addEventListener("click", function() {
     if(query_stid.length==0){
         alert("請輸入學號")
     }else{
-        window.location.href = "/signin"+"/s/"+query_stid+"/"+"all"+"/result";
+        window.location.href = "/signin"+"/s2/"+query_stid+"/"+"all"+"/result";
     }
 
 });
+
+var query_signin3=document.getElementById('query_signin3');
+query_signin3.addEventListener("click", function() {
+    var query_date=document.getElementById('query_date').value;
+    var query_stName=document.getElementById('query_stName').value;
+    if(query_stName.length==0){
+        alert("請輸入姓名")
+    }else{
+        window.location.href = "/signin"+"/s1/"+query_stName+"/"+"all"+"/result";
+    }
+
+});
+
+var rad = document.radio_form.query_b_mode;
+var prev = null;
+for (var i = 0; i < rad.length; i++) {
+    rad[i].addEventListener('change', function() {
+        (prev) ? console.log(prev.value): null;
+        if (this !== prev) {
+            prev = this;
+        }
+        console.log(this.value)
+        switch (this.value) {
+        case "mode_1":
+            $('#mode_1_div').show()
+            $('#mode_2_div').hide()
+            break;
+        case "mode_2":
+            $('#mode_2_div').show()
+            $('#mode_1_div').hide()
+            break;
+        default:
+        }
+    });
+}
+
 </script>
 @endsection

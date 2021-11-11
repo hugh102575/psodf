@@ -18,7 +18,7 @@
             <div class="col-md-12">
 
             @if(count($signin)==0)
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" >
                 日期: {{$date}}<br>班級: {{$classs_name}}<br><br>查無簽到退記錄
             </div>
             @else
@@ -162,6 +162,7 @@
                                 @endforeach
                                 </tbody>
                             </table>
+                            <div>
                         </div>
                     </div>
 
@@ -174,67 +175,175 @@
             </div>
         </div>
         @endif
-        @if($q_type=="s")
+        @if($q_type=="s1")
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+            <span class="text-info enlarge_text">「{{$st_Name}}」搜尋結果，{{count($student)}}位符合的學生</span>
+            @foreach($student as $st)
+                    @php
+                    $belong_sign=0;
+                    $belong_classs=null;
+                    foreach($classs as $cls){
+                        if($cls->id==$st->Classs_id){
+                            $belong_classs=$cls;
+                            break;
+                        }
+                    }
+                    foreach($signin as $sn){
+                        if($sn->Student_id==$st->id){
+                            $belong_sign++;
+                        }
+                    }
+                    @endphp
+                <div class="alert alert-info mb-3">
+                日期: 全部<br>學號: {{$st->STU_id}}<br>學生: {{$st->name}}<br>班級:
+                @if($belong_classs!=null)
+                {{$belong_classs->Classs_Name}}
+                @endif
+                <br><br>
+                @if($belong_sign!=0)
+                <span class="text-success">{{$belong_sign}}筆簽到/退資料</span>&nbsp;&nbsp;<button class="small query_s1_btn" id="st_{{$st->STU_id}}">查看</button>
+                @else
+                <span class="text-danger">{{$belong_sign}}筆簽到/退資料</span>
+                @endif
+                </div>
+            @endforeach
+
+                <div class="card">
+                        <div class="card-header d-flex flex-row" >
+                            <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人查詢</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table dataTable table-hover text-center text-middle" id="signin_table" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr class="my_nav_color text-light">
+                                            <th>日期</th>
+                                            <th>時間</th>
+                                            <th>學號</th>
+                                            <th>班級</th>
+                                            <th>簽到 / 簽退</th>
+                                            <th>簽到相片</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($signin as $sn)
+                                    @php
+                                    $belong_classs=null;
+                                    $me=null;
+                                    $t1=date('Y-m-d', strtotime($sn->created_at));
+                                    $t2=date('H:i:s', strtotime($sn->created_at));
+                                    $s_type="";
+                                    if($sn->sign=="in"){
+                                        $s_type="簽到";
+                                    }
+                                    if($sn->sign=="out"){
+                                        $s_type="簽退";
+                                    }
+                                    foreach($student as $st){
+                                        if($sn->Student_id==$st->id){
+                                            $me=$st;
+                                            break;
+                                        }
+                                    }
+                                    foreach($classs as $cls){
+                                        if($cls->id==$st->Classs_id){
+                                            $belong_classs=$cls;
+                                            break;
+                                        }
+                                    }
+                                    @endphp
+                                    <tr>
+                                    <td>{{$t1}}</td>
+                                    <td>{{$t2}}</td>
+                                    <td>
+                                    @if($me!=null)
+                                    {{$me->STU_id}}
+                                    @endif
+                                    </td>
+                                    <td>
+                                    @if($belong_classs!=null)
+                                    {{$belong_classs->Classs_Name}}
+                                    @endif
+                                    </td>
+                                    <td>{{$s_type}}</td>
+                                    <td>
+                                        <div>
+                                        <img src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
+                                        </div>
+                                    </td>
+                                    </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        @endif
+        @if($q_type=="s2")
         <div class="row justify-content-center">
             <div class="col-md-12">
 
-            @if(count($signin)==0)
-            <div class="alert alert-danger">
-                日期: 全部<br>學號: {{$st_id}}<br>學生: {{$student->name}}<br>班級: {{$classs->Classs_Name}}<br><br>查無簽到退記錄
-            </div>
-            @else
-            <div class="alert alert-info">
-                日期: 全部<br>學號: {{$st_id}}<br>學生: {{$student->name}}<br>班級: {{$classs->Classs_Name}}<br><br>查詢結果如下
-            </div>
-            @endif
+                @if(count($signin)==0)
+                <div class="alert alert-danger">
+                    日期: 全部<br>學號: {{$st_id}}<br>學生: {{$student->name}}<br>班級: {{$classs->Classs_Name}}<br><br>查無簽到退記錄
+                </div>
+                @else
+                <div class="alert alert-info">
+                    日期: 全部<br>學號: {{$st_id}}<br>學生: {{$student->name}}<br>班級: {{$classs->Classs_Name}}<br><br>查詢結果如下
+                </div>
+                @endif
 
-            <div class="card">
-                    <div class="card-header d-flex flex-row" >
-                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人查詢</h5>
-                    </div>
-                    <div class="card-body">
-
-                        <div class="table-responsive">
-                            <table class="table dataTable table-hover text-center text-middle" id="signin_table" width="100%" cellspacing="0">
-                                <thead>
-                                <tr class="my_nav_color text-light">
-                                    <th>日期</th>
-                                    <th>時間</th>
-                                    <th>簽到 / 簽退</th>
-                                    <th>簽到相片</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($signin as $sn)
-                                @php
-                                $t1=date('Y-m-d', strtotime($sn->created_at));
-                                $t2=date('H:i:s', strtotime($sn->created_at));
-                                $s_type="";
-                                if($sn->sign=="in"){
-                                    $s_type="簽到";
-                                }
-                                if($sn->sign=="out"){
-                                    $s_type="簽退";
-                                }
-                                @endphp
-                                <tr>
-                                   <td>{{$t1}}</td>
-                                   <td>{{$t2}}</td>
-                                   <td>{{$s_type}}</td>
-                                   <td>
-                                    <div>
-                                    <img src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
-                                    </div>
-                                   </td>
-                                </tr>
-
-
-                                @endforeach
-                                </tbody>
-                            </table>
+                <div class="card">
+                        <div class="card-header d-flex flex-row" >
+                            <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人查詢</h5>
                         </div>
-                    </div>
+                        <div class="card-body">
 
+                            <div class="table-responsive">
+                                <table class="table dataTable table-hover text-center text-middle" id="signin_table" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr class="my_nav_color text-light">
+                                        <th>日期</th>
+                                        <th>時間</th>
+                                        <th>簽到 / 簽退</th>
+                                        <th>簽到相片</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($signin as $sn)
+                                    @php
+                                    $t1=date('Y-m-d', strtotime($sn->created_at));
+                                    $t2=date('H:i:s', strtotime($sn->created_at));
+                                    $s_type="";
+                                    if($sn->sign=="in"){
+                                        $s_type="簽到";
+                                    }
+                                    if($sn->sign=="out"){
+                                        $s_type="簽退";
+                                    }
+                                    @endphp
+                                    <tr>
+                                    <td>{{$t1}}</td>
+                                    <td>{{$t2}}</td>
+                                    <td>{{$s_type}}</td>
+                                    <td>
+                                        <div>
+                                        <img src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
+                                        </div>
+                                    </td>
+                                    </tr>
+
+
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                </div>
             </div>
         </div>
         @endif
@@ -280,7 +389,9 @@ $(document).ready(function() {
 } );
 
 var date={!! json_encode($date) !!};
+var q_type={!! json_encode($q_type) !!};
 
+if(q_type=="c"){
 var show_signed=document.getElementById('show_signed');
 show_signed.addEventListener("click", function() {
     $('#signin_table').DataTable({
@@ -414,6 +525,39 @@ show_all.addEventListener("click", function() {
         destroy:true,
         "oSearch": {"sSearch": ""}
     } );
+});
+}
+
+var query_s1_btn_c=document.querySelectorAll(".query_s1_btn")
+query_s1_btn_c.forEach(function(item,index){
+    var query_s1_btn=document.getElementById(item.id);
+    query_s1_btn.addEventListener("click", function() {
+        console.log(query_s1_btn.id)
+        var st_id=(query_s1_btn.id).replace("st_", "");
+        $('#signin_table').DataTable({
+    //$('#dataTable').dataTable( {
+        pageLength: 10,
+        order: [],
+        responsive: true,
+        oLanguage: {
+            "sProcessing": "處理中...",
+            "sLengthMenu": "顯示 _MENU_ 項結果",
+            "sZeroRecords": "沒有匹配結果",
+            "sInfo": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+            "sInfoEmpty": "顯示第 0 至 0 項結果，共 0 項",
+            "sInfoFiltered": "(從 _MAX_ 項結果過濾)",
+            "sSearch": "搜尋:",
+            "oPaginate": {
+                "sFirst": "首頁",
+                "sPrevious": "上頁",
+                "sNext": "下頁",
+                "sLast": "尾頁"
+            }
+        },
+        destroy:true,
+        "oSearch": {"sSearch": st_id}
+    } );
+    });
 });
 </script>
 @endsection

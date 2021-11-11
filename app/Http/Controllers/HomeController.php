@@ -132,12 +132,23 @@ class HomeController extends Controller
                 return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name,'all_classs'=>$all_classs]);
             }
         }
-        if($q_type=="s"){
+        if($q_type=="s2"){
             $student=$this->studentRepo->find_stid($classs_id);
             if($student){
                 $classs=$this->classsRepo->find($student->Classs_id);
-                $signin=Auth::user()->school->signin->where('Student_id',$student->id)->reverse()->values();;
+                $signin=Auth::user()->school->signin->where('Student_id',$student->id)->reverse()->values();
                 return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'st_id'=>$classs_id,'classs'=>$classs]);
+            }else{
+                return redirect()->route('signin')->with('error_msg', "查無學生資料，請檢查輸入是否正確");
+            }
+        }
+        if($q_type=="s1"){
+            $student=$this->studentRepo->search_name($classs_id);
+            if(count($student)!=0){
+                //$student=Auth::user()->school->student;
+                $classs=Auth::user()->school->classs;
+                $signin=Auth::user()->school->signin->where('Student_Name',$classs_id)->reverse()->values();
+                return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'st_Name'=>$classs_id,'classs'=>$classs]);
             }else{
                 return redirect()->route('signin')->with('error_msg', "查無學生資料，請檢查輸入是否正確");
             }

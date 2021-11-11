@@ -286,12 +286,12 @@
     <div class="container py-4">
     <div class="row justify-content-center">
         @if(session()->has('success_msg'))
-            <div class="alert alert-info">
+            <div class="alert alert-info" name="alert_msg">
                 {{ session()->get('success_msg') }}
             </div>
         @endif
         @if(session()->has('error_msg'))
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" name="alert_msg">
                 {{ session()->get('error_msg') }}
             </div>
         @endif
@@ -345,6 +345,11 @@ toggle.addEventListener('click', function(event){
 });
 window.addEventListener('resize', function(event){
     change_toggle();
+});
+$("document").ready(function(){
+    setTimeout(function(){
+        $("[name='alert_msg']").hide();
+    }, 3000 );
 });
 </script>
 @yield('js')

@@ -13,6 +13,9 @@ class StudentRepository
     public function find_stid($stid){
         return student::where('STU_id',$stid)->where('School_id',Auth::user()->School_id)->first();
     }
+    public function search_name($name){
+        return student::where('name',$name)->where('School_id',Auth::user()->School_id)->get();
+    }
     public function store(array $data,$classs,$classs_id,$count){
         $now = date('Y-m-d H:i:s');
         $data['School_id']=Auth::user()->School_id;
