@@ -14,7 +14,13 @@
                             </div>
                         @endif
                         {{ __('You are logged in!') }}<br>
-                        現在時間: {{$now}}
+                        @php
+                        $t1=date('Y-m-d', strtotime($now));
+                        //$t2=date('H:i:s', strtotime($now));
+                        $dayofweek_ = date('w', strtotime($t1));
+                        $dayofweek =' ('.'星期' . ['日', '一', '二', '三', '四', '五', '六'][$dayofweek_].')';
+                        @endphp
+                        現在時間: {{$t1}}{{$dayofweek}}{{--&nbsp;&nbsp;{{$t2}}--}}
                     </div>
                 </div>
             </div>

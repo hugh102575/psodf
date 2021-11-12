@@ -117,19 +117,21 @@ class HomeController extends Controller
         return view('signin.signin',['today'=>$today,'school_classs'=>$school_classs]);
     }
     public function signin_result($q_type,$classs_id, $date){
+        $dayofweek_ = date('w', strtotime($date));
+        $dayofweek =' ('.'星期' . ['日', '一', '二', '三', '四', '五', '六'][$dayofweek_].')';
         if($q_type=="c"){
             if($classs_id!="all_classs"){
                 $classs=$this->classsRepo->find($classs_id);
                 $classs_name=$classs->Classs_Name;
                 $student=$classs->student;
                 $signin=$this->signinRepo->get_signin($classs_id,$date);
-                return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name]);
+                return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name,'dayofweek'=>$dayofweek]);
             }else{
                 $classs_name="不分班級";
                 $student=Auth::user()->school->student;
                 $signin=Auth::user()->school->signin->where('created_date',$date);
                 $all_classs=Auth::user()->school->classs;
-                return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name,'all_classs'=>$all_classs]);
+                return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name,'all_classs'=>$all_classs,'dayofweek'=>$dayofweek]);
             }
         }
         if($q_type=="s2"){

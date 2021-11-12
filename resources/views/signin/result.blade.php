@@ -19,11 +19,11 @@
 
             @if(count($signin)==0)
             <div class="alert alert-danger" >
-                日期: {{$date}}<br>班級: {{$classs_name}}<br><br>查無簽到退記錄
+                日期: {{$date}}{{$dayofweek}}<br>班級: {{$classs_name}}<br><br>查無簽到退記錄
             </div>
             @else
             <div class="alert alert-info">
-                日期: {{$date}}<br>班級: {{$classs_name}}<br><br>查詢結果如下
+                日期: {{$date}}{{$dayofweek}}<br>班級: {{$classs_name}}<br><br>查詢結果如下
             </div>
             @endif
                 <div class="card">
@@ -252,9 +252,11 @@
                                             break;
                                         }
                                     }
+                                    $dayofweek_ = date('w', strtotime($t1));
+                                    $dayofweek =' ('.'星期' . ['日', '一', '二', '三', '四', '五', '六'][$dayofweek_].')';
                                     @endphp
                                     <tr>
-                                    <td>{{$t1}}</td>
+                                    <td>{{$t1}}{{$dayofweek}}</td>
                                     <td>{{$t2}}</td>
                                     <td>
                                     @if($me!=null)
@@ -315,6 +317,7 @@
                                     <tbody>
                                     @foreach($signin as $sn)
                                     @php
+                                   
                                     $t1=date('Y-m-d', strtotime($sn->created_at));
                                     $t2=date('H:i:s', strtotime($sn->created_at));
                                     $s_type="";
@@ -324,9 +327,11 @@
                                     if($sn->sign=="out"){
                                         $s_type="簽退";
                                     }
+                                    $dayofweek_ = date('w', strtotime($t1));
+                                    $dayofweek =' ('.'星期' . ['日', '一', '二', '三', '四', '五', '六'][$dayofweek_].')';
                                     @endphp
                                     <tr>
-                                    <td>{{$t1}}</td>
+                                    <td>{{$t1}}{{$dayofweek}}</td>
                                     <td>{{$t2}}</td>
                                     <td>{{$s_type}}</td>
                                     <td>
@@ -559,5 +564,6 @@ query_s1_btn_c.forEach(function(item,index){
     } );
     });
 });
+
 </script>
 @endsection

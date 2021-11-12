@@ -119,7 +119,7 @@ class LINEController extends Controller
         array_push($actions,$per_btn_build);
         $per_btn_build2=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("聯絡安親班",'contact');
         array_push($actions,$per_btn_build2);
-        $btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder(null,$school->School_Name."\n"."您好，請選擇操作選項",null,$actions);
+        $btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder(null,$school->School_Name."\n"."家長您好，請選擇操作選項",null,$actions);
         $MessageBuild = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder("按鈕訊息回覆", $btn_build);
         if($rp_token==null){
             $result=$bot->pushMessage($userId,$MessageBuild);

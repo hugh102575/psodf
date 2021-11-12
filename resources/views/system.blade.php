@@ -65,14 +65,14 @@
                                 <label for="in_msg_div" class="font-weight-bold my_nav_text ">簽到訊息</label>
                                 </div>
                                 <div class="col-sm-6 mb-3" id="in_msg_div">
-                                <textarea class="form-control" id="in_msg" name="in_msg" rows="3" style="resize: none;" required="required">{{Auth::user()->school->in_msg}}</textarea>
+                                <textarea class="form-control" id="in_msg" name="in_msg" rows="4" style="resize: none;" required="required">{{Auth::user()->school->in_msg}}</textarea>
                                 </div>
 
                                 <div class="col-sm-4" >
                                 <label for="out_msg_div" class="font-weight-bold my_nav_text ">簽退訊息</label>
                                 </div>
                                 <div class="col-sm-6" id="out_msg_div">
-                                <textarea class="form-control" id="out_msg" name="out_msg" rows="3" style="resize: none;" required="required">{{Auth::user()->school->out_msg}}</textarea>
+                                <textarea class="form-control" id="out_msg" name="out_msg" rows="4" style="resize: none;" required="required">{{Auth::user()->school->out_msg}}</textarea>
                                 </div>
                                 
                             </div>

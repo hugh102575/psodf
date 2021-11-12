@@ -199,14 +199,16 @@ for (var i = 0; i < rad.length; i++) {
             prev = this;
         }
         console.log(this.value)
+        document.getElementById('query_stName').value='';
+        document.getElementById('query_stid').value='';
         switch (this.value) {
         case "mode_1":
-            $('#mode_1_div').show()
-            $('#mode_2_div').hide()
+            $('#mode_1_div').show('normal')
+            $('#mode_2_div').hide('normal')
             break;
         case "mode_2":
-            $('#mode_2_div').show()
-            $('#mode_1_div').hide()
+            $('#mode_2_div').show('normal')
+            $('#mode_1_div').hide('normal')
             break;
         default:
         }
