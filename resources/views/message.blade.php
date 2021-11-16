@@ -198,6 +198,7 @@
                 </div>
 
                 <div class="card-body">
+                <small class="mb-3">「@Name」等關鍵字將自動轉換，其他關鍵字請<a id="keyword_hint" href="#">點這裡</a>查看</small>
                     {{--<div class="mb-3">
                         <span class="small">快速搜尋:</span>
                         @foreach($all_message as $bt)
@@ -207,7 +208,7 @@
                         <button class="btn btn-link  shadow-none" type="button" id="show_all_btn"><small>全部</small></button>
                     </div>--}}
                     <div class="table-responsive">
-                        <table id="message_table" class="table.dataTable table-hover text-center text-middle" id="dataTable" width="100%" cellspacing="0">
+                        <table id="message_table" class="table dataTable table-hover text-center text-middle" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                             <tr class="my_nav_color text-light">
                                 <th>範本名稱</th>
@@ -409,6 +410,7 @@ $('#message_edit_delete').click(function(){
        }
 })
 
+/*
 var show_all_btn=document.getElementById('show_all_btn');
 show_all_btn.addEventListener("click", function() {
     $('#message_table').DataTable({
@@ -465,7 +467,11 @@ show_btns.forEach(function(item,index){
                 "oSearch": {"sSearch": btn_value}
             } );
         });
-    });
+    });*/
 
+    $('#keyword_hint').click(function(){
+    var msg="@Name  學生姓名\n@School  安親班名稱\n@Phone  安親班電話";
+    alert(msg);
+});
 </script>
 @endsection

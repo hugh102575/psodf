@@ -104,11 +104,18 @@
                                     $in_count=0;
                                     $out_count=0;
                                     $count_2=0;
+                                    $count_2_display=0;
+                                    foreach($signin as $in){
+                                        if($in->Student_id==$st->id){
+                                            $count_2++;
+                                            $count_2_display++;
+                                        }
+                                    }
                                     @endphp
                                    @foreach($signin as $in)
                                    @if($in->Student_id==$st->id)
                                         @php
-                                        $count_2++;
+                                        //$count_2++;
                                         $created_at=substr($in->created_at, 11);
                                         if($in->sign=="in"){
                                             $sign="簽到";
@@ -118,7 +125,10 @@
                                             $out_count++;
                                         }
                                         @endphp
-                                   <div>({{$count_2}}) <span class="enlarge_text">{{$sign}}</span> {{$created_at}}<br><img src="{{$in->signin_img}}"  style="height: 5rem; width: 5rem;"><br><br></div></div>
+                                   <div>({{$count_2_display}}) <span class="enlarge_text">{{$sign}}</span> {{$created_at}}<br><img src="{{$in->signin_img}}"  style="height: 5rem; width: 5rem;"><br><br></div></div>
+                                        @php
+                                        $count_2_display--;
+                                        @endphp
                                    @endif
 
 
@@ -288,7 +298,21 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
 
+            <div class="alert alert-info mb-3">
+                日期: 全部<br>學號: {{$st_id}}<br>學生: {{$student->name}}<br>班級: {{$classs->Classs_Name}}<br><br>
+                @php
+                $belong_sign=count($signin);
+                @endphp
                 @if(count($signin)==0)
+                <span class="text-danger">{{$belong_sign}}筆簽到/退資料</span>
+                @else
+                <span class="text-success">{{$belong_sign}}筆簽到/退資料</span>
+                @endif
+                
+                {{--<br><br>查詢結果如下--}}
+
+            </div>
+                {{--@if(count($signin)==0)
                 <div class="alert alert-danger">
                     日期: 全部<br>學號: {{$st_id}}<br>學生: {{$student->name}}<br>班級: {{$classs->Classs_Name}}<br><br>查無簽到退記錄
                 </div>
@@ -296,7 +320,7 @@
                 <div class="alert alert-info">
                     日期: 全部<br>學號: {{$st_id}}<br>學生: {{$student->name}}<br>班級: {{$classs->Classs_Name}}<br><br>查詢結果如下
                 </div>
-                @endif
+                @endif--}}
 
                 <div class="card">
                         <div class="card-header d-flex flex-row" >

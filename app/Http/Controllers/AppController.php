@@ -49,6 +49,7 @@ class AppController extends Controller
                     $return['success']=true;
                     $return['api_token']=$user->api_token;
                     $return['school_name']=$user->school->School_Name;
+                    $return['school_id']=$user->school->id;
                     $return['thresh']=$user->school->thresh;
                     $return['sign_mode']=$user->school->sign_mode;
                     $return['error_msg']="";
@@ -60,6 +61,7 @@ class AppController extends Controller
                 $return['success']=true;
                 $return['api_token']=$user->api_token;
                 $return['school_name']=$user->school->School_Name;
+                $return['school_id']=$user->school->id;
                 $return['thresh']=$user->school->thresh;
                 $return['sign_mode']=$user->school->sign_mode;
                 $return['error_msg']="";

@@ -13,6 +13,9 @@
 .hidden_object{
     display: none;
 }
+.aaa{
+  //background-color:  #D3D3D3 !important;
+}
 </style>
 @yield('css')
 @endsection
@@ -29,7 +32,7 @@
         </div>
     @endif--}}
 
-<div class="sidebar ">
+<div class="sidebar">
   <div class="sidebar-inner">
     <ul class="sidebar-menu scrollable position-relative pt-3">
       <li id="close_sidebar_btn" class="nav-item dropdown hidden_object pb-3">
@@ -37,7 +40,7 @@
           <i class="far fa-times-circle"></i>
         </a>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown mb-3">
         {{--<a class="nav-link wave-effect" href="{{ route('home') }}">
           <span class="icon-holder">
             <i class="fas fa-home"></i>
@@ -61,26 +64,26 @@
             }
             @endphp
             @if($basic_dropdown)
-            <ul class="dropdown-menu stay-open">
+            <ul class="dropdown-menu stay-open aaa">
             @else
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu aaa">
             @endif
                 <li class="nav-item dropdown">
 
 
                     <a class="nav-link dropdown-toggle" href="#">
-                    <span><a href="{{route('basic')}}" class="{{ (preg_match('(basic)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">基本資料</a></span>
+                    <span><a href="{{route('basic')}}" class="{{ (preg_match('(basic)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : ' ' }}">基本資料</a></span>
                     </a>
 
                     <a class="nav-link dropdown-toggle" href="#">
-                    <span><a href="{{route('system')}}" class="{{ (preg_match('(system)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">系統設定</a></span>
+                    <span><a href="{{route('system')}}" class="{{ (preg_match('(system)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : ' ' }}">系統設定</a></span>
                     </a>
                 </li>
             </ul>
 
 
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown mb-3">
         <a class="nav-link dropdown-toggle" href="#">
           <span class="icon-holder">
             <i class="fas fa-folder-plus"></i>
@@ -99,31 +102,31 @@
         }
         @endphp
         @if($classs_dropdown)
-        <ul class="dropdown-menu stay-open">
+        <ul class="dropdown-menu stay-open aaa">
         @else
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu aaa">
         @endif
 
           <li class="nav-item dropdown">
             {{--<a class="nav-link dropdown-toggle" href="#">
-              <span><a href="#" class="{{ (str_contains(Route::currentRouteName(),'classs.student')) ? 'text-info enlarge_text' : '' }}">學生名單</a></span>
+              <span><a href="#" class="{{ (str_contains(Route::currentRouteName(),'classs.student')) ? 'my_nav_color enlarge_text ' : '' }}">學生名單</a></span>
             </a>--}}
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('classs.classs')}}" class="{{ (preg_match('(classs.classs|classs.student)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">班級資料</a></span>
+              <span><a href="{{route('classs.classs')}}" class="{{ (preg_match('(classs.classs|classs.student)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">班級資料</a></span>
             </a>
 
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('batch')}}" class="{{ (preg_match('(batch)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">梯次</a></span>
+              <span><a href="{{route('batch')}}" class="{{ (preg_match('(batch)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">梯次</a></span>
             </a>
 
             {{--<a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('signin')}}" class="{{ (preg_match('(signin)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">簽到退查詢</a></span>
+              <span><a href="{{route('signin')}}" class="{{ (preg_match('(signin)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">簽到退查詢</a></span>
             </a>--}}
           </li>
         </ul>
       </li>
 
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown mb-3">
         <a class="nav-link dropdown-toggle" href="#">
           <span class="icon-holder">
           <i class="fas fa-search"></i>
@@ -142,9 +145,9 @@
         @endphp
 
         @if($sign_dropdown)
-        <ul class="dropdown-menu stay-open">
+        <ul class="dropdown-menu stay-open aaa">
         @else
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu aaa">
         @endif
 
 
@@ -153,7 +156,7 @@
 
 
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('signin')}}" class="{{ (preg_match('(signin)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">查詢</a></span>
+              <span><a href="{{route('signin')}}" class="{{ (preg_match('(signin)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">查詢</a></span>
             </a>
           </li>
         </ul>
@@ -164,7 +167,7 @@
 
 
 
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown mb-3">
         <a class="nav-link dropdown-toggle" href="#">
           <span class="icon-holder">
           <i class="fab fa-line"></i>
@@ -183,9 +186,9 @@
         @endphp
 
         @if($line_dropdown)
-        <ul class="dropdown-menu stay-open">
+        <ul class="dropdown-menu stay-open aaa">
         @else
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu aaa">
         @endif
 
 
@@ -194,7 +197,7 @@
 
 
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('line')}}" class="{{ (preg_match('(line)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">安親班LINE@</a></span>
+              <span><a href="{{route('line')}}" class="{{ (preg_match('(line)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">安親班LINE@</a></span>
             </a>
           </li>
         </ul>
@@ -203,7 +206,7 @@
 
       </li>
 
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown mb-3">
         <a class="nav-link dropdown-toggle" href="#">
           <span class="icon-holder">
           <i class="fas fa-comments"></i>
@@ -222,9 +225,9 @@
         @endphp
 
         @if($message_dropdown)
-        <ul class="dropdown-menu stay-open">
+        <ul class="dropdown-menu stay-open aaa">
         @else
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu aaa">
         @endif
 
 
@@ -233,7 +236,7 @@
 
 
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('message')}}" class="{{ (preg_match('(message)', Route::currentRouteName()) === 1) ? 'text-info enlarge_text' : '' }}">訊息發送</a></span>
+              <span><a href="{{route('message')}}" class="{{ (preg_match('(message)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">訊息發送</a></span>
             </a>
           </li>
       </ul>

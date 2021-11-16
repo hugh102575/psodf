@@ -285,11 +285,12 @@ class SettingController extends Controller
 
         $re = $request->all();
 
-        $stu_array = [];
+        $stu_array = array();
         $status_a= array();
         $std_name_a=array();
         $total_a=array();
         $processed=array();
+        $stID_array = array();
         foreach($re as $key => $value)
         {
             if(substr($key,0,7) == "student")
@@ -300,27 +301,40 @@ class SettingController extends Controller
                 $st=$this->studentRepo->check_stuid($st_id);
                 if($st){
                     $st_name=$st->name;
-                }
-
-                $value_d=json_decode($value);
-                foreach($value_d as $v){
-                    array_push($stu_array,$v);
-                    array_push($std_name_a,$st_name);
+                    $stID=$st->id;
+                
+                    $value_d=json_decode($value);
+                    foreach($value_d as $v){
+                        array_push($stu_array,$v);
+                        array_push($std_name_a,$st_name);
+                        array_push($stID_array,$stID);
+                    }
                 }
 
             }
         }
 
 
+        
         $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
         $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
         $return =array();
         foreach($stu_array as $key =>$value){
             if(isset($value)){
-                $message=$re['Message_Data'];
+                $STU=$st=$this->studentRepo->find($stID_array[$key]);
+
+                $msg=$re['Message_Data'];
+                if($STU){
+                $msg=str_replace("@Name",$STU->name,$msg);
+                }
+                $msg=str_replace("@School",$school->School_Name,$msg);
+                $msg=str_replace("@Phone",$school->phone,$msg);
+                $message=$msg;
+
                 $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
                 $result=$bot->pushMessage($value,$push_build);
                 $return['status']=$result->getHTTPStatus();
+                //$return['status']=200;
                 //return redirect()->route('message')->with('success_msg', '訊息已發送！');
             }else{
                 $return['status']=404;
@@ -382,7 +396,7 @@ class SettingController extends Controller
             //return redirect()->route('message')->with('success_msg', $result_string_1."， ".$result_string_2);
             return redirect()->route('message')->with('success_msg', $result_string_1)->with('error_msg', $result_string_2);
         }
-
+        
 
     }
 

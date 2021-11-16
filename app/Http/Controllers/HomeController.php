@@ -124,12 +124,12 @@ class HomeController extends Controller
                 $classs=$this->classsRepo->find($classs_id);
                 $classs_name=$classs->Classs_Name;
                 $student=$classs->student;
-                $signin=$this->signinRepo->get_signin($classs_id,$date);
+                $signin=$this->signinRepo->get_signin($classs_id,$date)->reverse()->values();
                 return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name,'dayofweek'=>$dayofweek]);
             }else{
                 $classs_name="不分班級";
                 $student=Auth::user()->school->student;
-                $signin=Auth::user()->school->signin->where('created_date',$date);
+                $signin=Auth::user()->school->signin->where('created_date',$date)->reverse()->values();
                 $all_classs=Auth::user()->school->classs;
                 return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name,'all_classs'=>$all_classs,'dayofweek'=>$dayofweek]);
             }
