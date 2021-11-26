@@ -59,6 +59,7 @@
 
                             </div>
                         </div>
+                        
                         <div class="card py-4 px-5 mb-5">
                             <div class="form-group row">
                                 <div class="col-sm-4" >
@@ -76,8 +77,9 @@
                                 </div>
                                 
                             </div>
-                            <small class="mt-3">「@Name」等關鍵字將自動轉換，其他關鍵字請<a id="keyword_hint" href="#">點這裡</a>查看</small>
+                            <small class="mt-3 text-secondary">「@Name」等關鍵字將自動轉換，其他關鍵字請<a id="keyword_hint" href="#">點這裡</a>查看</small>
                         </div>
+                        
                         <div class="card py-4 px-5 ">
                             <div class="form-group row">
                             <div class="col-sm-4" >
@@ -90,9 +92,12 @@
                             </div>
 
                             </div>
-                            <small class="mt-3">辨識誤差值會和最佳結果比較，愈大找到得愈多但可能誤判，愈小找得愈精確(至少會找到一個)，預設值為0.1。</small>
+                            <small class="mt-3 text-secondary">辨識誤差值會和最佳結果比較，愈大找到得愈多但可能誤判，愈小找得愈精確(至少會找到一個)，預設值為0.1。</small>
                         </div>
-                        <button  type="submit" class="mt-3 btn my_nav_color text-light float-right">更新資料</button>
+                        <div class="d-flex  float-right  ml-auto" >
+                        <button id="default_btn" type="button" class=" mt-3 btn btn-secondary text-light ">恢復預設值</button>
+                        <button  type="submit" class="ml-3 mt-3 btn my_nav_color text-light ">更新資料</button>
+                        </div>
                     </div>
 
                 </div>
@@ -112,6 +117,13 @@ document.getElementById('nav_title').innerHTML="<small>系統設定</small>";
 $('#keyword_hint').click(function(){
     var msg="@Name  學生姓名\n@School  安親班名稱\n@Phone  安親班電話";
     alert(msg);
+});
+$('#default_btn').click(function(){
+    document.getElementById("flexRadioDefault1").checked = false;
+    document.getElementById("flexRadioDefault2").checked = true;
+    document.getElementById('in_msg').innerHTML="您的孩子@Name已經到班囉!"
+    document.getElementById('out_msg').innerHTML="您的孩子@Name已經下課囉!"
+    document.getElementById('thresh').value="0.1"
 });
 </script>
 @endsection

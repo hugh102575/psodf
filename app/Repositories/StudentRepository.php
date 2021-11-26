@@ -83,8 +83,8 @@ class StudentRepository
         return student::destroy($id);
     }
 
-    public function check_stuid($STU_id){
-        return student::where('STU_id',$STU_id)->first();
+    public function check_stuid($STU_id,$school_id){
+        return student::where('School_id',$school_id)->where('STU_id',$STU_id)->first();
     }
     public function add_parent_line($id,$userId){
         return student::where('id','=',$id)->update(array('parent_line' => $userId));

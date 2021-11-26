@@ -3,6 +3,10 @@
 @section('css')
 <link href="{{asset('vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 <style>
+.inline-block {
+  display: inline-block;
+  text-align: left;
+}
 </style>
 @endsection
 
@@ -198,7 +202,7 @@
                 </div>
 
                 <div class="card-body">
-                <small class="mb-3">「@Name」等關鍵字將自動轉換，其他關鍵字請<a id="keyword_hint" href="#">點這裡</a>查看</small>
+                <small class="mb-3 text-secondary">「@Name」等關鍵字將自動轉換，其他關鍵字請<a id="keyword_hint" href="#">點這裡</a>查看</small>
                     {{--<div class="mb-3">
                         <span class="small">快速搜尋:</span>
                         @foreach($all_message as $bt)
@@ -222,7 +226,11 @@
                             @foreach($all_message as $message)
                             <tr>
                                 <td>{{ $message->name }}</td>{{--  {{route('classs.student',$classs->id)}}  --}}
-                                <td><pre>{{ $message->data }}</pre></td>
+                                <td>
+                                <div class="inline-block">
+                                    <pre>{{ $message->data }}</pre>
+                                </div>
+                                </td>
                                 <td class="message_edit_btn"><a href="#"><i class="fas fa-pencil-alt  my_nav_text" data-target="#MessageModal_edit" data-toggle="modal"></i></a></td>
                                 <td class="message_send_btn"><a href="#"><i class="fas fa-paper-plane my_nav_text" data-target="#MessageModal_send" data-toggle="modal"></i></a></td>
                                 <td class="message_edit_id hidden_object">{{$message->id}}</td>

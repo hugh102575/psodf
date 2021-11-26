@@ -36,6 +36,7 @@ Route::middleware('auth:api')->get('/class/{id}/student', [AppController::class,
 Route::middleware('auth:api')->post('/line/notify', [AppController::class, 'line_notify']);
 Route::middleware('auth:api')->post('/line/notify_queue', [AppController::class, 'notify_queue']);
 Route::middleware('auth:api')->post('/profile', [AppController::class, 'profile']);
+Route::middleware('auth:api')->post('/manual_sign_check', [AppController::class, 'manual_sign_check']);
 
 
 

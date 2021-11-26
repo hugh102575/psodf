@@ -298,7 +298,7 @@ class SettingController extends Controller
                 //array_push($stu_array,$value);
 
                 $st_id=explode("_",$key)[1];
-                $st=$this->studentRepo->check_stuid($st_id);
+                $st=$this->studentRepo->check_stuid($st_id,$school->id);
                 if($st){
                     $st_name=$st->name;
                     $stID=$st->id;

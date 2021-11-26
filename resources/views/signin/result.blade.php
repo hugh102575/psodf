@@ -221,7 +221,7 @@
 
                 <div class="card">
                         <div class="card-header d-flex flex-row" >
-                            <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人查詢</h5>
+                            <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人姓名查詢</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -324,7 +324,7 @@
 
                 <div class="card">
                         <div class="card-header d-flex flex-row" >
-                            <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人查詢</h5>
+                            <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人學號查詢</h5>
                         </div>
                         <div class="card-body">
 

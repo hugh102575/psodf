@@ -58,13 +58,15 @@ class AppController extends Controller
                     $return['error_msg']="使用非核可的裝置";
                 }
             }else{
-                $return['success']=true;
+                $return['success']=false;
+                $return['error_msg']="尚未綁定裝置";
+                /*$return['success']=true;
                 $return['api_token']=$user->api_token;
                 $return['school_name']=$user->school->School_Name;
                 $return['school_id']=$user->school->id;
                 $return['thresh']=$user->school->thresh;
                 $return['sign_mode']=$user->school->sign_mode;
-                $return['error_msg']="";
+                $return['error_msg']="";*/
             }
         }else{
             $return['success']=false;
@@ -203,7 +205,7 @@ class AppController extends Controller
         $userId=$request['LineID'];
         $stid=$request['stid'];
         $school_id=$request['school_id'];
-        $student=$this->studentRepo->check_stuid($stid);
+        $student=$this->studentRepo->check_stuid($stid,$school_id);
         if($student){
             $add_line=$this->studentRepo->add_parent_line2($student,$userId);
             if($add_line){
@@ -217,6 +219,24 @@ class AppController extends Controller
             $message="查無學生資料，\n請檢查輸入是否正確";
             return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('error_msg', $message);
         }
+    }
+    public function manual_sign_check(Request $request){
+        $stid=$request['stid'];
+        $school_id=$request['school_id'];
+        $student=$this->studentRepo->check_stuid($stid,$school_id);
+        if($student){
+            $classs=$this->classsRepo->find($student->Classs_id);
+        }
+        $return=array();
+        if($student){
+            $return['found']=true;
+            $return['name']=$student->name;
+            $return['id']=$student->id;
+            $return['classs']=$classs->Classs_Name;
+        }else{
+            $return['found']=false;
+        }
+        return json_encode($return);
     }
 
 }
