@@ -36,7 +36,8 @@ class student extends Model
         'create_from',
         'update_from',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'parent_line_multi'
     ];
 
     public function classs(){

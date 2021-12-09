@@ -651,6 +651,9 @@ student_edit_btn.forEach(function(item,index){
 })
 $('#student_update_submit').click(function(){
     var st = new Object();
+    if(document.getElementById('st_name').value.length==0){
+        alert("請填寫姓名")
+    }else{
     var update_id = document.getElementById('st_id').value;
     st.name = document.getElementById('st_name').value;
     st.Classs_id = document.getElementById('st_Classs_id').value;
@@ -660,32 +663,43 @@ $('#student_update_submit').click(function(){
     st.memo = document.getElementById('st_memo').value;
     st.gender = document.getElementById('st_gender').value;
     st.grade = document.getElementById('st_grade').value;
+    var format = /[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]+/;
+    var fine_name = false
+    if(format.test(st.name)){
+        fine_name=false
+    } else {
+        fine_name=true
+    }
+    if(fine_name){
+        $.ajax({
+                        type:'POST',
+                        url:'/student/'+update_id+'/update',
+                        dataType:'json',
+                        data:{
+                        'student':st,
+                        _token: '{{csrf_token()}}'
+                        },
+                        success:function(data){
+                            console.log(data)
+                            var result=data.result;
+                            if(result=='success'){
+                                //window.location.href = "/classs"+"?success_msg="+data.msg;
+                                window.location.href = "/classs"+"?success_msg="+data.msg;
+                            }else{
+                                //window.location.href = "/classs"+"?error_msg="+data.msg;
+                                window.location.href = "/classs"+"?error_msg="+data.msg;
+                            }
 
-    $.ajax({
-                    type:'POST',
-                    url:'/student/'+update_id+'/update',
-                    dataType:'json',
-                    data:{
-                    'student':st,
-                    _token: '{{csrf_token()}}'
-                    },
-                    success:function(data){
-                        console.log(data)
-                        var result=data.result;
-                        if(result=='success'){
-                            //window.location.href = "/classs"+"?success_msg="+data.msg;
-                            window.location.href = "/classs"+"?success_msg="+data.msg;
-                        }else{
-                            //window.location.href = "/classs"+"?error_msg="+data.msg;
-                            window.location.href = "/classs"+"?error_msg="+data.msg;
+
+                        },
+                        error:function(e){
+                            alert('Error: ' + e);
                         }
-
-
-                    },
-                    error:function(e){
-                        alert('Error: ' + e);
-                    }
-        });
+            });
+    }else{
+        alert("姓名不可包含特殊符號")
+    }
+    }
 
 });
 $('#student_update_delete').click(function(){

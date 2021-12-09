@@ -86,6 +86,9 @@ class StudentRepository
     public function check_stuid($STU_id,$school_id){
         return student::where('School_id',$school_id)->where('STU_id',$STU_id)->first();
     }
+    public function check_stuName($STU_name,$school_id){
+        return student::where('School_id',$school_id)->where('name',$STU_name)->get();
+    }
     public function add_parent_line($id,$userId){
         return student::where('id','=',$id)->update(array('parent_line' => $userId));
     }

@@ -331,6 +331,11 @@
 <script src="{{asset('vendor/collapsible-sticky-sidebar-nav-next/js/perfect-scrollbar.min.js')}}"></script>
 <script src="{{asset('vendor/collapsible-sticky-sidebar-nav-next/js/next-sidebar.js')}}"></script>
 <script>
+$.ajaxSetup({
+  headers: {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
 function change_toggle(){
     const max_width=991;
     if(window.innerWidth<=max_width){

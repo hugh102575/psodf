@@ -71,6 +71,15 @@ class LINEController extends Controller
                     }
                     //$result=$bot->pushMessage($userId,$push_build);
                 }
+                else if($postback_data=="bind_student2"){
+                    $url=url("bind"."/".$school->id."/".$userId);
+                    $message="家長您好，\n請前往下列網址進行綁定，\n".$url;
+                    $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+                    $rp_result=$bot->replyMessage($event['replyToken'],$push_build);
+                    if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
+                        $result=$bot->pushMessage($userId,$push_build);
+                    }
+                }
             }else{
                 $this->default_template($school,$bot,$userId,$event['replyToken']);
                 /*$message = $event['message'];
@@ -114,8 +123,8 @@ class LINEController extends Controller
     public function default_template($school,$bot,$userId,$rp_token){
         $actions = array();
         $url=url("bind"."/".$school->id."/".$userId);
-        $per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("綁定學生資料",$url);
-        //$per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("綁定學生資料",'bind_student');
+        //$per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("綁定學生資料",$url);
+        $per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("綁定學生資料",'bind_student2');
         array_push($actions,$per_btn_build);
         $per_btn_build2=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("聯絡安親班",'contact');
         array_push($actions,$per_btn_build2);
@@ -130,6 +139,64 @@ class LINEController extends Controller
             }
         }
     }
+    /*public function add_rich_menu($school,$userId,$access_token){
+        $authorization = "Authorization: Bearer " . $access_token;
+        $url_1 = "https://api.line.me/v2/bot/richmenu";
+        $bind_url=url("bind"."/".$school->id."/".$userId);
+        $rich_menu_object=
+        '{
+            "size": {
+              "width": 2500,
+              "height": 843
+            },
+            "selected": false,
+            "name": "my_richmenu",
+            "chatBarText": "操作選項",
+            "areas": [
+              {
+                "bounds": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1250,
+                  "height": 843
+                },
+                "action": {
+                  "type": "uri",
+                  "label": "綁定學生資料",
+                  "uri": '.$bind_url.'
+                }
+              },
+              {
+                "bounds": {
+                  "x": 1250,
+                  "y": 0,
+                  "width": 1250,
+                  "height": 843
+                },
+                "action": {
+                  "type": "postback",
+                  "label": "聯絡安親班",
+                  "data": "contact"
+                }
+              }
+           ]
+        }';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization ));
+        curl_setopt($ch, CURLOPT_URL, $url_1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($rich_menu_object));
+        $json_result = curl_exec($ch);
+        $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($resultStatus == 200) {
+            $result=json_decode($json_result,true);
+	        $richMenuId=$result['richMenuId'];
+        }else{
+            $result=null;
+        }
+        curl_close($ch);
+    }*/
 }
 
 

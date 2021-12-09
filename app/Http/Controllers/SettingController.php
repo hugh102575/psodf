@@ -129,6 +129,7 @@ class SettingController extends Controller
             $return['id']=$id;
         }
         return json_encode($return);
+
     }
     public function student_search(Request $request){
         $result = $this->studentRepo->search_student($request['student_name']);
@@ -205,19 +206,36 @@ class SettingController extends Controller
     public function line_update(Request $request){
         //dd($request->all());
         $school = Auth::user()->school;
+        $LineChannelAccessToken_db=$school->LineChannelAccessToken;
+
         $school->LineID = isset($request['Linedisbtn']) ? null : $request['LineID'];
         $school->LineChannelSecret = isset($request['Linedisbtn']) ? null : $request['LineChannelSecret'];
         $school->LineChannelAccessToken = isset($request['Linedisbtn']) ? null : $request['LineChannelAccessToken'];
         if(isset($request['Linedisbtn'])){
             $school->LineChannelName=null;
             $school->save();
-            return redirect()->route('line')->with('success_msg', '已斷開LINE@連接！');
+            //if($school->id==2){
+                $test_result='已斷開LINE@連接！';
+                $rich_menu_result=$this->del_rich_menu($school,$LineChannelAccessToken_db);
+                return redirect()->route('line')->with('success_msg', $test_result);
+            //}else{
+                //return redirect()->route('line')->with('success_msg', '已斷開LINE@連接！');
+            //}
+            
         }else{
             $LineChannelName=$this->get_LineChannelName($request['LineChannelAccessToken']);
             if(isset($LineChannelName)){
+                
                 $school->LineChannelName=$LineChannelName;
                 $school->save();
-                return redirect()->route('line')->with('success_msg', 'LINE@串接成功！');
+                //if($school->id==2){
+                    $test_result='LINE@串接成功！';
+                    $rich_menu_result=$this->add_rich_menu($school,$request['LineChannelAccessToken']);
+                    return redirect()->route('line')->with('success_msg', $test_result);
+                //}else{
+                    //return redirect()->route('line')->with('success_msg', 'LINE@串接成功！');
+                //}
+                
             }else{
                 return redirect()->route('line')->with('error_msg', '輸入資料有誤，查無資料！');
             }
@@ -398,6 +416,159 @@ class SettingController extends Controller
         }
         
 
+    }
+
+    public function del_rich_menu($school,$access_token){
+        $authorization = "Authorization: Bearer " . $access_token;
+        $richMenuId=null;
+
+        $url_1 = "https://api.line.me/v2/bot/richmenu/list";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization ));
+        curl_setopt($ch, CURLOPT_URL, $url_1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $json_result = curl_exec($ch);
+        $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($resultStatus == 200) {
+            $richmenus_a=array();
+            $result=json_decode($json_result,true);
+	        $richmenus=$result['richmenus'];
+            foreach($richmenus as $r){
+                array_push($richmenus_a,$r['richMenuId']);
+            }
+            //$result=json_encode($richmenus_a);
+        }else{
+            $result="http_error_1";
+        }
+
+        if(count($richmenus_a)!=0){
+            foreach($richmenus_a as $r_id){
+                $url_2 = "https://api.line.me/v2/bot/richmenu/".$r_id;
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization ));
+                curl_setopt($ch, CURLOPT_URL, $url_2);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                $json_result = curl_exec($ch);
+            }
+            $result="rm_all_richmenus";
+            curl_close($ch);
+        }else{
+            curl_close($ch);
+        }
+        return $result;
+    }
+    public function add_rich_menu($school,$access_token){
+        $authorization = "Authorization: Bearer " . $access_token;
+
+        $richMenuId=null;
+        //$userId="1234";
+        $url_1 = "https://api.line.me/v2/bot/richmenu";
+        //$bind_url=url("bind"."/".$school->id."/".$userId);
+        $rich_menu_obj =
+                        [
+                            'size' => ['width' => 2500 , 'height' => 843],
+                            'selected' => false,
+                            'name' =>  'my_richmenu',
+                            'chatBarText' => '操作選項',
+                            'areas' => [
+                                [
+                                    'bounds' => [
+                                        'x' => 0,
+                                        'y' => 0,
+                                        'width' => 1250,
+                                        'height' =>843
+                                    ],
+                                    /*'action'=>[
+                                        'type' => 'uri',
+                                        'label' => '綁定學生資料',
+                                        'uri' => $bind_url
+                                    ]*/
+
+                                    'action'=>[
+                                        'type' => 'postback',
+                                        'label' => '綁定學生資料',
+                                        'data' => 'bind_student2'
+                                    ]
+                                ],
+                                [
+                                    'bounds' => [
+                                        'x' => 1250,
+                                        'y' => 0,
+                                        'width' => 1250,
+                                        'height' =>843
+                                    ],
+                                    'action'=>[
+                                        'type' => 'postback',
+                                        'label' => '聯絡安親班',
+                                        'data' => 'contact'
+                                    ]
+                                ],
+
+                            ]
+                        ]
+                    ;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization ));
+        curl_setopt($ch, CURLOPT_URL, $url_1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($rich_menu_obj));
+        $json_result = curl_exec($ch);
+        $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($resultStatus == 200) {
+            $result=json_decode($json_result,true);
+	        $richMenuId=$result['richMenuId'];
+            $result=$richMenuId;
+        }else{
+            $result="http_error_1";
+        }
+        //curl_close($ch);
+
+        //$richMenuId="richmenu-44974ac3bce7f6f76fa7a563b57f0969";
+        if(isset($richMenuId)){
+            $image_path=url('img/rich_menu2.png');
+            $url_2 = "https://api-data.line.me/v2/bot/richmenu/".$richMenuId."/content";
+            //$ch_2 = curl_init();
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: image/png' , $authorization ));
+            curl_setopt($ch, CURLOPT_URL, $url_2);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents($image_path));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $json_result = curl_exec($ch);
+            $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if ($resultStatus == 200) {
+                $result="http_ok_2";
+            }else{
+                $result="http_error_2";
+            }
+            //curl_close($ch);
+
+            if($result=="http_ok_2"){
+                $url_3 = "https://api.line.me/v2/bot/user/all/richmenu/".$richMenuId;
+                //$ch_3 = curl_init();
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization ));
+                curl_setopt($ch, CURLOPT_URL, $url_3);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                $json_result = curl_exec($ch);
+                $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                if ($resultStatus == 200) {
+                    $result="http_ok_3";
+                }else{
+                    $result="http_error_3";
+                }
+                curl_close($ch);
+            }else{
+                curl_close($ch);
+            }
+        }else{
+            curl_close($ch);
+        }
+
+
+
+
+        return $result;
     }
 
 }

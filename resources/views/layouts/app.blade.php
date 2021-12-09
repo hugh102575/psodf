@@ -17,6 +17,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <link href="{{asset('vendor/fontawesome-free-5.15.4-web/css/all.css')}}" rel="stylesheet">
 <style>
     .my_nav_color{
         background-color:  #6B5B95 !important;
@@ -107,6 +109,7 @@
     <!-- fontawesome -->
     <script src="https://kit.fontawesome.com/6fa6feb997.js" crossorigin="anonymous"></script>
 
+    <script src="{{asset('vendor/fontawesome-free-5.15.4-web/js/all.js')}}"></script>
     @yield('app_js')
 </body>
 </html>

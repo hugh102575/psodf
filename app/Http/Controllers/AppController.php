@@ -205,11 +205,18 @@ class AppController extends Controller
         $userId=$request['LineID'];
         $stid=$request['stid'];
         $school_id=$request['school_id'];
+        $school=$this->schoolRepo->find($school_id);
         $student=$this->studentRepo->check_stuid($stid,$school_id);
         if($student){
             $add_line=$this->studentRepo->add_parent_line2($student,$userId);
             if($add_line){
-                $message="設定成功!\n".$student->name."的家長您好，"."之後小朋友到班時，本程式會自動通知您";
+                $message="設定成功!\n".$student->name."的家長您好，\n"."之後小朋友到班時，本程式會自動通知您";
+
+                $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
+                $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
+                $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+                $push_result=$bot->pushMessage($userId,$push_build);
+
                 return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('success_msg', $message);
             }else{
                 $message="謝謝，".$student->name."的家長，\n"."您之前已經設定成功囉";
@@ -226,17 +233,34 @@ class AppController extends Controller
         $student=$this->studentRepo->check_stuid($stid,$school_id);
         if($student){
             $classs=$this->classsRepo->find($student->Classs_id);
+        }else{
+            $student_a=$this->studentRepo->check_stuName($stid,$school_id);
+	    if(count($student_a)==1){
+		$student=$student_a[0];
+		$classs=$this->classsRepo->find($student->Classs_id);
+            }elseif(count($student_a)>1){
+		$error_msg="multi";
+            }else{
+		$error_msg="not found";
+            }
         }
         $return=array();
-        if($student){
+        if($student && $classs){
             $return['found']=true;
             $return['name']=$student->name;
             $return['id']=$student->id;
             $return['classs']=$classs->Classs_Name;
+            $return['STU_id']=$student->STU_id;
         }else{
             $return['found']=false;
+	    $return['error_msg']=$error_msg;
         }
         return json_encode($return);
+    }
+
+    public function school_all_students(Request $request){
+        $students=$request->user()->school->student;
+        return $students;
     }
 
 }

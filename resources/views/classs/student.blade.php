@@ -2,7 +2,8 @@
 
 @section('css')
 <style>
-@media only screen and (max-width: 600px) {
+   
+@media only screen and (max-width: 800px) {
     .wrapper-1 {
     width: auto;
     }
@@ -44,6 +45,10 @@ document.getElementById('nav_title').innerHTML="<small>學生名單</small>";
 var this_classs={!! json_encode($this_classs) !!};
 var classs_student={!! json_encode($classs_student) !!};
 
+/*var width = window.innerWidth
+|| document.documentElement.clientWidth
+|| document.body.clientWidth;
+alert(width)*/
 
 
 
@@ -168,6 +173,26 @@ $('#save_student_list').click(function(){
  if(result_old.length==0){
     result_old=null;
  }
+ var format = /[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]+/;
+ var fine_name = false
+ if(result!=null){
+    for (let i = 0; i < result.length; i++) {
+        st_name=result[i].name
+        if(format.test(st_name)){
+            fine_name=false
+            break;
+        } else {
+            fine_name=true
+        }
+    }
+ }else{
+    fine_name=true
+     console.log("result null")
+ }
+ console.log("fine_name",fine_name)
+ if(fine_name){
+
+ 
         $.ajax({
                     type:'POST',
                     url:'/classs/'+this_classs.id+'/student',
@@ -178,6 +203,7 @@ $('#save_student_list').click(function(){
                     _token: '{{csrf_token()}}'
                     },
                     success:function(data){
+                        console.log("data",data)
                         var result=data.result;
                         if(result=='success'){
                             //window.location.href = "/classs"+"?success_msg="+data.msg;
@@ -191,6 +217,9 @@ $('#save_student_list').click(function(){
                         alert('Error: ' + e);
                     }
         });
+    }else{
+        alert("姓名不可包含特殊符號")
+    }
 })
 </script>
 @endsection

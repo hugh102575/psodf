@@ -105,6 +105,7 @@
                                     $out_count=0;
                                     $count_2=0;
                                     $count_2_display=0;
+                                    $count_2_display_asc=1;
                                     foreach($signin as $in){
                                         if($in->Student_id==$st->id){
                                             $count_2++;
@@ -125,9 +126,10 @@
                                             $out_count++;
                                         }
                                         @endphp
-                                   <div>({{$count_2_display}}) <span class="enlarge_text">{{$sign}}</span> {{$created_at}}<br><img src="{{$in->signin_img}}"  style="height: 5rem; width: 5rem;"><br><br></div></div>
+                                   <div>({{$count_2_display_asc}}) <span class="enlarge_text">{{$sign}}</span> {{$created_at}}<br><img src="{{$in->signin_img}}"  style="height: 5rem; width: 5rem;"><br><br></div></div>
                                         @php
                                         $count_2_display--;
+                                        $count_2_display_asc++;
                                         @endphp
                                    @endif
 

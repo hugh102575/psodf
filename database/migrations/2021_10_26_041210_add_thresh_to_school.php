@@ -14,7 +14,7 @@ class AddThreshToSchool extends Migration
     public function up()
     {
         Schema::table('school', function (Blueprint $table) {
-            $table->float('thresh')->after('LineQR')->default('0.1')->nullable();
+            $table->float('thresh')->after('LineQR')->default('1.0')->nullable();
         });
     }
 

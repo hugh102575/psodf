@@ -83,16 +83,16 @@
                         <div class="card py-4 px-5 ">
                             <div class="form-group row">
                             <div class="col-sm-4" >
-                            <label for="thresh" class="font-weight-bold my_nav_text ">辨識誤差值</label>
+                            <label for="thresh" class="font-weight-bold my_nav_text ">辨識門檻值</label>
                             </div>
                             <div class="col-sm-6" >
-                            <input class="form-control" type="number" id="thresh" name="thresh" min="0" max="1" step="0.01" required="required" placeholder="請輸入0到1之間的小數值" value="{{Auth::user()->school->thresh}}">
+                            <input class="form-control" type="number" id="thresh" name="thresh" min="0" max="2" step="0.1" required="required" placeholder="請輸入0到2之間的小數值" value="{{Auth::user()->school->thresh}}">
                             {{--<input class="form-control"  type="text" name="School_Name" id="School_Name" placeholder="請輸入安親班名稱" required="required" value="{{Auth::user()->school->School_Name}}" >
                             --}}
                             </div>
 
                             </div>
-                            <small class="mt-3 text-secondary">辨識誤差值會和最佳結果比較，愈大找到得愈多但可能誤判，愈小找得愈精確(至少會找到一個)，預設值為0.1。</small>
+                            <small class="mt-3 text-secondary">辨識門檻值是介於0和2之間的小數，<br>小於辨識門檻值的特徵才能簽到，<br>門檻值愈小篩的愈嚴格、愈大篩的愈寬鬆，建議採用預設值1.0</small>
                         </div>
                         <div class="d-flex  float-right  ml-auto" >
                         <button id="default_btn" type="button" class=" mt-3 btn btn-secondary text-light ">恢復預設值</button>
@@ -123,7 +123,9 @@ $('#default_btn').click(function(){
     document.getElementById("flexRadioDefault2").checked = true;
     document.getElementById('in_msg').innerHTML="您的孩子@Name已經到班囉!"
     document.getElementById('out_msg').innerHTML="您的孩子@Name已經下課囉!"
-    document.getElementById('thresh').value="0.1"
+    document.getElementById('thresh').value="1.0"
 });
+var thresh=document.getElementById('thresh').value
+document.getElementById('thresh').value=parseFloat(thresh).toFixed(1)
 </script>
 @endsection

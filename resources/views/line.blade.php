@@ -16,7 +16,6 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
 
-
                 <div class="card">
                     <div class="card-header d-flex flex-row" >
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">安親班LINE@</h5>
@@ -87,11 +86,11 @@
                             </tr>--}}
                             <tr>
                             <th scope="row">QR Code (掃描加入)</th>
-                            <td><div class="p-1"id="qrcode"></div></td>
+                            <td><div id="qr_div" class="p-3 row"><div class="" id="qrcode"></div><button type="button" id="qr_download" class="btn btn-link"><small><u>按我下載</u></small></button></div></td>
                             </tr>
                             <tr>
                             <th scope="row">連接狀態</th>
-                            <td><button id="Linedisbtn" name="Linedisbtn" type="submit" class="btn btn-link text-danger btn-sm">斷開連接</button></td>
+                            <td><button id="Linedisbtn" name="Linedisbtn" type="submit" class="btn btn-link text-danger btn-sm"><i class="fas fa-exclamation-triangle"></i><small>斷開連接</small></button></td>
                             </tr>
 
                         </tbody>
@@ -127,5 +126,36 @@ if(school.LineChannelSecret!=null && school.LineChannelAccessToken!=null){
     });
 }
 
+function download(canvas, filename) {
+		  /// create an "off-screen" anchor tag
+		  var lnk = document.createElement('a'), e;
+
+		  /// the key here is to set the download attribute of the a tag
+		  lnk.download = filename;
+
+		  /// convert canvas content to data-uri for link. When download
+		  /// attribute is set the content pointed to by link will be
+		  /// pushed as "download" in HTML5 capable browsers
+		  lnk.href = canvas[0].toDataURL("image/png");
+
+		  /// create a "fake" click-event to trigger the download
+		  if (document.createEvent) {
+		    e = document.createEvent("MouseEvents");
+		    e.initMouseEvent("click", true, true, window,
+		                     0, 0, 0, 0, 0, false, false, false,
+		                     false, 0, null);
+
+		    lnk.dispatchEvent(e);
+		  } else if (lnk.fireEvent) {
+		    lnk.fireEvent("onclick");
+		  }
+		}
+
+var qr_download = document.getElementById('qr_download');
+qr_download.addEventListener("click", function() {
+    //alert('ccc')
+var canvas = $('#qrcode canvas');
+    download(canvas,school.School_Name+".png");
+});
 </script>
 @endsection
