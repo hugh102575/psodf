@@ -198,7 +198,8 @@ class AppController extends Controller
 
     public function bind($school_id,$LineID){
         $school=$this->schoolRepo->find($school_id);
-        return view('bind',['school'=>$school,'LineID'=>$LineID]);
+        $decode=base64_decode(str_replace('_','/',$LineID));
+        return view('bind',['school'=>$school,'LineID'=>$decode]);
     }
     public function bind_update(Request $request){
         //dd($request->all());

@@ -72,8 +72,9 @@ class LINEController extends Controller
                     //$result=$bot->pushMessage($userId,$push_build);
                 }
                 else if($postback_data=="bind_student2"){
-                    $url=url("bind"."/".$school->id."/".$userId);
-                    $message="家長您好，\n請前往下列網址進行綁定，\n".$url;
+                    $encode=str_replace('/','_',base64_encode($userId));
+                    $url=url("bind"."/".$school->id."/".$encode);
+                    $message="親愛的家長您好，\n請前往下列網址進行綁定。\n".$url;
                     $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
                     $rp_result=$bot->replyMessage($event['replyToken'],$push_build);
                     if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
@@ -123,12 +124,14 @@ class LINEController extends Controller
     public function default_template($school,$bot,$userId,$rp_token){
         $actions = array();
         $url=url("bind"."/".$school->id."/".$userId);
+        $thumb_nail=url('img/dexway-classroom-companion-ingles-uk.jpg');
         //$per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("綁定學生資料",$url);
         $per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("綁定學生資料",'bind_student2');
         array_push($actions,$per_btn_build);
         $per_btn_build2=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("聯絡安親班",'contact');
         array_push($actions,$per_btn_build2);
-        $btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder(null,$school->School_Name."\n"."家長您好，請選擇操作選項",null,$actions);
+        //$btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder(null,$school->School_Name."\n"."家長您好，請選擇操作選項",null,$actions);
+        $btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder($school->School_Name,"親愛的家長您好，\n請選擇操作選項。",$thumb_nail,$actions);
         $MessageBuild = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder("按鈕訊息回覆", $btn_build);
         if($rp_token==null){
             $result=$bot->pushMessage($userId,$MessageBuild);

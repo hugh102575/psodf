@@ -16,7 +16,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
 
-                <div class="card">
+                <div class="card shadow-sm">
                     <div class="card-header d-flex flex-row" >
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">安親班LINE@</h5>
                     </div>
@@ -69,7 +69,7 @@
                             <td class="enlarge_text">{{$school->LineChannelName}}</td>
                             </tr>
                             <tr>
-                            <th scope="row">Channel ID (邀請碼)</th>
+                            <th scope="row">LINE ID (邀請碼)</th>
                             <td class="enlarge_text">{{$school->LineID}}</td>
                             </tr>
                             {{--<tr>

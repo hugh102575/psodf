@@ -441,6 +441,7 @@ class SettingController extends Controller
             $result="http_error_1";
         }
 
+        $resultStatus_a=array();
         if(count($richmenus_a)!=0){
             foreach($richmenus_a as $r_id){
                 $url_2 = "https://api.line.me/v2/bot/richmenu/".$r_id;
@@ -449,9 +450,20 @@ class SettingController extends Controller
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 $json_result = curl_exec($ch);
+                $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                array_push($resultStatus_a,$resultStatus);
             }
-            $result="rm_all_richmenus";
             curl_close($ch);
+            
+            foreach($resultStatus_a as $rs){
+                if($rs!=200){
+                    $result="http_error_2";
+                    break;
+                }else{
+                    $result="rm_all_richmenus";
+                }
+            }
+            
         }else{
             curl_close($ch);
         }

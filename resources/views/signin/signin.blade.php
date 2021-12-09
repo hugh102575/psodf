@@ -16,7 +16,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
 
-                <div class="card mb-5">
+                <div class="card shadow-sm mb-5">
                     <div class="card-header d-flex flex-row" >
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">A. 以班級查詢</h5>
                     </div>
@@ -75,7 +75,7 @@
 
                 </div>
 
-                <div class="card ">
+                <div class="card shadow-sm">
                     <div class="card-header d-flex flex-row" >
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">B. 以個人查詢</h5>
                     </div>

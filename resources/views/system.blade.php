@@ -15,7 +15,7 @@
             <div class="col-md-8">
             <form action="{{ route('system.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="card">
+                <div class="card shadow-sm">
                     <div class="card-header d-flex flex-row" >
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">系統設定</h5>
                     </div>

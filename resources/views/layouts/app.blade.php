@@ -26,11 +26,14 @@
     .my_nav_text{
         color:  #6B5B95 !important;
     }
+    .my_gray{
+        //background-color:  #f5f5f5;
+    }
 </style>
 @yield('app_css')
 </head>
 <body class="app">
-    <div id="app">
+    <div id="app" class="my_gray">
     @guest
         <nav class="navbar navbar-expand-md navbar-light my_nav_color shadow-sm">
             <div class="container">

@@ -26,7 +26,7 @@
                 日期: {{$date}}{{$dayofweek}}<br>班級: {{$classs_name}}<br><br>查詢結果如下
             </div>
             @endif
-                <div class="card">
+                <div class="card shadow-sm">
                     <div class="card-header d-flex flex-row" >
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">以班級查詢</h5>
                     </div>
@@ -221,7 +221,7 @@
                 </div>
             @endforeach
 
-                <div class="card">
+                <div class="card shadow-sm">
                         <div class="card-header d-flex flex-row" >
                             <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人姓名查詢</h5>
                         </div>
@@ -324,7 +324,7 @@
                 </div>
                 @endif--}}
 
-                <div class="card">
+                <div class="card shadow-sm">
                         <div class="card-header d-flex flex-row" >
                             <h5 class="font-weight-bold text-success mr-5 my_nav_text">以個人學號查詢</h5>
                         </div>
