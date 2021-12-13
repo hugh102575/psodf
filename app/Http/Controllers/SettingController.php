@@ -476,7 +476,7 @@ class SettingController extends Controller
         //$userId="1234";
         $url_1 = "https://api.line.me/v2/bot/richmenu";
         //$bind_url=url("bind"."/".$school->id."/".$userId);
-        $rich_menu_obj =
+        /*$rich_menu_obj =
                         [
                             'size' => ['width' => 2500 , 'height' => 843],
                             'selected' => false,
@@ -490,11 +490,7 @@ class SettingController extends Controller
                                         'width' => 1250,
                                         'height' =>843
                                     ],
-                                    /*'action'=>[
-                                        'type' => 'uri',
-                                        'label' => '綁定學生資料',
-                                        'uri' => $bind_url
-                                    ]*/
+                
 
                                     'action'=>[
                                         'type' => 'postback',
@@ -518,7 +514,48 @@ class SettingController extends Controller
 
                             ]
                         ]
-                    ;
+                    ;*/
+                    $rich_menu_obj =
+                    [
+                        'size' => ['width' => 800 , 'height' => 270],
+                        'selected' => false,
+                        'name' =>  'my_richmenu',
+                        'chatBarText' => '主選單',
+                        'areas' => [
+                            [
+                                'bounds' => [
+                                    'x' => 0,
+                                    'y' => 0,
+                                    'width' => 400,
+                                    'height' =>270
+                                ],
+            
+
+                                'action'=>[
+                                    'type' => 'postback',
+                                    'label' => '主選單',
+                                    'data' => 'main_menu'
+                                ]
+                            ],
+                            [
+                                    'bounds' => [
+                                        'x' => 400,
+                                        'y' => 0,
+                                        'width' => 400,
+                                        'height' =>270
+                                    ],
+                
+    
+                                    'action'=>[
+                                        'type' => 'postback',
+                                        'label' => '聯絡安親班',
+                                        'data' => 'contact'
+                                    ]
+                            ]
+
+                        ]
+                    ]
+                ;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization ));
@@ -538,7 +575,7 @@ class SettingController extends Controller
 
         //$richMenuId="richmenu-44974ac3bce7f6f76fa7a563b57f0969";
         if(isset($richMenuId)){
-            $image_path=url('img/rich_menu2.png');
+            $image_path=url('img/rich_menu_main2.png');
             $url_2 = "https://api-data.line.me/v2/bot/richmenu/".$richMenuId."/content";
             //$ch_2 = curl_init();
             curl_setopt($ch, CURLOPT_POST, 1);

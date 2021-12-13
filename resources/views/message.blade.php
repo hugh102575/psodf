@@ -217,8 +217,8 @@
                             <tr class="my_nav_color text-light">
                                 <th>範本名稱</th>
                                 <th>內容</th>
-                                <th>修改</th>
-                                <th>套用</th>
+                                <th class="no-sort">修改</th>
+                                <th class="no-sort">套用</th>
                                 <th class="hidden_object"></th>
                             </tr>
                             </thead>
@@ -259,7 +259,7 @@
 <script>
 document.getElementById('nav_title').innerHTML="<small>訊息傳送</small>";
 $(document).ready(function() {
-    $('#message_table').DataTable({
+    $('table.dataTable').DataTable({
         pageLength: 10,
         order: [],
         responsive: true,
@@ -279,7 +279,11 @@ $(document).ready(function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": ""}
+        "oSearch": {"sSearch": ""},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 
 

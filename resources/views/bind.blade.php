@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
 
-        <div class="col-md-6">
+        <div class="col-md-12">
         <h1 class="my_nav_text text-center mb-5 font-weight-bold">{{$school->School_Name}}</h1>
         @if(session()->has('success_msg'))
             <div class="alert alert-success mb-3" name="alert_msg">
@@ -24,7 +24,7 @@
             <form action="{{ route('bind.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
             <div class="card">
-                <div class="card-header "><span class="font-weight-bold my_nav_text enlarge_text">家長綁定學生資料</span><br>
+                <div class="card-header "><span class="font-weight-bold my_nav_text enlarge_text">家長綁定孩子資料</span><br>
                 <small>當小朋友到班時本系統會自動通知您</small>
                 </div>
 

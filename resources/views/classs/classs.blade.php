@@ -388,8 +388,8 @@
                                     <th>梯次</th>
                                     <th>學生數</th>
                                     <th>備註</th>
-                                    <th>學生名單</th>
-                                    <th>設定</th>
+                                    <th class="no-sort">學生名單</th>
+                                    <th  class="no-sort">設定</th>
                                     <th class="hidden_object"></th>
                                 </tr>
                                 </thead>
@@ -453,10 +453,10 @@
                                     <th>學號</th>
                                     <th>學生班級</th>
                                     <th>家長的LINE</th>
-                                    <th>相片建檔</th>
+                                    <th class="no-sort">相片建檔</th>
                                     <th>備註</th>
 
-                                    <th>設定</th>
+                                    <th class="no-sort">設定</th>
                                     <th class="hidden_object"></th>
                                 </tr>
                                 </thead>
@@ -535,7 +535,11 @@ $(document).ready(function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": ""}
+        "oSearch": {"sSearch": ""},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 } );
 $('#classs_store_cancel').click(function() {
@@ -827,7 +831,11 @@ show_all_btn.addEventListener("click", function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": ""}
+        "oSearch": {"sSearch": ""},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 });
 var show_all_btn2=document.getElementById('show_all_btn2');
@@ -853,7 +861,11 @@ show_all_btn2.addEventListener("click", function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": ""}
+        "oSearch": {"sSearch": ""},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 });
 
@@ -886,7 +898,11 @@ show_btns.forEach(function(item,index){
                     }
                 },
                 destroy:true,
-                "oSearch": {"sSearch": btn_value}
+                "oSearch": {"sSearch": btn_value},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
             } );
         });
     });
@@ -919,7 +935,11 @@ show_btns2.forEach(function(item,index){
                     }
                 },
                 destroy:true,
-                "oSearch": {"sSearch": btn_value}
+                "oSearch": {"sSearch": btn_value},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
             } );
         });
     });

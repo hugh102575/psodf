@@ -39,6 +39,15 @@
                         <button class="btn btn-link  shadow-none" type="button" id="show_not_signed"><small>尚未簽到</small></button>
                         <button class="btn btn-link  shadow-none" type="button" id="show_all"><small>全部顯示</small></button>
                         </div>
+                        @if($classs_name=="不分班級")
+                        <div class="mb-3">
+                        <span class="small">搜尋班級:</span>   
+                        @foreach($all_classs as $ac)
+                        <button class="btn btn-link  shadow-none small show_signed_classs" id="show_signed_classs_<?php echo $ac->id; ?>" type="button" ><small>{{$ac->Classs_Name}}</small></button>
+                        <input class="hidden_object" id="show_signed_classs_value_<?php echo $ac->id; ?>" value="{{$ac->Classs_Name}}">
+                        @endforeach
+                        </div>
+                        @endif
                         <div class="table-responsive">
                             <table class="table dataTable table-hover text-center text-middle" id="signin_table" width="100%" cellspacing="0">
                                 <thead>
@@ -214,7 +223,13 @@
                 @endif
                 <br><br>
                 @if($belong_sign!=0)
-                <span class="text-success">{{$belong_sign}}筆簽到/退資料</span>&nbsp;&nbsp;<button class="small query_s1_btn" id="st_{{$st->STU_id}}">查看</button>
+                    @if(count($student)==1)
+                    <span class="text-success">{{$belong_sign}}筆簽到/退資料</span>
+                    @else
+                    <span class="text-success">{{$belong_sign}}筆簽到/退資料</span>&nbsp;&nbsp;<button class="small query_s1_btn" id="st_{{$st->STU_id}}">查看</button>
+                    @endif
+
+                {{--<span class="text-success">{{$belong_sign}}筆簽到/退資料</span>&nbsp;&nbsp;<button class="small query_s1_btn" id="st_{{$st->STU_id}}">查看</button>--}}
                 @else
                 <span class="text-danger">{{$belong_sign}}筆簽到/退資料</span>
                 @endif
@@ -235,7 +250,7 @@
                                             <th>學號</th>
                                             <th>班級</th>
                                             <th>簽到 / 簽退</th>
-                                            <th>簽到相片</th>
+                                            <th class="no-sort">簽到相片</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -280,7 +295,7 @@
                                     {{$belong_classs->Classs_Name}}
                                     @endif
                                     </td>
-                                    <td>{{$s_type}}</td>
+                                    <td class="text-success">{{$s_type}}</td>
                                     <td>
                                         <div>
                                         <img src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
@@ -337,7 +352,7 @@
                                         <th>日期</th>
                                         <th>時間</th>
                                         <th>簽到 / 簽退</th>
-                                        <th>簽到相片</th>
+                                        <th class="no-sort">簽到相片</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -359,7 +374,7 @@
                                     <tr>
                                     <td>{{$t1}}{{$dayofweek}}</td>
                                     <td>{{$t2}}</td>
-                                    <td>{{$s_type}}</td>
+                                    <td class="text-success">{{$s_type}}</td>
                                     <td>
                                         <div>
                                         <img src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
@@ -415,7 +430,11 @@ $(document).ready(function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": ""}
+        "oSearch": {"sSearch": ""},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 } );
 
@@ -446,7 +465,11 @@ show_signed.addEventListener("click", function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": "已簽"}
+        "oSearch": {"sSearch": "已簽"},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 });
 
@@ -473,7 +496,11 @@ show_signed_in.addEventListener("click", function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": "已簽到"}
+        "oSearch": {"sSearch": "已簽到"},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 });
 
@@ -500,7 +527,11 @@ show_signed_out.addEventListener("click", function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": "已簽退"}
+        "oSearch": {"sSearch": "已簽退"},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 });
 
@@ -527,7 +558,11 @@ show_not_signed.addEventListener("click", function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": "尚未簽到"}
+        "oSearch": {"sSearch": "尚未簽到"},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 });
 
@@ -554,7 +589,11 @@ show_all.addEventListener("click", function() {
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": ""}
+        "oSearch": {"sSearch": ""},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
 });
 }
@@ -586,10 +625,53 @@ query_s1_btn_c.forEach(function(item,index){
             }
         },
         destroy:true,
-        "oSearch": {"sSearch": st_id}
+        "oSearch": {"sSearch": st_id},
+        "columnDefs": [ {
+            "targets": 'no-sort',
+            "orderable": false,
+        } ]
     } );
     });
 });
-
+var show_signed_classs=document.querySelectorAll(".show_signed_classs")
+show_signed_classs.forEach(function(item,index){
+    var show_signed_classs_btn=document.getElementById(item.id);
+    show_signed_classs_btn.addEventListener("click", function() {
+        console.log(show_signed_classs_btn.id)
+        var sscb_id=(show_signed_classs_btn.id).replace("show_signed_classs_", "");
+        var sscb_input=document.getElementById('show_signed_classs_value_'+sscb_id);
+        if(sscb_input!=null){
+            var classs_name=sscb_input.value;
+        //var classs_name= docu.innerHTML;
+        $('#signin_table').DataTable({
+    //$('#dataTable').dataTable( {
+            pageLength: 10,
+            order: [],
+            responsive: true,
+            oLanguage: {
+                "sProcessing": "處理中...",
+                "sLengthMenu": "顯示 _MENU_ 項結果",
+                "sZeroRecords": "沒有匹配結果",
+                "sInfo": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+                "sInfoEmpty": "顯示第 0 至 0 項結果，共 0 項",
+                "sInfoFiltered": "(從 _MAX_ 項結果過濾)",
+                "sSearch": "搜尋:",
+                "oPaginate": {
+                    "sFirst": "首頁",
+                    "sPrevious": "上頁",
+                    "sNext": "下頁",
+                    "sLast": "尾頁"
+                }
+            },
+            destroy:true,
+            "oSearch": {"sSearch": classs_name},
+            "columnDefs": [ {
+                "targets": 'no-sort',
+                "orderable": false,
+            } ]
+        } );
+        }
+    });
+});
 </script>
 @endsection

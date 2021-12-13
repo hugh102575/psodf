@@ -115,6 +115,23 @@ class StudentRepository
         }
 
     }
+    public function parent_supervise($school_id,$LineID){
+        $my_child=array();
+        $school_st= student::where('School_id',$school_id)->get();
+        if(count($school_st)!=0){
+            foreach($school_st as $s){
+                if($s->parent_line_multi!=null){
+                    $parent_line_multi_a=json_decode($s->parent_line_multi,true);
+                    foreach($parent_line_multi_a as $p){
+                        if($p==$LineID){
+                            array_push($my_child,$s);
+                        }
+                    }
+                }
+            }
+        }
+        return $my_child;
+    }
 
 
 

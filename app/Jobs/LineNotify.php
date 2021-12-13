@@ -21,6 +21,7 @@ class LineNotify implements ShouldQueue
     protected $student;
     protected $sign;
     protected $image_path;
+    protected $created_at;
 
     /**
      * Create a new job instance.
@@ -29,12 +30,13 @@ class LineNotify implements ShouldQueue
      */
 
 
-    public function __construct(school $school, student $student,$image_path,$sign)
+    public function __construct(school $school, student $student,$image_path,$sign,$created_at)
     {
         $this->school=$school;
         $this->student=$student;
         $this->sign=$sign;
         $this->image_path=$image_path;
+        $this->created_at=$created_at;
     }
 
     /**
@@ -93,6 +95,11 @@ class LineNotify implements ShouldQueue
             }
 
             $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+            if($this->sign=="in"){
+                $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$this->created_at);
+            }else{
+                $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$this->created_at);
+            }
 
             $url=str_replace('http://','https://',url($this->image_path));
             //$ngrok="https://ca04-61-220-205-150.ngrok.io";
@@ -100,6 +107,7 @@ class LineNotify implements ShouldQueue
             $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
 
             $MessageBuilder->add($push_build1);
+            $MessageBuilder->add($push_build_time);
             $MessageBuilder->add($push_build2);
 
             $parent_line_multi=json_decode($this->student->parent_line_multi);

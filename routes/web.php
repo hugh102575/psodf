@@ -33,6 +33,7 @@ Route::get('/', function () {
 });
 Route::get('/bind/{school_id}/{LineID}', [AppController::class, 'bind'])->name('bind');
 Route::post('/bind/update', [AppController::class, 'bind_update'])->name('bind.update');
+Route::get('/supervise/{school_id}/{LineID}', [AppController::class, 'supervise'])->name('supervise');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/basic', [HomeController::class, 'basic'])->name('basic');
 Route::post('/basic', [SettingController::class, 'basic_update'])->name('basic.update');

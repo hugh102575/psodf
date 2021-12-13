@@ -81,6 +81,9 @@ class LINEController extends Controller
                         $result=$bot->pushMessage($userId,$push_build);
                     }
                 }
+                else if($postback_data=="main_menu"){
+                    $this->default_template($school,$bot,$userId,$event['replyToken']);
+                }
             }else{
                 $this->default_template($school,$bot,$userId,$event['replyToken']);
                 /*$message = $event['message'];
@@ -124,10 +127,18 @@ class LINEController extends Controller
     public function default_template($school,$bot,$userId,$rp_token){
         $actions = array();
         $url=url("bind"."/".$school->id."/".$userId);
+        $url2=url("supervise"."/".$school->id."/".$userId);
         $thumb_nail=url('img/dexway-classroom-companion-ingles-uk.jpg');
-        //$per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("綁定學生資料",$url);
-        $per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("綁定學生資料",'bind_student2');
+        $per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("綁定孩子資料",$url);
+        //$per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("綁定學生資料",'bind_student2');
         array_push($actions,$per_btn_build);
+
+
+        $per_btn_build3=new \LINE\LINEBot\TemplateActionBuilder\UriTemplateActionBuilder("查詢孩子簽到退",$url2);
+        //$per_btn_build=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("綁定學生資料",'bind_student2');
+        array_push($actions,$per_btn_build3);
+
+
         $per_btn_build2=new \LINE\LINEBot\TemplateActionBuilder\PostbackTemplateActionBuilder("聯絡安親班",'contact');
         array_push($actions,$per_btn_build2);
         //$btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder(null,$school->School_Name."\n"."家長您好，請選擇操作選項",null,$actions);

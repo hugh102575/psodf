@@ -143,7 +143,7 @@ class AppController extends Controller
                         if($result && $image_path){
                             $today=date('Y-m-d');
                             $now = date('Y-m-d H:i:s');
-                            LineNotify::dispatch($school,$student,$image_path,$sign);
+                            LineNotify::dispatch($school,$student,$image_path,$sign,$now);
                             $return['status']="successed";
 
                             $signin=array();
@@ -198,8 +198,9 @@ class AppController extends Controller
 
     public function bind($school_id,$LineID){
         $school=$this->schoolRepo->find($school_id);
-        $decode=base64_decode(str_replace('_','/',$LineID));
-        return view('bind',['school'=>$school,'LineID'=>$decode]);
+        //$decode=base64_decode(str_replace('_','/',$LineID));
+        //return view('bind',['school'=>$school,'LineID'=>$decode]);
+        return view('bind',['school'=>$school,'LineID'=>$LineID]);
     }
     public function bind_update(Request $request){
         //dd($request->all());
@@ -211,7 +212,7 @@ class AppController extends Controller
         if($student){
             $add_line=$this->studentRepo->add_parent_line2($student,$userId);
             if($add_line){
-                $message="設定成功!\n".$student->name."的家長您好，\n"."之後小朋友到班時，本程式會自動通知您";
+                $message="設定成功!\n".$student->name."的家長您好，\n"."之後小朋友到班時，\n本系統會自動通知您。";
 
                 $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
                 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
@@ -262,6 +263,17 @@ class AppController extends Controller
     public function school_all_students(Request $request){
         $students=$request->user()->school->student;
         return $students;
+    }
+
+    public function supervise($school_id,$LineID){
+        $school=$this->schoolRepo->find($school_id);
+        $student=$this->studentRepo->parent_supervise($school_id,$LineID);
+        if(count($student)!=0){
+            $signin=$this->signinRepo->parent_supervise($school_id,$student);
+        }else{
+            $signin=array();
+        }
+        return view('supervise',['school'=>$school,'student'=>$student,'signin'=>$signin]);
     }
 
 }
