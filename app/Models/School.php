@@ -32,6 +32,7 @@ class school extends Model
         'LineChannelName',
         'thresh',
         'phone',
+        'address',
         'device_id',
         'sign_mode',
         'in_msg',

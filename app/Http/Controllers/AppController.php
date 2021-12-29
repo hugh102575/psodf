@@ -53,6 +53,9 @@ class AppController extends Controller
                     $return['thresh']=$user->school->thresh;
                     $return['sign_mode']=$user->school->sign_mode;
                     $return['error_msg']="";
+                    $return['backup_batch']=$user->school->batch;
+                    $return['backup_classs']=$user->school->classs;
+                    $return['backup_student']=$user->school->student;
                 }else{
                     $return['success']=false;
                     $return['error_msg']="使用非核可的裝置";
@@ -120,6 +123,11 @@ class AppController extends Controller
         $student=$this->studentRepo->find($id);
         $classs=$student->classs;
         $sign=$request['sign'];
+        if(isset($request['setTime'])){
+            $setTime=$request['setTime'];
+        }else{
+            $setTime=null;
+        }
 
         $new_img="image";
         $return=array();
@@ -128,7 +136,7 @@ class AppController extends Controller
             $file = $request->file($new_img);
             if ($file->isValid()){
                 //if($student && $student->parent_line){
-                if($student && $student->parent_line_multi){
+                if($student && isset($student->parent_line_multi)){
                     $date = date('Y_m_d_');
                     //$record=$this->signinRepo->find_record($id,$date);
                     //if($record){
@@ -139,11 +147,12 @@ class AppController extends Controller
                         $result=Storage::disk('public')->put($path, $request->file($new_img)->get());
                         if(Storage::disk('public')->exists($path))
                             $image_path = Storage::url($path);
+                            
 
                         if($result && $image_path){
                             $today=date('Y-m-d');
                             $now = date('Y-m-d H:i:s');
-                            LineNotify::dispatch($school,$student,$image_path,$sign,$now);
+                            LineNotify::dispatch($school,$student,$image_path,$sign,$now,$setTime);
                             $return['status']="successed";
 
                             $signin=array();
@@ -154,8 +163,20 @@ class AppController extends Controller
                             $signin['Student_Name']=$student->name;
                             $signin['sign']=$sign;
                             $signin['signin_img']=$image_path;
-                            $signin['created_date']=$today;
-                            $signin['created_at']=$now;
+                            if(isset($setTime)){
+                                $timestamp_ = strtotime($setTime);
+                                $timestamp=date('Y-m-d', $timestamp_);
+                                $signin['created_date']=$timestamp;
+                            }else{
+                                $signin['created_date']=$today;
+                            }
+                            if(isset($setTime)){
+                                $timestamp_ = strtotime($setTime);
+                                $timestamp=date('Y-m-d H:i:s', $timestamp_);
+                                $signin['created_at']=$timestamp;
+                            }else{
+                                $signin['created_at']=$now;
+                            }
                             $this->signinRepo->store($signin);
                         }
                     //}
@@ -230,33 +251,69 @@ class AppController extends Controller
         }
     }
     public function manual_sign_check(Request $request){
+        $find=false;
         $stid=$request['stid'];
         $school_id=$request['school_id'];
         $student=$this->studentRepo->check_stuid($stid,$school_id);
         if($student){
             $classs=$this->classsRepo->find($student->Classs_id);
+            $find=true;
+            $type="single";
         }else{
             $student_a=$this->studentRepo->check_stuName($stid,$school_id);
-	    if(count($student_a)==1){
-		$student=$student_a[0];
-		$classs=$this->classsRepo->find($student->Classs_id);
+            if(count($student_a)==1){
+                $student=$student_a[0];
+                $classs=$this->classsRepo->find($student->Classs_id);
+                $find=true;
+                $type="single";
             }elseif(count($student_a)>1){
-		$error_msg="multi";
+                $find=true;
+                $type="multi";
             }else{
-		$error_msg="not found";
+                $error_msg="not found";
             }
         }
         $return=array();
-        if($student && $classs){
-            $return['found']=true;
-            $return['name']=$student->name;
-            $return['id']=$student->id;
-            $return['classs']=$classs->Classs_Name;
-            $return['STU_id']=$student->STU_id;
+      
+        if($find){
+        //if($student && $classs){
+            if($type=="single"){
+                $return['found']=true;
+                $return['name']=$student->name;
+                $return['id']=$student->id;
+                $return['classs']=$classs->Classs_Name;
+                $return['STU_id']=$student->STU_id;
+                $return['type']="single";
+            }elseif($type=="multi"){
+                $student_a_id=array();
+                $student_a_name=array();
+                $student_a_STU_id=array();
+                $student_a_classs=array();
+                foreach($student_a as $st){
+                    array_push($student_a_id,$st->id);
+                }
+                foreach($student_a as $st){
+                    array_push($student_a_name,$st->name);
+                }
+                foreach($student_a as $st){
+                    array_push($student_a_STU_id,$st->STU_id);
+                }
+                foreach($student_a as $st){
+                    $c=$this->classsRepo->find($st->Classs_id);
+                    array_push($student_a_classs,$c->Classs_Name);
+                }
+                $return['found']=true;
+                $return['type']="multi";
+                $return['student_a_id']=$student_a_id;
+                $return['student_a_name']=$student_a_name;
+                $return['student_a_STU_id']=$student_a_STU_id;
+                $return['student_a_classs']=$student_a_classs;
+            }
         }else{
             $return['found']=false;
-	    $return['error_msg']=$error_msg;
+            $return['error_msg']=$error_msg;
         }
+        
         return json_encode($return);
     }
 

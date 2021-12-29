@@ -22,6 +22,7 @@ class LineNotify implements ShouldQueue
     protected $sign;
     protected $image_path;
     protected $created_at;
+    protected $setTime;
 
     /**
      * Create a new job instance.
@@ -30,13 +31,14 @@ class LineNotify implements ShouldQueue
      */
 
 
-    public function __construct(school $school, student $student,$image_path,$sign,$created_at)
+    public function __construct(school $school, student $student,$image_path,$sign,$created_at,$setTime)
     {
         $this->school=$school;
         $this->student=$student;
         $this->sign=$sign;
         $this->image_path=$image_path;
         $this->created_at=$created_at;
+        $this->setTime=$setTime;
     }
 
     /**
@@ -96,9 +98,21 @@ class LineNotify implements ShouldQueue
 
             $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
             if($this->sign=="in"){
-                $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$this->created_at);
+                if(isset($this->setTime)){
+                    $timestamp_ = strtotime($this->setTime);
+                    $timestamp=date('Y-m-d H:i:s', $timestamp_);
+                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$timestamp);
+                }else{
+                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$this->created_at);
+                }
             }else{
-                $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$this->created_at);
+                if(isset($this->setTime)){
+                    $timestamp_ = strtotime($this->setTime);
+                    $timestamp=date('Y-m-d H:i:s', $timestamp_);
+                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$timestamp);
+                }else{
+                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$this->created_at);
+                }
             }
 
             $url=str_replace('http://','https://',url($this->image_path));

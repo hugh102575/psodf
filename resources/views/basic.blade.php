@@ -54,6 +54,18 @@
 
                             </div>
 
+                            <div class="form-group row">
+                            <div class="col-sm-4" >
+                            <label for="manager_address" class="font-weight-bold my_nav_text">聯絡地址</label>
+                            </div>
+                            <div class="col-sm-6" >
+                            <input class="form-control"  type="text" name="manager_address" id="manager_address" placeholder="請輸入聯絡地址" required="required" value="{{Auth::user()->school->address}}" >
+                            </div>
+
+
+
+                            </div>
+
                     </div>
                     <button  type="submit" class="mt-3 btn my_nav_color text-light float-right">更新資料</button>
                 </div>

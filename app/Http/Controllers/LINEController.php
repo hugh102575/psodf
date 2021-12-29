@@ -63,8 +63,11 @@ class LINEController extends Controller
                     }
                     //$result=$bot->pushMessage($userId,$push_build);
                 }else if($postback_data=="contact"){
-                    $message="<".$school->School_Name.">"."\n"."聯絡人: ".$owner->name."\n"."聯絡電話: ".$school->phone;
-                    $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+                    $message="$ "."<".$school->School_Name.">"."\n"."聯絡人: ".$owner->name."\n"."聯絡電話: ".$school->phone."\n"."聯絡地址: \n".$school->address;
+                    $emoji1 = new \LINE\LINEBot\MessageBuilder\Text\EmojiBuilder(0, '5ac21542031a6752fb806d55', '119');
+                    //$emoji2 = new \LINE\LINEBot\MessageBuilder\Text\EmojiBuilder(1, '5ac21542031a6752fb806d55', '119');
+                    $emojiText = new \LINE\LINEBot\MessageBuilder\Text\EmojiTextBuilder($message, $emoji1);
+                    $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($emojiText);
                     $rp_result=$bot->replyMessage($event['replyToken'],$push_build);
                     if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
                         $result=$bot->pushMessage($userId,$push_build);

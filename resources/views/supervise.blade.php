@@ -6,11 +6,30 @@
 .enlarge_text{
   font-size: x-large !important;
 }
-
+.zoom_img {
+    cursor: pointer;
+}
 </style>
 @endsection
 
 @section('content')
+<div class="modal fade" id="zoomModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div class="container-fluid">
+            <button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+                <div class="form-group text-center">
+                    <img class="img-fluid mb-3" id="zoom_result"/>
+                </div>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -119,7 +138,7 @@
                                     <!--<td>{{$s_type}}</td>-->
                                     <td>
                                         <div>
-                                        <img src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
+                                        <img class="zoom_img" src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
                                         </div>
                                     </td>
                                     </tr>
@@ -206,6 +225,16 @@ query_s1_btn_c.forEach(function(item,index){
     } );
     });
 });
+
+var zoom_img=document.querySelectorAll(".zoom_img")
+zoom_img.forEach(function(item,index){
+    item.addEventListener("click", function() {
+        console.log(this.src)
+        document.getElementById("zoom_result").src=this.src;
+        $('#zoomModal').modal('show');
+    });
+});
+
 </script>
 @endsection
 

@@ -3,10 +3,31 @@
 @section('css')
 <link href="{{asset('vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 <style>
+.zoom_img {
+    cursor: pointer;
+}
 </style>
 @endsection
 
 @section('stage')
+<div class="modal fade" id="zoomModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div class="container-fluid">
+            <button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+                <div class="form-group text-center">
+                    <img class="img-fluid mb-3"id="zoom_result"/>
+                    <div class="enlarge_text" id="zoom_result_name"></div>
+                </div>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+
 <form action="{{ route('classs.store') }}" method="POST" enctype="multipart/form-data">
 @csrf
 <div class="modal fade" id="ClasssModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -373,7 +394,7 @@
 
                     <div class="card-body">
                         <div class="mb-3">
-                            <span class="small">快速搜尋:</span>
+                            <span class="small">搜尋梯次:</span>
                         @foreach($school_batch as $bt)
                         <button class="btn btn-link show_btns shadow-none" id="show_btns_{{$loop->index+1}}" type="button"><small>{{$bt->Batch_Name}}</small></button>
                         <label class="hidden_object" id="show_btns_value_{{$loop->index+1}}">{{$bt->Batch_Name}}</label>
@@ -438,7 +459,7 @@
 
                     <div class="card-body">
                         <div class="mb-3">
-                        <span class="small">快速搜尋:</span>
+                        <span class="small">搜尋班級:</span>
                         @foreach($school_classs as $sc)
                         <button class="btn btn-link show_btns2 shadow-none" id="show_btns2_{{$loop->index+1}}" type="button"><small>{{$sc->Classs_Name}}</small></button>
                         <label class="hidden_object" id="show_btns_value2_{{$loop->index+1}}">{{$sc->Classs_Name}}</label>
@@ -479,7 +500,7 @@
                                     </td>
                                     <td>
                                     @if($student->profile!=null)
-                                    <img style="height: 5rem; width: 5rem;" src="{{$student->profile}}" />
+                                    <img class="zoom_img" style="height: 5rem; width: 5rem;" alt="{{$student->name}}" src="{{$student->profile}}" />
                                     @else
                                     <span class="text-danger">尚未建檔</span>
                                     @endif
@@ -512,6 +533,7 @@
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
+
 <script>
 document.getElementById('nav_title').innerHTML="<small>班級資料</small>";
 $(document).ready(function() {
@@ -943,5 +965,15 @@ show_btns2.forEach(function(item,index){
             } );
         });
     });
+
+var zoom_img=document.querySelectorAll(".zoom_img")
+zoom_img.forEach(function(item,index){
+    item.addEventListener("click", function() {
+        console.log(this.src)
+        document.getElementById("zoom_result").src=this.src;
+        document.getElementById("zoom_result_name").innerHTML=this.alt;
+        $('#zoomModal').modal('show');
+    });
+});
 </script>
 @endsection

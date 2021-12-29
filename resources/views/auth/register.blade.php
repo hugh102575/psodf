@@ -65,6 +65,14 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="address" class="col-md-4 col-form-label text-md-right">安親班地址<span class="text-danger"> *</span></label>
+
+                            <div class="col-md-6">
+                                <input id="address" class="form-control" type="text" name="address" required="required" >
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}<span class="text-danger"> *</span></label>
 
                             <div class="col-md-6">

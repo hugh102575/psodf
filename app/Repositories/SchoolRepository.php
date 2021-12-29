@@ -17,6 +17,7 @@ class SchoolRepository
         $now = date('Y-m-d H:i:s');
         //if(isset($data['manager_phone'])||isset($data['manager_name'])){
             $data['phone']=$data['manager_phone'];
+            $data['address']=$data['manager_address'];
             $user=User::where('School_id',$id)->first();
             $user->update(array('name' => $data['manager_name']));
         //}

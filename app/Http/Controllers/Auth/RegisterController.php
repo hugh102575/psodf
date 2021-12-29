@@ -75,6 +75,7 @@ class RegisterController extends Controller
         School::create([
             'School_Name' => $data['school'],
             'phone' => $data['phone'],
+            'address' => $data['address'],
             'create_from' => $data['email'],
             'created_at' =>  $now
         ]);
