@@ -14,6 +14,7 @@
 @section('stage')
 <div class="container">
         <div class="row justify-content-center">
+
             <div class="col-md-8">
 
                 <div class="card shadow-sm mb-5">
@@ -135,6 +136,7 @@
 @endsection
 
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- Page level plugins -->
 <script src="{{asset('vendor/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
@@ -152,6 +154,7 @@ $('.datepicker').datepicker({
 	    language: 'zh-CN',
       todayHighlight: true
 	});
+
 var query_signin=document.getElementById('query_signin');
 query_signin.addEventListener("click", function() {
     var query_date=document.getElementById('query_date').value;

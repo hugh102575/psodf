@@ -68,6 +68,7 @@ class LINEController extends Controller
                     //$emoji2 = new \LINE\LINEBot\MessageBuilder\Text\EmojiBuilder(1, '5ac21542031a6752fb806d55', '119');
                     $emojiText = new \LINE\LINEBot\MessageBuilder\Text\EmojiTextBuilder($message, $emoji1);
                     $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($emojiText);
+                    //$push_build2 = new \LINE\LINEBot\MessageBuilder\LocationMessageBuilder($school->School_Name,$school->address,25.04395588388903, 121.52203109668106);
                     $rp_result=$bot->replyMessage($event['replyToken'],$push_build);
                     if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
                         $result=$bot->pushMessage($userId,$push_build);

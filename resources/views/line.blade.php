@@ -8,6 +8,48 @@
 .LineColor {
     background-color: rgb(29, 191, 33);
   }
+
+  #snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
 </style>
 @endsection
 
@@ -59,7 +101,7 @@
                     <form action="{{ route('line.update') }}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('確定要斷開LINE@連接嗎?\nLine@與簽到等相關功能將無法使用。');">
                     @csrf
                     <div class="table-responsive">
-                        <p class="mb-3">您的webhook網址為:&nbsp;&nbsp;<br><span class="small text-light my_nav_color">{{URL::to('/')}}/callback/{{Auth::user()->api_token}}</span><br>請於<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>設定，若您已經設定請忽略此訊息
+                        <p class="mb-3">您的webhook網址為:&nbsp;&nbsp;<br><span id="my_webhook_url" class="small text-light my_nav_color">{{URL::to('/')}}/callback/{{Auth::user()->api_token}}</span><br><button id="copy_webhook_btn" type="button" class="btn btn-light text-secondary"><small><i class="far fa-copy"></i> 複製</small></button><br><br>請於<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>設定，若您已經設定請忽略此訊息
                         </p>
                         <table class="table table-bordered overflow-auto" style='table-layout:fixed;'>
 
@@ -105,7 +147,7 @@
 
 
 
-
+                <div id="snackbar">webhook已複製到剪貼簿</div>
             </div>
         </div>
 </div>
@@ -113,6 +155,7 @@
 
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script src="{{asset('vendor/copy-paste-select-jqlipboard/copy-paste-select-jqlipboard/src/jQlipboard.js')}}"></script>
 <script>
 document.getElementById('nav_title').innerHTML="<small>LINE @串接</small>";
 var school={!! json_encode($school) !!};
@@ -156,6 +199,15 @@ qr_download.addEventListener("click", function() {
     //alert('ccc')
 var canvas = $('#qrcode canvas');
     download(canvas,school.School_Name+".png");
+});
+
+var copy_webhook_btn = document.getElementById('copy_webhook_btn');
+copy_webhook_btn.addEventListener("click", function() {
+     var x = document.getElementById("snackbar");
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    $('#my_webhook_url' ).copy();
+   
 });
 </script>
 @endsection

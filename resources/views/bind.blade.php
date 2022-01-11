@@ -54,11 +54,11 @@
 
 @section('app_js')
 <script>
-$("document").ready(function(){
+/*$("document").ready(function(){
     setTimeout(function(){
         $("[name='alert_msg']").hide();
     }, 3000 );
-});
+});*/
 </script>
 @endsection
 
