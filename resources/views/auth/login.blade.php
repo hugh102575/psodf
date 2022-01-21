@@ -24,7 +24,18 @@
             <div class="login d-flex align-items-center py-5">
                 <div class="container">
                     <div class="row">
+                            
                         <div class="col-lg-7 col-xl-6 mx-auto">
+                        @if(session()->has('login_success_msg'))
+                            <div class="alert alert-success mb-5" name="alert_msg">
+                                {{ session()->get('login_success_msg') }}
+                            </div>
+                        @endif
+                        @if(session()->has('login_error_msg'))
+                            <div class="alert alert-danger mb-5" name="alert_msg">
+                                {{ session()->get('login_error_msg') }}
+                            </div>
+                        @endif
                             <h3 class="">{{ config('app.name', 'Laravel') }}</h3> <br>
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf

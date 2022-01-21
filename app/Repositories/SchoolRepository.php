@@ -18,8 +18,9 @@ class SchoolRepository
         //if(isset($data['manager_phone'])||isset($data['manager_name'])){
             $data['phone']=$data['manager_phone'];
             $data['address']=$data['manager_address'];
-            $user=User::where('School_id',$id)->first();
-            $user->update(array('name' => $data['manager_name']));
+            $data['admin']=$data['manager_name'];
+            //$user=User::where('School_id',$id)->first();
+            //$user->update(array('name' => $data['manager_name']));
         //}
         $data['updated_at']=$now;
         $school = School::find($id);

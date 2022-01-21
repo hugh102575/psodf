@@ -6,8 +6,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\LINEController;
-
-
+use App\Http\Controllers\AdminController;
+use App\Http\Middleware\IsAdmin;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -63,7 +63,34 @@ Route::post('/message/delete', [SettingController::class, 'message_delete'])->na
 Route::post('/message/send', [SettingController::class, 'message_send'])->name('message.send');
 Route::get('/system', [HomeController::class, 'system'])->name('system');
 Route::post('/system', [SettingController::class, 'system_update'])->name('system.update');
+Route::get('/self_profile', [HomeController::class, 'self_profile'])->name('self_profile');
+Route::post('/self_profile/update', [SettingController::class, 'self_profile_update'])->name('self_profile.update');
+Route::get('/role', [HomeController::class, 'role'])->name('role');
+Route::get('/role/create', [HomeController::class, 'role_create'])->name('role.create');
+Route::get('/role/{RoleID}/edit', [HomeController::class, 'role_edit'])->name('role.edit');
+Route::post('/role/create_post', [SettingController::class, 'role_create_post'])->name('role.create_post');
+Route::post('/role/{RoleID}/edit_post', [SettingController::class, 'role_edit_post'])->name('role.edit_post');
+Route::post('/role/{RoleID}/delete_post', [SettingController::class, 'role_delete_post'])->name('role.delete_post');
+Route::get('/account', [HomeController::class, 'account'])->name('account');
+Route::get('/account/create', [HomeController::class, 'account_create'])->name('account.create');
+Route::get('/account/{id}/edit', [HomeController::class, 'account_edit'])->name('account.edit');
+Route::post('/account/create_post', [SettingController::class, 'account_create_post'])->name('account.create_post');
+Route::post('/account/{id}/edit_post', [SettingController::class, 'account_edit_post'])->name('account.edit_post');
+Route::post('/account/{id}/delete_post', [SettingController::class, 'account_delete_post'])->name('account.delete_post');
+Route::post('/account/{id}/change_active', [SettingController::class, 'change_active'])->name('account.change_active');
+
+
+
+
 
 Route::post('/callback/{id}', [LINEController::class, 'post'])->name('lintbot_api');
+
+
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login');
+Route::middleware([IsAdmin::class])->group(function () {
+    Route::get('/admin/home', [AdminController::class, 'home'])->name('admin.home');
+    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+}); 
 
 

@@ -21,7 +21,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'School_id'
+        'School_id',
+        'RoleID',
+        'active'
     ];
 
     /**
@@ -47,4 +49,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne('App\Models\School','id','School_id');
     }
+
+    public function role()
+    {
+        return $this->hasOne('App\Models\role','RoleID','RoleID');
+    }
+  
 }

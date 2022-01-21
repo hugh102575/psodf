@@ -35,54 +35,23 @@
 <div class="sidebar">
   <div class="sidebar-inner">
     <ul class="sidebar-menu scrollable position-relative pt-3">
-      <li id="close_sidebar_btn" class="nav-item dropdown hidden_object pb-3">
+      <li id="close_sidebar_btn" class="nav-item dropdown hidden_object mb-3">
         <a  class="sidebar-toggle nav-link " href="#">
           <i class="far fa-times-circle"></i>
         </a>
+        {{--<hr class="bg-light">--}}
       </li>
-      <li class="nav-item dropdown mb-3">
-        {{--<a class="nav-link wave-effect" href="{{ route('home') }}">
+
+      {{--<li class="nav-item dropdown mb-3">
+        <a class="nav-link wave-effect" href="{{ route('home') }}">
           <span class="icon-holder">
             <i class="fas fa-home"></i>
           </span>
           <span class="title">{{Auth::user()->school->School_Name}}</span>
-        </a>--}}
-        <a class="nav-link dropdown-toggle" href="#">
-          <span class="icon-holder">
-            <i class="fas fa-home"></i>
-          </span>
-          <span class="title">{{Auth::user()->school->School_Name}}</span>
-          <span class="arrow">
-            <i class="fas fa-angle-right"></i>
-          </span>
         </a>
-            @php
-            if(preg_match('(basic|system)', Route::currentRouteName()) === 1) {
-                $basic_dropdown=true;
-            }else{
-                $basic_dropdown=false;
-            }
-            @endphp
-            @if($basic_dropdown)
-            <ul class="dropdown-menu stay-open aaa">
-            @else
-            <ul class="dropdown-menu aaa">
-            @endif
-                <li class="nav-item dropdown">
-
-
-                    <a class="nav-link dropdown-toggle" href="#">
-                    <span><a href="{{route('basic')}}" class="{{ (preg_match('(basic)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : ' ' }}">基本資料</a></span>
-                    </a>
-
-                    <a class="nav-link dropdown-toggle" href="#">
-                    <span><a href="{{route('system')}}" class="{{ (preg_match('(system)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : ' ' }}">系統設定</a></span>
-                    </a>
-                </li>
-            </ul>
-
-
-      </li>
+      </li>--}}
+     
+      @if(str_contains(Auth::user()->role->authority, 'classs'))
       <li class="nav-item dropdown mb-3">
         <a class="nav-link dropdown-toggle" href="#">
           <span class="icon-holder">
@@ -93,6 +62,7 @@
             <i class="fas fa-angle-right"></i>
           </span>
         </a>
+        
 
         @php
         if(preg_match('(classs.classs|classs.student|batch)', Route::currentRouteName()) === 1) {
@@ -107,16 +77,16 @@
         <ul class="dropdown-menu aaa">
         @endif
 
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown  border-left rounded border-info">
             {{--<a class="nav-link dropdown-toggle" href="#">
               <span><a href="#" class="{{ (str_contains(Route::currentRouteName(),'classs.student')) ? 'my_nav_color enlarge_text ' : '' }}">學生名單</a></span>
             </a>--}}
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('classs.classs')}}" class="{{ (preg_match('(classs.classs|classs.student)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">班級資料</a></span>
+              <span><a href="{{route('classs.classs')}}" class="{{ (preg_match('(classs.classs|classs.student)', Route::currentRouteName()) === 1) ? 'my_nav_color  ' : '' }}">班級資料</a></span>
             </a>
 
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('batch')}}" class="{{ (preg_match('(batch)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">梯次</a></span>
+              <span><a href="{{route('batch')}}" class="{{ (preg_match('(batch)', Route::currentRouteName()) === 1) ? 'my_nav_color  ' : '' }}">梯次</a></span>
             </a>
 
             {{--<a class="nav-link dropdown-toggle" href="#">
@@ -125,7 +95,9 @@
           </li>
         </ul>
       </li>
+      @endif
 
+      @if(str_contains(Auth::user()->role->authority, 'sign'))
       <li class="nav-item dropdown mb-3">
         <a class="nav-link dropdown-toggle" href="#">
           <span class="icon-holder">
@@ -152,60 +124,24 @@
 
 
 
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown border-left rounded border-info">
 
 
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('signin')}}" class="{{ (preg_match('(signin)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">查詢</a></span>
+              <span><a href="{{route('signin')}}" class="{{ (preg_match('(signin)', Route::currentRouteName()) === 1) ? 'my_nav_color  ' : '' }}">查詢</a></span>
             </a>
           </li>
         </ul>
 
 
-
+        {{--<hr class="bg-light">--}}
       </li>
+      @endif
 
 
 
-      <li class="nav-item dropdown mb-3">
-        <a class="nav-link dropdown-toggle" href="#">
-          <span class="icon-holder">
-          <i class="fab fa-line"></i>
-          </span>
-          <span class="title">LINE@ 串接</span>
-          <span class="arrow">
-            <i class="fas fa-angle-right"></i>
-          </span>
-        </a>
-        @php
-        if(preg_match('(line)', Route::currentRouteName()) === 1) {
-            $line_dropdown=true;
-        }else{
-            $line_dropdown=false;
-        }
-        @endphp
-
-        @if($line_dropdown)
-        <ul class="dropdown-menu stay-open aaa">
-        @else
-        <ul class="dropdown-menu aaa">
-        @endif
-
-
-
-          <li class="nav-item dropdown">
-
-
-            <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('line')}}" class="{{ (preg_match('(line)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">安親班LINE@</a></span>
-            </a>
-          </li>
-        </ul>
-
-
-
-      </li>
-
+      
+      @if(str_contains(Auth::user()->role->authority, 'message'))
       <li class="nav-item dropdown mb-3">
         <a class="nav-link dropdown-toggle" href="#">
           <span class="icon-holder">
@@ -232,15 +168,146 @@
 
 
 
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown border-left rounded border-info">
 
 
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('message')}}" class="{{ (preg_match('(message)', Route::currentRouteName()) === 1) ? 'my_nav_color enlarge_text ' : '' }}">訊息發送</a></span>
+              <span><a href="{{route('message')}}" class="{{ (preg_match('(message)', Route::currentRouteName()) === 1) ? 'my_nav_color  ' : '' }}">訊息發送</a></span>
             </a>
           </li>
-      </ul>
+        </ul>
+        {{--<hr class="bg-light">--}}
       </li>
+      @endif
+
+      @if(str_contains(Auth::user()->role->authority, 'line'))
+      <li class="nav-item dropdown mb-3">
+        <a class="nav-link dropdown-toggle" href="#">
+          <span class="icon-holder">
+          <i class="fab fa-line"></i>
+          </span>
+          <span class="title">LINE@串接</span>
+          <span class="arrow">
+            <i class="fas fa-angle-right"></i>
+          </span>
+        </a>
+        @php
+        if(preg_match('(line)', Route::currentRouteName()) === 1) {
+            $line_dropdown=true;
+        }else{
+            $line_dropdown=false;
+        }
+        @endphp
+
+        @if($line_dropdown)
+        <ul class="dropdown-menu stay-open aaa">
+        @else
+        <ul class="dropdown-menu aaa">
+        @endif
+
+
+
+          <li class="nav-item dropdown border-left rounded border-info">
+
+
+            <a class="nav-link dropdown-toggle" href="#">
+              <span><a href="{{route('line')}}" class="{{ (preg_match('(line)', Route::currentRouteName()) === 1) ? 'my_nav_color  ' : '' }}">安親班LINE@</a></span>
+            </a>
+          </li>
+        </ul>
+
+
+        {{--<hr class="bg-light">--}}
+      </li>
+      @endif
+
+      @if(str_contains(Auth::user()->role->authority, 'sys'))
+      <li class="nav-item dropdown mb-3">
+        {{--<a class="nav-link wave-effect" href="{{ route('home') }}">
+          <span class="icon-holder">
+            <i class="fas fa-home"></i>
+          </span>
+          <span class="title">{{Auth::user()->school->School_Name}}</span>
+        </a>--}}
+        <a class="nav-link dropdown-toggle" href="#">
+          <span class="icon-holder">
+            {{--<i class="fas fa-home"></i>--}}
+            <i class="fas fa-cog"></i>
+          </span>
+          <span class="title">設定</span>
+          <span class="arrow">
+            <i class="fas fa-angle-right"></i>
+          </span>
+        </a>
+            @php
+            if(preg_match('(basic|system)', Route::currentRouteName()) === 1) {
+                $sys_dropdown=true;
+            }else{
+                $sys_dropdown=false;
+            }
+            @endphp
+            @if($sys_dropdown)
+            <ul class="dropdown-menu stay-open aaa">
+            @else
+            <ul class="dropdown-menu aaa">
+            @endif
+                <li class="nav-item dropdown border-left rounded border-info">
+
+
+                    <a class="nav-link dropdown-toggle" href="#">
+                    <span><a href="{{route('basic')}}" class="{{ (preg_match('(basic)', Route::currentRouteName()) === 1) ? 'my_nav_color  ' : ' ' }}">基本設定</a></span>
+                    </a>
+
+                    <a class="nav-link dropdown-toggle" href="#">
+                    <span><a href="{{route('system')}}" class="{{ (preg_match('(system)', Route::currentRouteName()) === 1) ? 'my_nav_color  ' : ' ' }}">進階設定</a></span>
+                    </a>
+                </li>
+            </ul>
+
+            {{--<hr class="bg-light">--}}
+      </li>
+      @endif
+      
+      @if(str_contains(Auth::user()->role->authority, 'account'))
+      <li class="nav-item dropdown mb-3">
+        <a class="nav-link dropdown-toggle" href="#">
+          <span class="icon-holder">
+            <i class="fas fa-user-circle"></i>
+          </span>
+          <span class="title">帳號權限</span>
+          <span class="arrow">
+            <i class="fas fa-angle-right"></i>
+          </span>
+        </a>
+          @php
+          if(preg_match('(role|role.create|role.edit|account|account.create|account.edit)', Route::currentRouteName()) === 1) {
+              $account_dropdown=true;
+          }else{
+              $account_dropdown=false;
+          }
+          @endphp
+          @if($account_dropdown)
+          <ul class="dropdown-menu stay-open aaa">
+          @else
+          <ul class="dropdown-menu aaa">
+          @endif
+            <li class="nav-item dropdown border-left rounded border-info">
+
+
+                    <a class="nav-link dropdown-toggle" href="#">
+                    <span><a href="{{route('account')}}" class="{{ (preg_match('(account|account.create|account.edit)', Route::currentRouteName()) === 1) ? 'my_nav_color  ' : ' ' }}">帳號一覽</a></span>
+                    </a>
+
+                    <a class="nav-link dropdown-toggle" href="#">
+                    <span><a href="{{route('role')}}" class="{{ (preg_match('(role|role.create|role.edit)', Route::currentRouteName()) === 1) ? 'my_nav_color  ' : ' ' }}">角色一覽</a></span>
+                    </a>
+                </li>
+            </ul>
+
+
+      </li>
+      @endif
+
     </ul>
   </div>
 </div>
@@ -268,10 +335,14 @@
     <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                <i class="fas fa-user text-light"></i>&nbsp;&nbsp;{{ Auth::user()->name }}
+                                {{--<i class="fas fa-user text-light"></i>&nbsp;&nbsp;{{ Auth::user()->name }}--}}
+                                {{Auth::user()->school->School_Name}}&nbsp;&nbsp;/&nbsp;&nbsp;<i class="fas fa-user text-light"></i>&nbsp;&nbsp;{{ Auth::user()->name }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="{{route('self_profile')}}">
+                                       個人資料更改
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -357,8 +428,9 @@ window.addEventListener('resize', function(event){
 $("document").ready(function(){
     setTimeout(function(){
         $("[name='alert_msg']").hide();
-    }, 3000 );
+    }, 5000 );
 });
+
 </script>
 @yield('js')
 @endsection

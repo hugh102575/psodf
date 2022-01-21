@@ -36,11 +36,12 @@ class school extends Model
         'device_id',
         'sign_mode',
         'in_msg',
-        'out_msg'
+        'out_msg',
+        'admin'
     ];
 
     public function User(){
-        return $this->hasOne('App\Models\User','School_id','id');
+        return $this->hasMany('App\Models\User','School_id','id');
     }
     public function classs(){
         return $this->hasMany('App\Models\classs','School_id','id');
@@ -53,6 +54,9 @@ class school extends Model
     }
     public function signin(){
         return $this->hasMany('App\Models\signin','School_id','id');
+    }
+    public function role(){
+        return $this->hasMany('App\Models\role','School_id','id');
     }
 
 }

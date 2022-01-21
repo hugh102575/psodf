@@ -10,6 +10,8 @@ use Auth;
 use Illuminate\Support\Facades\View;
 use App\Repositories\MessageRepository;
 use App\Repositories\SchoolRepository;
+use App\Repositories\RoleRepository;
+use App\Repositories\UserRepository;
 
 class HomeController extends Controller
 {
@@ -24,8 +26,10 @@ class HomeController extends Controller
     protected $signinRepo;
     protected $messageRepo;
     protected $schoolRepo;
+    protected $roleRepo;
+    protected $userRepo;
     //protected $global_test;
-    public function __construct(ClasssRepository $classsRepo,StudentRepository $studentRepo,MessageRepository $messageRepo,SigninRepository $signinRepo,SchoolRepository $schoolRepo)
+    public function __construct(ClasssRepository $classsRepo,StudentRepository $studentRepo,MessageRepository $messageRepo,SigninRepository $signinRepo,SchoolRepository $schoolRepo, RoleRepository $roleRepo,UserRepository $userRepo)
     {
         $this->middleware(['auth','verified']);
         $this->classsRepo=$classsRepo;
@@ -33,6 +37,8 @@ class HomeController extends Controller
         $this->signinRepo=$signinRepo;
         $this->messageRepo=$messageRepo;
         $this->schoolRepo=$schoolRepo;
+        $this->roleRepo=$roleRepo;
+        $this->userRepo=$userRepo;
         //$this->global_test="global_test123123";
         //View::share("global_test",$this->global_test);
     }
@@ -48,11 +54,71 @@ class HomeController extends Controller
         return view('index',['now'=>$now]);
         //return view('index');
     }
-    public function classs(){
+    public function check_authority($permission){
+        $allow=false;
+        $page="?";
+        switch($permission){
+            case 'classs':
+                $page="班級";
+                if(str_contains(Auth::user()->role->authority, 'classs')){
+                    $allow=true;
+                }
+                break;
+            case 'sign':
+                $page="簽到退查詢";
+                if(str_contains(Auth::user()->role->authority, 'sign')){
+                    $allow=true;
+                }
+                break;
+            case 'message':
+                $page="訊息";
+                if(str_contains(Auth::user()->role->authority, 'message')){
+                    $allow=true;
+                }
+                break;
+            case 'line':
+                $page="LINE@串接";
+                if(str_contains(Auth::user()->role->authority, 'line')){
+                    $allow=true;
+                }
+                break;
+            case 'sys':
+                $page="設定";
+                if(str_contains(Auth::user()->role->authority, 'sys')){
+                    $allow=true;
+                }
+                break;
+            case 'account':
+                $page="帳號權限";
+                if(str_contains(Auth::user()->role->authority, 'account')){
+                    $allow=true;
+                }
+                break;
+            default:
+                $allow=false;
+                $page="?";
+        }
 
+        $permission_msg="很抱歉，您沒有存取"."「".$page."」"."頁面的權限";
+        $result=array();
+        $result[0]=$allow;
+        $result[1]=$permission_msg;
+        return $result;
+        //return $allow;
+        /*if(!$allow){
+            return redirect()->route('classs.classs')->with('error_msg', '您沒有存取此頁面的權限');
+        }*/
+    }
+    public function classs(){
+        $permission=$this->check_authority('classs');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
         $school_classs=Auth::user()->school->classs;
         $school_batch=Auth::user()->school->batch;
-        $all_student=$this->studentRepo->get_all_student();
+        //$all_student=$this->studentRepo->get_all_student();
+        $all_student=Auth::user()->school->student->sortBy('Classs_id')->values();
+        //$all_student=Auth::user()->school->student;
 
         if(isset($_GET['success_msg'])){
             return redirect()->route('classs.classs')->with('success_msg', $_GET['success_msg']);
@@ -64,6 +130,10 @@ class HomeController extends Controller
     }
 
     public function student($id){
+        $permission=$this->check_authority('classs');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
         $this_classs=$this->classsRepo->find($id);
         $classs_student_db=json_decode($this->studentRepo->get_student($id),true);
 
@@ -94,6 +164,10 @@ class HomeController extends Controller
         }
     }
     public function batch(){
+        $permission=$this->check_authority('classs');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
         $school_classs=Auth::user()->school->classs;
         $school_batch=Auth::user()->school->batch;
         if(isset($_GET['success_msg'])){
@@ -105,9 +179,69 @@ class HomeController extends Controller
         }
     }
     public function basic(){
+        $permission=$this->check_authority('sys');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
         return view('basic');
     }
+    public function self_profile(){
+        return view('self_profile');
+    }
+    public function role(){
+        $permission=$this->check_authority('account');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
+        $roles=Auth::user()->school->role;
+        return view('role.role',['roles'=>$roles]);
+    }
+    public function role_create(){
+        $permission=$this->check_authority('account');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
+        return view('role.create');
+    }
+    public function role_edit($RoleID){
+        $permission=$this->check_authority('account');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
+        $roles = $this->roleRepo->find($RoleID);
+        return view('role.edit', ['roles' => $roles]);
+    }
+    public function account(){
+        $permission=$this->check_authority('account');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
+        $accounts=Auth::user()->school->User;
+        return view('account.account',['accounts'=>$accounts]);
+    }
+    public function account_create(){
+        $permission=$this->check_authority('account');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
+        $roles=Auth::user()->school->role;
+        return view('account.create', ['roles' => $roles]);
+    }
+    public function account_edit($id){
+        $permission=$this->check_authority('account');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
+        $account = $this->userRepo->find($id);
+        $roles=Auth::user()->school->role;
+        return view('account.edit', ['account' => $account, 'roles' => $roles]);
+    }
+   
     public function line(){
+        $permission=$this->check_authority('line');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
         $school=Auth::user()->school;
         /*if($school->id==2){
             $rich_menu_a=$this->del_rich_menu($school,$school->LineChannelAccessToken);
@@ -131,11 +265,19 @@ class HomeController extends Controller
         return view('line',['school'=>$school]);
     }
     public function signin(){
+        $permission=$this->check_authority('sign');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
         $today=date('Y-m-d');
         $school_classs=Auth::user()->school->classs;
         return view('signin.signin',['today'=>$today,'school_classs'=>$school_classs]);
     }
     public function signin_result($q_type,$classs_id, $date){
+        $permission=$this->check_authority('sign');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
         $dayofweek_ = date('w', strtotime($date));
         $dayofweek =' ('.'星期' . ['日', '一', '二', '三', '四', '五', '六'][$dayofweek_].')';
         if($q_type=="c"){
@@ -148,7 +290,7 @@ class HomeController extends Controller
                 return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'classs_name'=>$classs_name,'dayofweek'=>$dayofweek]);
             }else{
                 $classs_name="不分班級";
-                $student=Auth::user()->school->student;
+                $student=Auth::user()->school->student->sortBy('Classs_id')->values();
                 $signin=Auth::user()->school->signin->where('created_date',$date);
                 //$signin=Auth::user()->school->signin->where('created_date',$date)->reverse()->values();
                 $all_classs=Auth::user()->school->classs;
@@ -178,10 +320,15 @@ class HomeController extends Controller
         }
     }
     public function message(Request $request){
+        $permission=$this->check_authority('message');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
         //dd($request->all());
         $school_classs=Auth::user()->school->classs;
         //$school_batch=Auth::user()->school->batch;
-        $all_student=$this->messageRepo->get_all_student();
+        $all_student=Auth::user()->school->student;
+        //$all_student=$this->messageRepo->get_all_student();
         $all_message=$this->messageRepo->get_all_message();
         if(isset($_GET['success_msg'])){
             return redirect()->route('message')->with('success_msg', $_GET['success_msg']);
@@ -195,6 +342,10 @@ class HomeController extends Controller
 
     }
     public function system(){
+        $permission=$this->check_authority('sys');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
         return view('system');
     }
     public function del_rich_menu($school,$access_token){

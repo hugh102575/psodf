@@ -7,6 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Auth;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\role;
 class SuccessfulLogin
 {
     /**
@@ -47,5 +48,6 @@ class SuccessfulLogin
             $school->out_msg="您的孩子@Name已經下課囉!";
             $school->save();
         }
+
     }
 }

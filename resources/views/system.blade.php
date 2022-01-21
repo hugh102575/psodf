@@ -17,7 +17,7 @@
                 @csrf
                 <div class="card shadow-sm">
                     <div class="card-header d-flex flex-row" >
-                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">系統設定</h5>
+                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">進階設定</h5>
                     </div>
                     <div class="card-body">
                         <div class="card py-4 px-5 mb-5">
@@ -113,7 +113,7 @@
 
 @section('js')
 <script>
-document.getElementById('nav_title').innerHTML="<small>系統設定</small>";
+document.getElementById('nav_title').innerHTML="<small>進階設定</small>";
 $('#keyword_hint').click(function(){
     var msg="@Name  學生姓名\n@School  安親班名稱\n@Phone  安親班電話";
     alert(msg);

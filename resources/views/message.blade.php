@@ -212,7 +212,7 @@
                         <button class="btn btn-link  shadow-none" type="button" id="show_all_btn"><small>全部</small></button>
                     </div>--}}
                     <div class="table-responsive">
-                        <table id="message_table" class="table dataTable table-hover text-center text-middle" id="dataTable" width="100%" cellspacing="0">
+                        <table id="message_table" class="table dataTable table-hover text-center text-middle table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                             <tr class="my_nav_color text-light">
                                 <th>範本名稱</th>
@@ -231,7 +231,7 @@
                                     <pre>{{ $message->data }}</pre>
                                 </div>
                                 </td>
-                                <td class="message_edit_btn"><a href="#"><i class="fas fa-pencil-alt  my_nav_text" data-target="#MessageModal_edit" data-toggle="modal"></i></a></td>
+                                <td class="message_edit_btn"><a class="my_nav_text"  href="#" data-target="#MessageModal_edit" data-toggle="modal"><i class="fas fa-pencil-alt" ></i> 編輯</a></td>
                                 <td class="message_send_btn"><a href="#"><i class="fas fa-paper-plane my_nav_text" data-target="#MessageModal_send" data-toggle="modal"></i></a></td>
                                 <td class="message_edit_id hidden_object">{{$message->id}}</td>
                             </tr>

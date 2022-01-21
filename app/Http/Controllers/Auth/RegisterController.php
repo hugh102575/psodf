@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\School;
+use App\Models\role;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -52,6 +53,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'admin' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -74,17 +76,30 @@ class RegisterController extends Controller
         $now = date('Y-m-d H:i:s');
         School::create([
             'School_Name' => $data['school'],
+            'admin' => $data['admin'],
             'phone' => $data['phone'],
             'address' => $data['address'],
             'create_from' => $data['email'],
             'created_at' =>  $now
         ]);
         $my_school = School::where('create_from',$data['email'])->first();
+
+        role::create([
+            'School_id' => $my_school->id,
+            'Role_Name' => '安親班管理員',
+            'Role_Desc' => '系統預設',
+            'authority' => 'classs,sign,message,line,sys,account',
+            'create_from' => 'system',
+            'created_at' =>  $now
+        ]);
+
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'School_id' =>  $my_school->id
+            'School_id' =>  $my_school->id,
+            'RoleID' => role::where('School_id',$my_school->id)->where('Role_Name','安親班管理員')->first()->RoleID,
         ]);
     }
 }

@@ -68,7 +68,7 @@
                         </div>
                         @endif
                         <div class="table-responsive">
-                            <table class="table dataTable table-hover text-center text-middle" id="signin_table" width="100%" cellspacing="0">
+                            <table class="table dataTable table-hover text-center text-middle table-bordered" id="signin_table" width="100%" cellspacing="0">
                                 <thead>
                                 <tr class="my_nav_color text-light">
 
@@ -261,7 +261,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table dataTable table-hover text-center text-middle" id="signin_table" width="100%" cellspacing="0">
+                                <table class="table dataTable table-hover text-center text-middle table-bordered" id="signin_table" width="100%" cellspacing="0">
                                     <thead>
                                         <tr class="my_nav_color text-light">
                                             <th>日期</th>
@@ -365,7 +365,7 @@
                         <div class="card-body">
 
                             <div class="table-responsive">
-                                <table class="table dataTable table-hover text-center text-middle" id="signin_table" width="100%" cellspacing="0">
+                                <table class="table dataTable table-hover text-center text-middle table-bordered" id="signin_table" width="100%" cellspacing="0">
                                     <thead>
                                     <tr class="my_nav_color text-light">
                                         <th>日期</th>

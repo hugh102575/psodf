@@ -8,7 +8,10 @@ use App\Repositories\BatchRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\SchoolRepository;
 use App\Repositories\MessageRepository;
+use App\Repositories\UserRepository;
+use App\Repositories\RoleRepository;
 use Auth;
+use Validator;
 
 class SettingController extends Controller
 {
@@ -16,8 +19,10 @@ class SettingController extends Controller
     protected $batchRepo;
     protected $studentRepo;
     protected $schoolRepo;
+    protected $userRepo;
+    protected $roleRepo;
 
-    public function __construct(ClasssRepository $classsRepo,BatchRepository $batchRepo,StudentRepository $studentRepo,SchoolRepository $schoolRepo,MessageRepository $messageRepo)
+    public function __construct(ClasssRepository $classsRepo,BatchRepository $batchRepo,StudentRepository $studentRepo,SchoolRepository $schoolRepo,MessageRepository $messageRepo,UserRepository $userRepo, RoleRepository $roleRepo)
     {
         $this->middleware(['auth','verified']);
         $this->classsRepo=$classsRepo;
@@ -25,6 +30,8 @@ class SettingController extends Controller
         $this->studentRepo=$studentRepo;
         $this->schoolRepo=$schoolRepo;
         $this->messageRepo=$messageRepo;
+        $this->userRepo=$userRepo;
+        $this->roleRepo=$roleRepo;
     }
 
     public function classs_store(Request $request){
@@ -198,11 +205,190 @@ class SettingController extends Controller
     public function basic_update(Request $request){
         $result=$this->schoolRepo->update($request->all());
         if($result){
-            return redirect()->route('basic')->with('success_msg', '基本資料已更新！');
+            return redirect()->route('basic')->with('success_msg', '基本設定已更新！');
         }else{
-            return redirect()->route('basic')->with('error_msg', '基本資料更新失敗！');
+            return redirect()->route('basic')->with('error_msg', '基本設定更新失敗！');
         }
     }
+    public function self_profile_update(Request $request){
+        //dd($request->all());
+        if($request->input('button')=="m1"){
+            $result=$this->userRepo->update($request->all());
+            if($result){
+                return redirect()->route('self_profile')->with('success_msg', '個人姓名已更新！');
+            }else{
+                return redirect()->route('self_profile')->with('error_msg', '個人姓名更新失敗！');
+            }
+        }elseif($request->input('button')=="m2"){
+            
+            if(!Hash::check ($request->input('profilePW_old'),Auth::user()->password)){
+                return redirect()->route('self_profile')->with('error_msg', '使用者密碼輸入錯誤!');
+            }elseif($request->input('profilePW_new')!=$request->input('profilePW_new2')){
+                return redirect()->route('self_profile')->with('error_msg', '新密碼確認不一致!');
+            }elseif($request->input('profilePW_new')==$request->input('profilePW_old')){
+                return redirect()->route('self_profile')->with('error_msg', '新舊密碼相同!');
+            }else{
+                $validator = Validator::make($request->all(),[
+                    'profilePW_new' => 'required|string|min:8',
+                ]);
+                if ($validator->fails()) {
+                    return redirect()->route('self_profile')->with('error_msg', '新密碼太短，至少8個字元!');
+                }else{
+                    $result=$this->userRepo->update($request->all());
+                    if($result){
+                        Auth::logout();
+                        return redirect()->route('login')->with('login_success_msg', '密碼已更新，請重新登入!');
+                        //return redirect()->route('self_profile')->with('success_msg', '密碼已更新!');
+                    }else{
+                        return redirect()->route('self_profile')->with('error_msg', '密碼更新失敗!');
+                    }
+                }
+            }
+        }
+       
+    }
+
+    public function role_create_post(Request $request){
+        if($this->roleRepo->check_name($request->input('Role_Name'))){
+            return redirect()->route('role')->with('error_msg', '新增失敗，該角色名稱已存在！');
+        }else{
+            if(isset(request()->authority))
+                $roles = $this->roleRepo->create(request()->only('Role_Name', 'Role_Desc', 'authority'));
+            else
+                $roles = $this->roleRepo->create(request()->only('Role_Name', 'Role_Desc'));
+
+            if (!$roles) {
+                return redirect()->route('role')->with('error_msg', '角色新增失敗！');
+            }
+        }
+    
+        return redirect()->route('role')->with('success_msg', '角色新增成功！');
+    }
+    public function role_edit_post(Request $request,$RoleID){
+        if($this->roleRepo->check_name2($request->input('Role_Name'),$RoleID)){
+            return redirect()->route('role')->with('error_msg', '編輯失敗，該角色名稱已存在！');
+        }else{
+            if(isset(request()->authority))
+                $roles = $this->roleRepo->update(request()->only('Role_Name', 'Role_Desc', 'authority'),$RoleID);
+            else
+                $roles = $this->roleRepo->update(request()->only('Role_Name', 'Role_Desc'),$RoleID);
+
+            if (!$roles) {
+                return redirect()->route('role')->with('error_msg', '角色編輯失敗！');
+            }
+        }
+
+        return redirect()->route('role')->with('success_msg', '角色編輯成功！');
+    }
+    public function role_delete_post(Request $request,$RoleID){
+        $result=$this->roleRepo->delete($RoleID);
+
+        if($result=="role_conflict"){
+            return redirect()->route('role')->with('error_msg', '角色刪除失敗，此角色正在使用中！');
+        }
+
+
+        if($result){
+            return redirect()->route('role')->with('success_msg', '角色已刪除！');
+        }else{
+            return redirect()->route('role')->with('error_msg', '角色刪除失敗！');
+        }
+    }
+    public function account_create_post(Request $request){
+        //dd($request->all());
+        $messages = [
+            'required'    => '此欄位為必填',
+            'email.unique'    => '此信箱已有使用者註冊',
+            'password.regex' => '使用者密碼不符合規範',
+            'password.confirmed' => '密碼確認不相符',
+            'max' => '此欄位限制最大字數為:max',
+            'min' => '此欄位限制最少字數為:min',
+        ];
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|max:100|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'RoleID' => 'required'
+        ], $messages);
+
+        if ($validator->fails()) {
+            return redirect()->route('account.create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $account = $this->userRepo->create(request()->only('name', 'email', 'password', 'RoleID'));
+        if (!$account) {
+            return redirect()->route('account')->with('error_msg', '帳號新增失敗！');
+        }
+
+        return redirect()->route('account')->with('success_msg', '帳號新增成功！');
+    }
+    public function account_edit_post(Request $request,$id){
+        //dd($request->all());
+        $check_only_admin=$this->userRepo->check_only_admin($id, request()->RoleID);
+        if($check_only_admin != 'admin_only_me_failed' && $check_only_admin != 'no_admin'){
+            $result = $this->userRepo->update_account($id, request()->only('name', 'RoleID'));
+            if($result){
+                return redirect()->route('account')->with('success_msg', '帳號資料已更新！');
+            }else{
+                return redirect()->route('account')->with('error_msg', '帳號更新失敗！');
+            }
+        }else{
+            return redirect()->route('account')->with('error_msg', '帳號更新失敗，至少需要一名管理員！');
+        }
+        
+    }
+
+    public function account_delete_post(Request $request,$id){
+        //dd($request->all());
+        $account=$this->userRepo->find($id);
+        $role_name=$account->role->Role_Name;
+        if($role_name=="安親班管理員"){
+            return redirect()->route('account')->with('error_msg', '刪除失敗!無法刪除管理員的帳號，如需刪除，請先指派其他角色');
+        }else{
+            $result=$this->userRepo->delete($id);
+            if($result){
+                return redirect()->route('account')->with('success_msg', '帳號已刪除！');
+            }else{
+                return redirect()->route('account')->with('error_msg', '帳號刪除失敗！');
+            }
+        }
+    }
+
+    public function change_active(Request $request,$id){
+        //echo $id;
+        //dd($request->all());
+        $account=$this->userRepo->find($id);
+        $role_name=$account->role->Role_Name;
+
+        if($request->input('current_status')==1){
+            $new_status=0;
+        }elseif($request->input('current_status')==0){
+            $new_status=1;
+        }
+        
+        if($role_name=="安親班管理員" && $new_status==0){
+            return redirect()->route('account')->with('error_msg', '停用失敗!無法停用管理員的帳號，如需停用，請先指派其他角色');
+        }else{
+            $result=$this->userRepo->change_active($id,$new_status);
+            if($result[1]==1){
+                if($result[0]){
+                    return redirect()->route('account')->with('success_msg', '帳號已啟用！');
+                }else{
+                    return redirect()->route('account')->with('error_msg', '帳號啟用失敗！');
+                }
+            }elseif($result[1]==0){
+                if($result[0]){
+                    return redirect()->route('account')->with('success_msg', '帳號已停用！');
+                }else{
+                    return redirect()->route('account')->with('error_msg', '帳號停用失敗！');
+                }
+            }
+        }
+
+    }
+    
     public function line_update(Request $request){
         //dd($request->all());
         $school = Auth::user()->school;
@@ -262,9 +448,9 @@ class SettingController extends Controller
     public function system_update(Request $request){
         $result=$this->schoolRepo->sys_update($request->all());
         if($result){
-            return redirect()->route('system')->with('success_msg', '系統設定已更新！');
+            return redirect()->route('system')->with('success_msg', '進階設定已更新！');
         }else{
-            return redirect()->route('system')->with('error_msg', '系統設定更新失敗！');
+            return redirect()->route('system')->with('error_msg', '進階設定更新失敗！');
         }
     }
     public function message_store(Request $request){

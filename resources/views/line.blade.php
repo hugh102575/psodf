@@ -100,10 +100,14 @@
                     @else
                     <form action="{{ route('line.update') }}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('確定要斷開LINE@連接嗎?\nLine@與簽到等相關功能將無法使用。');">
                     @csrf
+                    
+                    <span class="small d-flex justify-content-center">請於<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>設定，若您已經設定請忽略此訊息</span>
+
+                    <div class="card p-3 mb-5">
+                        <div class="">您的webhook網址為:&nbsp;&nbsp;<br><span id="my_webhook_url" class="small text-light my_nav_color">{{URL::to('/')}}/callback/{{Auth::user()->api_token}}</span><br><button id="copy_webhook_btn" type="button" class="btn btn-light text-secondary shadow-sm"><small><i class="far fa-copy"></i> 複製</small></button></div>
+                    </div>
                     <div class="table-responsive">
-                        <p class="mb-3">您的webhook網址為:&nbsp;&nbsp;<br><span id="my_webhook_url" class="small text-light my_nav_color">{{URL::to('/')}}/callback/{{Auth::user()->api_token}}</span><br><button id="copy_webhook_btn" type="button" class="btn btn-light text-secondary"><small><i class="far fa-copy"></i> 複製</small></button><br><br>請於<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>設定，若您已經設定請忽略此訊息
-                        </p>
-                        <table class="table table-bordered overflow-auto" style='table-layout:fixed;'>
+                        <table class="table table-bordered overflow-auto " style='table-layout:fixed;'>
 
                         <tbody>
                             <tr>
@@ -128,11 +132,11 @@
                             </tr>--}}
                             <tr>
                             <th scope="row">QR Code (掃描加入)</th>
-                            <td><div id="qr_div" class="p-3 row"><div class="" id="qrcode"></div><button type="button" id="qr_download" class="btn btn-link"><small><u>按我下載</u></small></button></div></td>
+                            <td><div id="qr_div" class="p-3 "><div class="" id="qrcode"></div><button type="button" id="qr_download" class="btn btn-link"><small><u><i class="fas fa-download"></i> 按我下載</u></small></button></div></td>
                             </tr>
                             <tr>
                             <th scope="row">連接狀態</th>
-                            <td><button id="Linedisbtn" name="Linedisbtn" type="submit" class="btn btn-link text-danger btn-sm"><i class="fas fa-exclamation-triangle"></i><small>斷開連接</small></button></td>
+                            <td><span class="">已連接！</span><button id="Linedisbtn" name="Linedisbtn" type="submit" class="btn btn-link text-danger btn-sm float-right"><i class="fas fa-exclamation-triangle"></i><small>斷開連接</small></button></td>
                             </tr>
 
                         </tbody>
@@ -157,7 +161,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 <script src="{{asset('vendor/copy-paste-select-jqlipboard/copy-paste-select-jqlipboard/src/jQlipboard.js')}}"></script>
 <script>
-document.getElementById('nav_title').innerHTML="<small>LINE @串接</small>";
+document.getElementById('nav_title').innerHTML="<small>LINE@串接</small>";
 var school={!! json_encode($school) !!};
 if(school.LineChannelSecret!=null && school.LineChannelAccessToken!=null){
     var bot_id=(school.LineID).replace("@", "");

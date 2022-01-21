@@ -402,7 +402,7 @@
                         <button class="btn btn-link  shadow-none" type="button" id="show_all_btn"><small>全部梯次</small></button>
                         </div>
                         <div class="table-responsive">
-                            <table id="classs_table" class="table dataTable table-hover text-center text-middle"  width="100%" cellspacing="0">
+                            <table id="classs_table" class="table dataTable table-hover text-center text-middle table-bordered"  width="100%" cellspacing="0">
                                 <thead>
                                 <tr class="my_nav_color text-light">
                                     <th>班級名稱</th>
@@ -426,7 +426,7 @@
                                     @if(count($classs->student)==0)
                                     <span class="text-success font-weight-bold mr-3">按這裡新增學生 <i class="fas fa-arrow-right"></i></span>
                                     @endif
-                                        <a href="{{route('classs.student',$classs->id)}}" class="my_nav_text"><i class="fas fa-user-plus "></i></a>
+                                        <a href="{{route('classs.student',$classs->id)}}" class="my_nav_text"><i class="fas fa-user-edit"></i> 編輯</a>
                                     </td>
                                     <td class="classs_edit_btn"><a href="#"><i class="fas fa-cogs my_nav_text" data-target="#ClasssModal_edit" data-toggle="modal"></i></a></td>
                                     <td class="classs_edit_id hidden_object">{{ $classs->id }}</td>
@@ -467,9 +467,9 @@
                         <button class="btn btn-link  shadow-none" type="button" id="show_all_btn2"><small>全部班級</small></button>
                         </div>
                         <div class="table-responsive">
-                            <table id="student_table" class="table dataTable table-hover text-center text-middle"  width="100%" cellspacing="0">
+                            <table id="student_table" class="table dataTable table-hover text-center text-middle table-bordered"  width="100%" cellspacing="0">
                                 <thead>
-                                <tr class=" ">
+                                <tr class="my_nav_color text-light">
                                     <th>學生姓名</th>
                                     <th>學號</th>
                                     <th>學生班級</th>
@@ -636,6 +636,7 @@ student_edit_btn.forEach(function(item,index){
         s_id=student_edit_id[index].innerHTML;
         console.log('s_id',s_id)
         var where=all_student.findIndex(x => x.id==s_id);
+        console.log('where',where)
         if(where!=-1){
             document.getElementById('st_id').value=all_student[where].id;
             document.getElementById('st_name').value=all_student[where].name;

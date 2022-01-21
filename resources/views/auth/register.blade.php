@@ -11,8 +11,9 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
+                        
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">安親班聯絡人<span class="text-danger"> *</span></label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">姓名<span class="text-danger"> *</span></label>
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
@@ -26,7 +27,6 @@
                         </div>
 
 
-
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}<span class="text-danger"> *</span></label>
 
@@ -34,6 +34,20 @@
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="請輸入有效的信箱方便驗證">
 
                                 @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="admin" class="col-md-4 col-form-label text-md-right">安親班聯絡人<span class="text-danger"> *</span></label>
+
+                            <div class="col-md-6">
+                                <input id="admin" type="text" class="form-control @error('admin') is-invalid @enderror" name="admin" value="{{ old('admin') }}" required autocomplete="admin" autofocus>
+
+                                @error('admin')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

@@ -16,7 +16,7 @@
                 @csrf
                 <div class="card shadow-sm">
                     <div class="card-header d-flex flex-row" >
-                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">基本資料</h5>
+                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">基本設定</h5>
                     </div>
                     <div class="card-body">
 
@@ -36,7 +36,7 @@
                             <label for="manager_name" class="font-weight-bold my_nav_text">聯絡人</label>
                             </div>
                             <div class="col-sm-6" >
-                            <input class="form-control"  type="text" name="manager_name" id="manager_name" placeholder="請輸入聯絡人" required="required" value="{{Auth::user()->name}}" >
+                            <input class="form-control"  type="text" name="manager_name" id="manager_name" placeholder="請輸入聯絡人" required="required" value="{{Auth::user()->school->admin}}" >
                             </div>
 
 
@@ -65,10 +65,11 @@
 
 
                             </div>
-
+                    
                     </div>
                     <button  type="submit" class="mt-3 btn my_nav_color text-light float-right">更新資料</button>
                 </div>
+                
             </form>
 
 
@@ -81,6 +82,6 @@
 
 @section('js')
 <script>
-document.getElementById('nav_title').innerHTML="<small>基本資料</small>";
+document.getElementById('nav_title').innerHTML="<small>基本設定</small>";
 </script>
 @endsection
