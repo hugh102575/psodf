@@ -59,7 +59,7 @@
 
 
                     <div class="form-group ">
-                    <button type="button" class="btn btn-link text-danger shadow-none" id="message_edit_delete" ><u>刪除</u></button>
+                    <button type="button" class="btn btn-link text-danger astext" id="message_edit_delete" ><i class="fas fa-trash-alt"></i> 刪除</button>
                     <div class="float-right">
                     <input class="hidden_object" id="message_update_id" name="message_update_id" value="" >
                     <a href="#" class="btn btn-secondary" id="message_edit_cancel">取消</a>

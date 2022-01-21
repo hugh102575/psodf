@@ -6,13 +6,6 @@
 .enlarge_text{
   font-size: x-large !important;
 }
-.astext {
-    background:none;
-    border:none;
-    margin:0;
-    padding:0;
-    cursor: pointer;
-}
 </style>
 @endsection
 
@@ -117,8 +110,10 @@
                                                 @if($role->Role_Name!="安親班管理員")
                                                 <form id="role_delete-form" action="{{ route('role.delete_post',$role->RoleID) }}" method="POST" class="" enctype="multipart/form-data" onsubmit="return confirm('確定刪除角色「{{$role->Role_Name}}」嗎?');" >
                                                     @csrf
-                                                    <button type="submit" class="btn btn-link my_nav_text astext"><i class="fas fa-trash-alt"></i> 刪除</button>
+                                                    <button type="submit" class="btn btn-link text-danger astext"><i class="fas fa-trash-alt"></i> 刪除</button>
                                                 </form>
+                                                @else
+                                                <small>請勿刪除管理員</small>
                                                 @endif
                                             </td>
 

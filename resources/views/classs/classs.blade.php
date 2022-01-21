@@ -122,7 +122,7 @@
 
 
                 <div class="form-group ">
-                <button type="button" class="btn btn-link text-danger shadow-none" id="classs_edit_delete" ><u>刪除</u></button>
+                <button type="button" class="btn btn-link text-danger  astext" id="classs_edit_delete" ><i class="fas fa-trash-alt"></i> 刪除</button>
                 <div class="float-right">
                 <input class="hidden_object" id="classs_update_id" name="classs_update_id" value="" >
                 <a href="#" class="btn btn-secondary" id="classs_edit_cancel">取消</a>
@@ -304,7 +304,8 @@
 
 
                 <div class="form-group ">
-                <button type="button" class="btn btn-link text-danger shadow-none" id="student_update_delete" ><u>刪除</u></button>
+                <button type="button" class="btn btn-link text-danger  astext" id="student_update_delete" ><i class="fas fa-trash-alt"></i> 刪除</button>
+
                 <div class="float-right">
                 <a href="#" class="btn btn-secondary" id="student_update_cancel">取消</a>
                 <button type="button" id="student_update_submit" class="btn text-light my_nav_color" >更新</button>

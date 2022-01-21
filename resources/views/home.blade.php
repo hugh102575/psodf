@@ -16,6 +16,13 @@
 .aaa{
   //background-color:  #D3D3D3 !important;
 }
+.astext {
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
+    cursor: pointer;
+}
 </style>
 @yield('css')
 @endsection

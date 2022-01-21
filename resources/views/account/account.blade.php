@@ -6,13 +6,6 @@
 .enlarge_text{
   font-size: x-large !important;
 }
-.astext {
-    background:none;
-    border:none;
-    margin:0;
-    padding:0;
-    cursor: pointer;
-}
 </style>
 @endsection
 
@@ -125,14 +118,18 @@
                                             <button type="submit" class="btn btn-link text-danger astext" name="current_status" value="{{$account->active}}"><i class="fas fa-power-off"></i> 已停用</button>
                                             @endif
                                             </form>
+                                        @else
+                                        <small>我的帳號</small>
                                         @endif
                                         </td>
                                         <td>
                                             @if($account->id != Auth::user()->id)
                                                 <form  action="{{ route('account.delete_post',$account->id) }}" method="POST" class="" enctype="multipart/form-data" onsubmit="return confirm('確定刪除帳號「{{$account->email}}」嗎?');" >
                                                     @csrf
-                                                    <button type="submit" class="btn btn-link my_nav_text astext"><i class="fas fa-trash-alt"></i> 刪除</button>
+                                                    <button type="submit" class="btn btn-link text-danger astext"><i class="fas fa-trash-alt"></i> 刪除</button>
                                                 </form>
+                                            @else
+                                            <small>我的帳號</small>
                                             @endif
                                         </td>
                                     </tr>

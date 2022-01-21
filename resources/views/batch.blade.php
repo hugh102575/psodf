@@ -64,7 +64,7 @@
 
 
                 <div class="form-group ">
-                <button type="button" class="btn btn-link text-danger shadow-none" id="batch_edit_delete"><u>刪除</u></button>
+                <button type="button" class="btn btn-link text-danger astext" id="batch_edit_delete"><i class="fas fa-trash-alt"></i> 刪除</button>
                 <div class="float-right">
                 <input class="hidden_object" id="batch_update_id" name="batch_update_id" value="" >
                 <a href="#" class="btn btn-secondary" id="batch_edit_cancel">取消</a>
