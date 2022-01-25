@@ -113,7 +113,7 @@
                                             <form  action="{{ route('account.change_active',$account->id) }}" method="POST" class="" enctype="multipart/form-data"  >
                                             @csrf
                                             @if($account->active)
-                                            <button type="submit" class="btn btn-link text-success astext" name="current_status" value="{{$account->active}}"><i class="fas fa-power-off"></i> 啟用</button>
+                                            <button type="submit" class="btn btn-link text-success astext" name="current_status" value="{{$account->active}}"><i class="fas fa-power-off"></i> 已啟用</button>
                                             @else
                                             <button type="submit" class="btn btn-link text-danger astext" name="current_status" value="{{$account->active}}"><i class="fas fa-power-off"></i> 已停用</button>
                                             @endif

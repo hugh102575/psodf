@@ -96,7 +96,8 @@ class AppController extends Controller
                 array_push($student_a,$st);
             }
         }
-        return $student_a;
+	$student_a_sort = collect($student_a)->sortBy('order')->values()->toArray();
+        return $student_a_sort;
     }
     public function line_notify(Request $request){
         $school=$request->user()->school;

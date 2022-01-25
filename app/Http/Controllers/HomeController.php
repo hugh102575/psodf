@@ -117,7 +117,7 @@ class HomeController extends Controller
         $school_classs=Auth::user()->school->classs;
         $school_batch=Auth::user()->school->batch;
         //$all_student=$this->studentRepo->get_all_student();
-        $all_student=Auth::user()->school->student->sortBy('Classs_id')->values();
+        $all_student=Auth::user()->school->student->sortBy('order')->sortBy('Classs_id')->values();
         //$all_student=Auth::user()->school->student;
 
         if(isset($_GET['success_msg'])){
