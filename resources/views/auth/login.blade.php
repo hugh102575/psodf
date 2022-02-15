@@ -104,18 +104,17 @@
                                     {{ __('Login') }}
                                 </button>
 
+                                    <div class="text-center d-flex justify-content-between mt-4">
+                                        <p><a href="{{ route('register') }}" class="font-italic text-muted"> <u><small>{{ __('Register') }}</small></u></a></p>
 
-                                {{--<div class="text-center d-flex justify-content-between mt-4">
-                                    <p><a href="{{ route('register') }}" class="font-italic text-muted"> <u>{{ __('Register') }}</u></a></p>
-
-                                </div>
+                                    </div>
                                    @if (Route::has('password.request'))
                                     <div class="form-group mb-3">
                                         <a class="font-italic text-muted" href="{{ route('password.request') }}">
-                                            <u>{{ __('Forgot Your Password?') }}</u>
+                                            <u><small>{{ __('Forgot Your Password?') }}</small></u>
                                         </a>
                                     </div>
-                                    @endif--}}
+                                    @endif
                             </form>
                         </div>
                     </div>

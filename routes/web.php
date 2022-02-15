@@ -37,7 +37,9 @@ Route::post('/bind/update', [AppController::class, 'bind_update'])->name('bind.u
 Route::get('/supervise/{school_id}/{LineID}', [AppController::class, 'supervise'])->name('supervise');
 Route::get('api_test', [AppController::class, 'api_test']);
 Route::post('/app/login', [AppController::class, 'login_v2']);
-
+Route::post('/costom_reset_pwd', [AppController::class, 'costom_reset_pwd'])->name('costom_reset_pwd');
+Route::get('/costom_reset_pwd/{id}', [AppController::class, 'costom_reset_pwd_form'])->name('costom_reset_pwd_form');
+Route::post('/costom_reset_pwd/{id}', [AppController::class, 'costom_reset_pwd_form_post'])->name('costom_reset_pwd_form_post');
 
 Route::middleware([IsActive::class])->group(function () {
 Route::get('/home', [HomeController::class, 'index'])->name('home');

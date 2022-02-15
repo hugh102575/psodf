@@ -11,6 +11,12 @@ use App\Repositories\SigninRepository;
 use App\Repositories\SchoolRepository;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\LineNotify;
+use App\Models\User;
+use App\Models\School;
+use Illuminate\Support\Facades\Crypt;
+use Validator;
+use Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 class AppController extends Controller
@@ -367,6 +373,66 @@ class AppController extends Controller
             $signin=array();
         }
         return view('supervise',['school'=>$school,'student'=>$student,'signin'=>$signin]);
+    }
+
+    public function costom_reset_pwd(Request $request){
+        //dd($request->all());
+        $school=School::where('PID',$request['PID'])->first();
+        if($school){
+            $school_id=$school->id;
+        }else{
+            $school_id="PID_error";
+        }
+        $user = User::where('School_id',$school_id)->where('account',$request['account'])->first();
+
+        //$user = User::where('PID',$request['PID'])->where('account',$request['account'])->first();
+        if($user){
+            return redirect()->route('costom_reset_pwd_form',['id'=>Crypt::encryptString($user->id)]);
+        }else{
+            return redirect()->back()->with('status', "查無資料，請檢查輸入是否正確");
+        }
+
+    }
+    public function costom_reset_pwd_form($id){
+        try {
+            $id = Crypt::decryptString($id);
+            $user=$this->userRepo->find($id);
+            $school=$this->schoolRepo->find($user->School_id);
+            return view('auth.passwords.reset2',['user'=>$user,'school'=>$school]);
+        } catch (DecryptException $e) {
+            //
+        }
+    }
+    public function costom_reset_pwd_form_post($id,Request $request){
+        //dd($request->all());
+        //echo $id;
+        $messages = [
+            'required'    => '此欄位為必填',
+            //'email.unique'    => '此信箱已有使用者註冊',
+            'password.regex' => '使用者密碼不符合規範',
+            'password.confirmed' => '密碼確認不相符',
+            'max' => '此欄位限制最大字數為:max',
+            'min' => '此欄位限制最少字數為:min',
+        ];
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|min:8|max:50|confirmed',
+        ], $messages);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $user=$this->userRepo->find($id);
+        $result=  $user ? $user->update(array('password'=>Hash::make($request['password']))) : false;
+        if($result){
+            Auth::logout();
+            return redirect()->route('login')->with('login_success_msg', '密碼已更新，請重新登入!');
+        }else{
+            Auth::logout();
+            return redirect()->route('login')->with('login_error_msg', '密碼更新失敗');
+        }
+        
     }
 
 }
