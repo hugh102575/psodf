@@ -52,10 +52,11 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'admin' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name' => ['required', 'string', 'max:50'],
+            'account' => ['required', 'string', 'max:50'],
+            'admin' => ['required', 'string', 'max:50'],
+            //'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'max:50','confirmed'],
         ]);
     }
 
@@ -73,16 +74,25 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);*/
 
+        $PID=strval("s").strval(rand(10000,99999));
+        while(School::where('PID',$PID)->exists()) {
+            $PID=strval("s").strval(rand(10000,99999));
+        }
+
+
         $now = date('Y-m-d H:i:s');
         School::create([
             'School_Name' => $data['school'],
+            'PID' => $PID,
             'admin' => $data['admin'],
             'phone' => $data['phone'],
             'address' => $data['address'],
-            'create_from' => $data['email'],
+            //'create_from' => $data['email'],
+            'create_from' => $data['account'],
             'created_at' =>  $now
         ]);
-        $my_school = School::where('create_from',$data['email'])->first();
+        //$my_school = School::where('create_from',$data['account'])->first();
+        $my_school = School::where('PID',$PID)->first();
 
         role::create([
             'School_id' => $my_school->id,
@@ -96,10 +106,12 @@ class RegisterController extends Controller
 
         return User::create([
             'name' => $data['name'],
-            'email' => $data['email'],
+            'account' => $data['account'],
+            //'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'School_id' =>  $my_school->id,
             'RoleID' => role::where('School_id',$my_school->id)->where('Role_Name','安親班管理員')->first()->RoleID,
         ]);
     }
 }
+

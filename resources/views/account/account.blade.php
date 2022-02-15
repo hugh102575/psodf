@@ -13,7 +13,7 @@
 <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-           
+
                 <div class="card shadow-sm">
                     <div class="card-header d-flex flex-row" >
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">帳號一覽</h5>
@@ -26,16 +26,18 @@
                             </a>
                         </div>
                     </div>
-                    
+
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table dataTable table-hover text-center text-middle table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr class="my_nav_color text-light">
                                         <th>帳號</th>
+                                        {{--<th>信箱</th>--}}
                                         <th>員工名稱</th>
                                         <th>角色名稱</th>
                                         <th>權限</th>
+                                        <th>最後登入</th>
                                         <th>編輯</th>
                                         <th>停用/啟用</th>
                                         <th>刪除</th>
@@ -44,7 +46,8 @@
                                 <tbody>
                                 @foreach($accounts as $account)
                                     <tr>
-                                        <td>{{ $account->email }}</td>
+                                        <td>{{ $account->account }}</td>
+                                        {{--<td>{{ $account->email }}</td>--}}
                                         <td>{{ $account->name }}</td>
                                         <td>{{ $account->role->Role_Name }}</td>
                                         <td class="text-left">
@@ -106,6 +109,13 @@
                                             @endforeach
                                         </td>
                                         <td>
+                                            @if($account->last_login!=null)
+                                            @php
+                                            @endphp
+                                            <small>{{ $account->last_login }}</small>
+                                            @endif
+                                        </td>
+                                        <td>
                                         <a href="{{route('account.edit',$account->id)}}" class="my_nav_text"><i class="fas fa-user-edit"></i> 編輯</a>
                                         </td>
                                         <td>
@@ -124,7 +134,7 @@
                                         </td>
                                         <td>
                                             @if($account->id != Auth::user()->id)
-                                                <form  action="{{ route('account.delete_post',$account->id) }}" method="POST" class="" enctype="multipart/form-data" onsubmit="return confirm('確定刪除帳號「{{$account->email}}」嗎?');" >
+                                                <form  action="{{ route('account.delete_post',$account->id) }}" method="POST" class="" enctype="multipart/form-data" onsubmit="return confirm('確定刪除帳號「{{$account->account}}」嗎?');" >
                                                     @csrf
                                                     <button type="submit" class="btn btn-link text-danger astext"><i class="fas fa-trash-alt"></i> 刪除</button>
                                                 </form>
@@ -137,7 +147,7 @@
                                 </tbody>
                             </table>
                         </div>
-                       
+
 
                     </div>
                 </div>
@@ -161,3 +171,4 @@
 document.getElementById('nav_title').innerHTML="<small>帳號一覽</small>";
 </script>
 @endsection
+

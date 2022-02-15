@@ -33,7 +33,7 @@ class StudentRepository
         //$data['Batch_id']=$batch_id;
         $data['Classs_id']=$classs_id;
         $data['order']=$count;
-        $data['create_from']=Auth::user()->email;
+        $data['create_from']=Auth::user()->account;
         $data['created_at']=$now;
         return  student::create($data);
     }

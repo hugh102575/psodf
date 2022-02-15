@@ -27,7 +27,7 @@
             @csrf
             <div class="card">
                 <div class="card-header ">
-                    <span class="font-weight-bold my_nav_text enlarge_text">管理員登入</span><br>
+                    <span class="font-weight-bold my_nav_text enlarge_text">系統管理員登入</span><br>
                 </div>
 
                 <div class="card-body mt-3">
@@ -37,7 +37,7 @@
                                 <label for="admin_account" class="font-weight-bold my_nav_text enlarge_text">帳號</label>
                                 </div>
                                 <div class="col-sm-6" >
-                                <input class="form-control"  type="text" name="admin_account" id="admin_account" placeholder="請輸入管理員帳號" required="required"  >
+                                <input class="form-control"  type="text" name="admin_account" id="admin_account" placeholder="請輸入系統管理員帳號" required="required"  >
                                 </div>
                         </div>
 
@@ -46,13 +46,13 @@
                                 <label for="admin_password" class="font-weight-bold my_nav_text enlarge_text">密碼</label>
                                 </div>
                                 <div class="col-sm-6" >
-                                <input class="form-control"  type="password" name="admin_password" id="admin_password" placeholder="請輸入管理員密碼" required="required"  >
+                                <input class="form-control"  type="password" name="admin_password" id="admin_password" placeholder="請輸入系統管理員密碼" required="required"  >
                                 </div>
                         </div>
                     </div>
                     <hr>
 
-                    <div class=" col-sm-8 mx-auto">
+                    <div class=" col-sm-6 mx-auto">
                         <button  type="submit" class="form-control mt-3 btn my_nav_color text-light ">登入</button>
                     </div>
                 </div>
@@ -72,3 +72,4 @@
 });*/
 </script>
 @endsection
+

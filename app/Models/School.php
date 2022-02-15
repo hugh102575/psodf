@@ -20,6 +20,7 @@ class school extends Model
     /** 因key是AI所以不用擺進去 */
     protected $fillable = [
         'School_Name',
+        'PID',
         //'secret_key',
         'create_from',
         'update_from',
@@ -37,7 +38,8 @@ class school extends Model
         'sign_mode',
         'in_msg',
         'out_msg',
-        'admin'
+        'admin',
+        'Active'
     ];
 
     public function User(){

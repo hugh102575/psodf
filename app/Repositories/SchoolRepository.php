@@ -8,9 +8,11 @@ use Auth;
 
 class SchoolRepository
 {
-
     public function find($id){
         return School::find($id);
+    }
+    public function list_all(){
+        return School::all();
     }
     public function update(array $data){
         $id=Auth::user()->School_id;
@@ -38,6 +40,14 @@ class SchoolRepository
         $data['updated_at']=$now;
         $school = School::find($id);
         return  $school ? $school->update($data) : false;
+    }
+
+    public function change_active($id, $new_status){
+        $school=School::find($id);
+        $result =array();
+        $result[0] = $school ? $school->update(array('Active'=>$new_status)) : false;
+        $result[1]=$new_status;
+        return $result;
     }
 
 

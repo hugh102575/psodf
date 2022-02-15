@@ -497,6 +497,11 @@
                                         $parent_count=count(json_decode($student->parent_line_multi));
                                         @endphp
                                         <span class="text-success">已加入 {{$parent_count}}位</span>
+                                          {{--@if(Auth::user()->school->LineChannelAccessToken!=null && Auth::user()->school->LineChannelSecret!=null)
+                                          @foreach(json_decode($student->parent_line_multi) as $parent_name)
+                                          <div><small class="text-secondary">{{$parent_name}}</small></div>
+                                          @endforeach
+                                          @endif--}}
                                         @endif
                                     </td>
                                     <td>

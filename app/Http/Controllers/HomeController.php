@@ -12,6 +12,7 @@ use App\Repositories\MessageRepository;
 use App\Repositories\SchoolRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -31,7 +32,8 @@ class HomeController extends Controller
     //protected $global_test;
     public function __construct(ClasssRepository $classsRepo,StudentRepository $studentRepo,MessageRepository $messageRepo,SigninRepository $signinRepo,SchoolRepository $schoolRepo, RoleRepository $roleRepo,UserRepository $userRepo)
     {
-        $this->middleware(['auth','verified']);
+        //$this->middleware(['auth','verified']);
+        $this->middleware('auth');
         $this->classsRepo=$classsRepo;
         $this->studentRepo=$studentRepo;
         $this->signinRepo=$signinRepo;
@@ -119,7 +121,27 @@ class HomeController extends Controller
         //$all_student=$this->studentRepo->get_all_student();
         $all_student=Auth::user()->school->student->sortBy('order')->sortBy('Classs_id')->values();
         //$all_student=Auth::user()->school->student;
-
+        /*if(isset(Auth::user()->school->LineChannelAccessToken) && isset(Auth::user()->school->LineChannelSecret)){
+            $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(Auth::user()->school->LineChannelAccessToken);
+            $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => Auth::user()->school->LineChannelSecret]);
+            foreach($all_student as $all_st){
+                $parent_line_multi=$all_st['parent_line_multi'];
+                if(isset($parent_line_multi)){
+                    $parent_name=array();
+                    $parent_line_multi=json_decode($parent_line_multi,true);
+                    foreach($parent_line_multi as $userId){
+                        $profile_rsp=$bot->getProfile($userId);
+                        $profile=($profile_rsp->isSucceeded()) ? $profile_rsp->getJSONDecodedBody() : null;
+                        if(isset($profile))
+                        array_push($parent_name,$profile['displayName']);
+                        else
+                        array_push($parent_name,"???");
+                    }
+                    $all_st['parent_line_multi']=json_encode($parent_name);
+                }
+            }
+        }*/
+        //echo $all_student;
         if(isset($_GET['success_msg'])){
             return redirect()->route('classs.classs')->with('success_msg', $_GET['success_msg']);
         }elseif(isset($_GET['error_msg'])){
@@ -236,7 +258,7 @@ class HomeController extends Controller
         $roles=Auth::user()->school->role;
         return view('account.edit', ['account' => $account, 'roles' => $roles]);
     }
-   
+
     public function line(){
         $permission=$this->check_authority('line');
         if(!$permission[0]){
@@ -258,7 +280,7 @@ class HomeController extends Controller
             }
             curl_close($ch);
             $rich_menu_a="ccc";
-           
+
         }else{
             $test=null;
         }*/
@@ -272,6 +294,47 @@ class HomeController extends Controller
         $today=date('Y-m-d');
         $school_classs=Auth::user()->school->classs;
         return view('signin.signin',['today'=>$today,'school_classs'=>$school_classs]);
+    }
+      public function signin_overview(){
+        $permission=$this->check_authority('sign');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
+        $t=time();
+        $today=date('Y-m-d');
+        $date_array = array(
+            "center"=>date("Y-m-d",$t),
+            "+1"=> date( "Y-m-d", strtotime( "+1 days" ) ),
+            "+2"=> date( "Y-m-d", strtotime( "+2 days" ) ),
+            "+3"=> date( "Y-m-d", strtotime( "+3 days" ) ),
+            "+4"=> date( "Y-m-d", strtotime( "+4 days" ) ),
+            "+5"=> date( "Y-m-d", strtotime( "+5 days" ) ),
+            "-1"=> date( "Y-m-d", strtotime( "-1 days" ) ),
+            "-2"=> date( "Y-m-d", strtotime( "-2 days" ) ),
+            "-3"=> date( "Y-m-d", strtotime( "-3 days" ) ),
+            "-4"=> date( "Y-m-d", strtotime( "-4 days" ) ),
+            "-5"=> date( "Y-m-d", strtotime( "-5 days" ) ),
+        );
+        $date_result=$this->signinRepo->getmultidata($date_array);
+        return view('signin.overview',['today'=>$today,'date_result'=>$date_result]);
+    }
+    public function update_chart(Request $request){
+        $update_date=$request['update_date'];
+        $date_array = array(
+            "center"=>date( "Y-m-d", strtotime($update_date)),
+            "+1"=> date( "Y-m-d", strtotime('+1 day', strtotime($update_date))),
+            "+2"=> date( "Y-m-d", strtotime('+2 day', strtotime($update_date))),
+            "+3"=> date( "Y-m-d", strtotime('+3 day', strtotime($update_date))),
+            "+4"=> date( "Y-m-d", strtotime('+4 day', strtotime($update_date))),
+            "+5"=> date( "Y-m-d", strtotime('+5 day', strtotime($update_date))),
+            "-1"=> date( "Y-m-d", strtotime('-1 day', strtotime($update_date))),
+            "-2"=> date( "Y-m-d", strtotime('-2 day', strtotime($update_date))),
+            "-3"=> date( "Y-m-d", strtotime('-3 day', strtotime($update_date))),
+            "-4"=> date( "Y-m-d", strtotime('-4 day', strtotime($update_date))),
+            "-5"=> date( "Y-m-d", strtotime('-5 day', strtotime($update_date))),
+        );
+        $date_result=$this->signinRepo->getmultidata($date_array);
+        return json_encode($date_result);
     }
     public function signin_result($q_type,$classs_id, $date){
         $permission=$this->check_authority('sign');
@@ -304,7 +367,7 @@ class HomeController extends Controller
                 $signin=Auth::user()->school->signin->where('Student_id',$student->id)->reverse()->values();
                 return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'st_id'=>$classs_id,'classs'=>$classs]);
             }else{
-                return redirect()->route('signin')->with('error_msg', "查無學生資料，請檢查輸入是否正確");
+                return redirect()->route('signin.signin')->with('error_msg', "查無學生資料，請檢查輸入是否正確");
             }
         }
         if($q_type=="s1"){
@@ -315,7 +378,7 @@ class HomeController extends Controller
                 $signin=Auth::user()->school->signin->where('Student_Name',$classs_id)->reverse()->values();
                 return view('signin.result',['q_type'=>$q_type,'signin'=>$signin,'date'=>$date,'student'=>$student,'st_Name'=>$classs_id,'classs'=>$classs]);
             }else{
-                return redirect()->route('signin')->with('error_msg', "查無學生資料，請檢查輸入是否正確");
+                return redirect()->route('signin.signin')->with('error_msg', "查無學生資料，請檢查輸入是否正確");
             }
         }
     }
@@ -374,3 +437,4 @@ class HomeController extends Controller
         return $result;
     }
 }
+

@@ -33,11 +33,24 @@
                             </div>
                             </div>
 
-                            <div class="form-group row">
-                            <label for="Func_Account" class="col-sm-2 col-form-label">E-mail <font color="#FF0000">*</font></label>
+                            {{--<div class="form-group row">
+                            <label for="Func_Email" class="col-sm-2 col-form-label">E-mail <font color="#FF0000">*</font></label>
                             <div class="col-sm-10">
-                                <input class="form-control @error('email') is-invalid @enderror" type="email" name="email" required="required" placeholder="請設定E-mail做為登入帳號"  maxlength="100">
+                                <input class="form-control @error('email') is-invalid @enderror" type="email" name="email" required="required" placeholder="請輸入E-mail"  maxlength="100">
                                 @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            </div>--}}
+
+
+                            <div class="form-group row">
+                            <label for="Func_Account" class="col-sm-2 col-form-label">登入帳號 <font color="#FF0000">*</font></label>
+                            <div class="col-sm-10">
+                                <input class="form-control @error('account') is-invalid @enderror" type="text" name="account" required="required" placeholder="請設定登入帳號" maxlength="50" >
+                                @error('account')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -45,10 +58,11 @@
                             </div>
                             </div>
 
+
                             <div class="form-group row">
-                            <label for="Func_Pswd" class="col-sm-2 col-form-label">密碼 <font color="#FF0000">*</font></label>
+                            <label for="Func_Pswd" class="col-sm-2 col-form-label">登入密碼 <font color="#FF0000">*</font></label>
                             <div class="col-sm-10">
-                                <input class="form-control @error('password') is-invalid @enderror" type="password" name="password" required="required" placeholder="請設定登入密碼" maxlength="50" minlength="8">
+                                <input class="form-control @error('password') is-invalid @enderror" type="password" name="password" required="required" placeholder="請設定登入密碼" maxlength="50" >
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -75,8 +89,8 @@
                                 </select>
                             </div>
                             </div>
-                            
-                          
+
+
 
                         </div>
 
@@ -84,7 +98,7 @@
                     </div>
                 </div>
             </form>
-                                
+
 
 
 
@@ -99,3 +113,4 @@
 document.getElementById('nav_title').innerHTML="<small>新增帳號</small>";
 </script>
 @endsection
+

@@ -123,7 +123,12 @@
                                     <td class="small">{{$t1}}<br>{{$dayofweek}}<br>{{$t2}}</td>
                                     <!--<td>{{$t2}}</td>-->
                                     <td>
-                                    <span class="">{{$me->name}}</span><br><span class="text-success">({{$s_type}})</span>
+                                    <span class="">{{$me->name}}</span><br>
+                                    @if($s_type=="簽到")
+                                    <span class="text-success">({{$s_type}})</span>
+                                    @elseif($s_type=="簽退")
+                                    <span class="text-primary">({{$s_type}})</span>
+                                    @endif
                                     </td>
                                     <td class="hidden_object">
                                     @if($me!=null)

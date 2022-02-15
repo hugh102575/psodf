@@ -13,7 +13,7 @@ class BatchRepository
     public function store(array $data){
         $now = date('Y-m-d H:i:s');
         $data['School_id']=Auth::user()->School_id;
-        $data['create_from']=Auth::user()->email;
+        $data['create_from']=Auth::user()->account;
         $data['created_at']=$now;
         return  batch::create($data);
     }

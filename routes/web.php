@@ -8,6 +8,7 @@ use App\Http\Controllers\AppController;
 use App\Http\Controllers\LINEController;
 use App\Http\Controllers\AdminController;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsActive;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,6 +35,11 @@ Route::get('/', function () {
 Route::get('/bind/{school_id}/{LineID}', [AppController::class, 'bind'])->name('bind');
 Route::post('/bind/update', [AppController::class, 'bind_update'])->name('bind.update');
 Route::get('/supervise/{school_id}/{LineID}', [AppController::class, 'supervise'])->name('supervise');
+Route::get('api_test', [AppController::class, 'api_test']);
+Route::post('/app/login', [AppController::class, 'login_v2']);
+
+
+Route::middleware([IsActive::class])->group(function () {
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/basic', [HomeController::class, 'basic'])->name('basic');
 Route::post('/basic', [SettingController::class, 'basic_update'])->name('basic.update');
@@ -50,11 +56,11 @@ Route::get('/batch', [HomeController::class, 'batch'])->name('batch');
 Route::post('/batch/store', [SettingController::class, 'batch_store'])->name('batch.store');
 Route::post('/batch/update', [SettingController::class, 'batch_update'])->name('batch.update');
 Route::post('/batch/delete', [SettingController::class, 'batch_delete'])->name('batch.delete');
-Route::get('api_test', [AppController::class, 'api_test']);
-Route::post('/app/login', [AppController::class, 'login']);
 Route::get('/line', [HomeController::class, 'line'])->name('line');
 Route::post('/line', [SettingController::class, 'line_update'])->name('line.update');
-Route::get('/signin', [HomeController::class, 'signin'])->name('signin');
+Route::get('/signin', [HomeController::class, 'signin'])->name('signin.signin');
+Route::get('/signin/overview', [HomeController::class, 'signin_overview'])->name('signin.overview');
+Route::post('/signin/update_chart', [HomeController::class, 'update_chart']);
 Route::get('/signin/{q_type}/{classs_id}/{date}/result', [HomeController::class, 'signin_result'])->name('signin.result');
 Route::get('/message', [HomeController::class, 'message'])->name('message');
 Route::post('/message/store', [SettingController::class, 'message_store'])->name('message.store');
@@ -78,7 +84,7 @@ Route::post('/account/create_post', [SettingController::class, 'account_create_p
 Route::post('/account/{id}/edit_post', [SettingController::class, 'account_edit_post'])->name('account.edit_post');
 Route::post('/account/{id}/delete_post', [SettingController::class, 'account_delete_post'])->name('account.delete_post');
 Route::post('/account/{id}/change_active', [SettingController::class, 'change_active'])->name('account.change_active');
-
+}); 
 
 
 
@@ -86,11 +92,17 @@ Route::post('/account/{id}/change_active', [SettingController::class, 'change_ac
 Route::post('/callback/{id}', [LINEController::class, 'post'])->name('lintbot_api');
 
 
-Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login');
+Route::get('/management', [AdminController::class, 'index'])->name('admin.index');
+Route::post('/management/login', [AdminController::class, 'login'])->name('admin.login');
 Route::middleware([IsAdmin::class])->group(function () {
-    Route::get('/admin/home', [AdminController::class, 'home'])->name('admin.home');
-    Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+    Route::get('/management/home', [AdminController::class, 'home'])->name('admin.home');
+    Route::post('/management/logout', [AdminController::class, 'logout'])->name('admin.logout');
+    Route::post('/management/update_plan', [AdminController::class, 'update_plan'])->name('admin.update_plan');
+    Route::post('/management/store_subscribe', [AdminController::class, 'store_subscribe'])->name('admin.store_subscribe');
+    Route::post('/management/update_subscribe', [AdminController::class, 'update_subscribe'])->name('admin.update_subscribe');
+    Route::post('/management/{id}/change_active', [AdminController::class, 'change_active'])->name('admin.change_active');
+    Route::post('/management/query_due', [AdminController::class, 'query_due'])->name('admin.query_due');
+
 }); 
 
 

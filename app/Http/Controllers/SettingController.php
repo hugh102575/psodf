@@ -12,6 +12,7 @@ use App\Repositories\UserRepository;
 use App\Repositories\RoleRepository;
 use Auth;
 use Validator;
+use DB;
 
 class SettingController extends Controller
 {
@@ -24,7 +25,8 @@ class SettingController extends Controller
 
     public function __construct(ClasssRepository $classsRepo,BatchRepository $batchRepo,StudentRepository $studentRepo,SchoolRepository $schoolRepo,MessageRepository $messageRepo,UserRepository $userRepo, RoleRepository $roleRepo)
     {
-        $this->middleware(['auth','verified']);
+        //$this->middleware(['auth','verified']);
+        $this->middleware('auth');
         $this->classsRepo=$classsRepo;
         $this->batchRepo=$batchRepo;
         $this->studentRepo=$studentRepo;
@@ -220,7 +222,7 @@ class SettingController extends Controller
                 return redirect()->route('self_profile')->with('error_msg', '個人姓名更新失敗！');
             }
         }elseif($request->input('button')=="m2"){
-            
+
             if(!Hash::check ($request->input('profilePW_old'),Auth::user()->password)){
                 return redirect()->route('self_profile')->with('error_msg', '使用者密碼輸入錯誤!');
             }elseif($request->input('profilePW_new')!=$request->input('profilePW_new2')){
@@ -245,7 +247,7 @@ class SettingController extends Controller
                 }
             }
         }
-       
+
     }
 
     public function role_create_post(Request $request){
@@ -261,7 +263,7 @@ class SettingController extends Controller
                 return redirect()->route('role')->with('error_msg', '角色新增失敗！');
             }
         }
-    
+
         return redirect()->route('role')->with('success_msg', '角色新增成功！');
     }
     public function role_edit_post(Request $request,$RoleID){
@@ -296,9 +298,19 @@ class SettingController extends Controller
     }
     public function account_create_post(Request $request){
         //dd($request->all());
+
+        Validator::extend('costomunique', function ($attribute, $value, $parameters, $validator) {
+            $count = DB::table('users')->where('account', request()->input('account'))
+                                        ->where('School_id', Auth::user()->school->id)
+                                        ->count();
+
+            return $count === 0;
+        }, '該帳號已被註冊');
+
+
         $messages = [
             'required'    => '此欄位為必填',
-            'email.unique'    => '此信箱已有使用者註冊',
+            //'email.unique'    => '此信箱已有使用者註冊',
             'password.regex' => '使用者密碼不符合規範',
             'password.confirmed' => '密碼確認不相符',
             'max' => '此欄位限制最大字數為:max',
@@ -306,8 +318,9 @@ class SettingController extends Controller
         ];
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:50',
-            'email' => 'required|email|max:100|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'account' => 'required|string|max:50|costomunique:{$request}',
+            //'email' => 'required|email|max:100|unique:users',
+            'password' => 'required|string|min:8|max:50|confirmed',
             'RoleID' => 'required'
         ], $messages);
 
@@ -317,7 +330,8 @@ class SettingController extends Controller
                 ->withInput();
         }
 
-        $account = $this->userRepo->create(request()->only('name', 'email', 'password', 'RoleID'));
+        //$account = $this->userRepo->create(request()->only('name', 'account','email', 'password', 'RoleID'));
+        $account = $this->userRepo->create(request()->only('name', 'account', 'password', 'RoleID'));
         if (!$account) {
             return redirect()->route('account')->with('error_msg', '帳號新增失敗！');
         }
@@ -328,7 +342,54 @@ class SettingController extends Controller
         //dd($request->all());
         $check_only_admin=$this->userRepo->check_only_admin($id, request()->RoleID);
         if($check_only_admin != 'admin_only_me_failed' && $check_only_admin != 'no_admin'){
-            $result = $this->userRepo->update_account($id, request()->only('name', 'RoleID'));
+            Validator::extend('costomunique', function ($attribute, $value, $parameters, $validator) {
+                $count = DB::table('users')->where('account', request()->input('account'))
+                                            ->where('School_id', Auth::user()->school->id)
+                                            ->where('id','!=',request()->id)
+                                            ->count();
+
+                return $count === 0;
+            }, '該帳號已被註冊');
+
+            $messages = [
+                'required'    => '此欄位為必填',
+                //'email.unique'    => '此信箱已有使用者註冊',
+                'password.regex' => '使用者密碼不符合規範',
+                'password.confirmed' => '密碼確認不相符',
+                'max' => '此欄位限制最大字數為:max',
+                'min' => '此欄位限制最少字數為:min',
+            ];
+
+            if(!empty($request['password'])){
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required|string|max:50',
+                    'account' => 'required|string|max:50|costomunique:{$request}',
+                    //'email' => 'required|email|max:100|unique:users',
+                    'password' => 'string|min:8|max:50|confirmed',
+                    'RoleID' => 'required'
+                ], $messages);
+            }else{
+                $validator = Validator::make($request->all(), [
+                    'name' => 'required|string|max:50',
+                    'account' => 'required|string|max:50|costomunique:{$request}',
+                    //'email' => 'required|email|max:100|unique:users',
+                    //'password' => 'string|min:8|max:50|confirmed',
+                    'RoleID' => 'required'
+                ], $messages);
+            }
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
+            if(!empty($request['password'])){
+                $result = $this->userRepo->update_account($id, request()->only('name', 'RoleID','account','password'));
+            }else{
+                $result = $this->userRepo->update_account($id, request()->only('name', 'RoleID','account'));
+
+            }
             if($result){
                 return redirect()->route('account')->with('success_msg', '帳號資料已更新！');
             }else{
@@ -337,7 +398,7 @@ class SettingController extends Controller
         }else{
             return redirect()->route('account')->with('error_msg', '帳號更新失敗，至少需要一名管理員！');
         }
-        
+
     }
 
     public function account_delete_post(Request $request,$id){
@@ -367,7 +428,7 @@ class SettingController extends Controller
         }elseif($request->input('current_status')==0){
             $new_status=1;
         }
-        
+
         if($role_name=="安親班管理員" && $new_status==0){
             return redirect()->route('account')->with('error_msg', '停用失敗!無法停用管理員的帳號，如需停用，請先指派其他角色');
         }else{
@@ -388,7 +449,7 @@ class SettingController extends Controller
         }
 
     }
-    
+
     public function line_update(Request $request){
         //dd($request->all());
         $school = Auth::user()->school;
@@ -407,11 +468,11 @@ class SettingController extends Controller
             //}else{
                 //return redirect()->route('line')->with('success_msg', '已斷開LINE@連接！');
             //}
-            
+
         }else{
             $LineChannelName=$this->get_LineChannelName($request['LineChannelAccessToken']);
             if(isset($LineChannelName)){
-                
+
                 $school->LineChannelName=$LineChannelName;
                 $school->save();
                 //if($school->id==2){
@@ -421,7 +482,7 @@ class SettingController extends Controller
                 //}else{
                     //return redirect()->route('line')->with('success_msg', 'LINE@串接成功！');
                 //}
-                
+
             }else{
                 return redirect()->route('line')->with('error_msg', '輸入資料有誤，查無資料！');
             }
@@ -506,7 +567,7 @@ class SettingController extends Controller
                 if($st){
                     $st_name=$st->name;
                     $stID=$st->id;
-                
+
                     $value_d=json_decode($value);
                     foreach($value_d as $v){
                         array_push($stu_array,$v);
@@ -519,7 +580,7 @@ class SettingController extends Controller
         }
 
 
-        
+
         $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
         $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
         $return =array();
@@ -600,7 +661,7 @@ class SettingController extends Controller
             //return redirect()->route('message')->with('success_msg', $result_string_1."， ".$result_string_2);
             return redirect()->route('message')->with('success_msg', $result_string_1)->with('error_msg', $result_string_2);
         }
-        
+
 
     }
 
@@ -640,7 +701,7 @@ class SettingController extends Controller
                 array_push($resultStatus_a,$resultStatus);
             }
             curl_close($ch);
-            
+
             foreach($resultStatus_a as $rs){
                 if($rs!=200){
                     $result="http_error_2";
@@ -649,7 +710,7 @@ class SettingController extends Controller
                     $result="rm_all_richmenus";
                 }
             }
-            
+
         }else{
             curl_close($ch);
         }
@@ -676,7 +737,7 @@ class SettingController extends Controller
                                         'width' => 1250,
                                         'height' =>843
                                     ],
-                
+
 
                                     'action'=>[
                                         'type' => 'postback',
@@ -715,7 +776,7 @@ class SettingController extends Controller
                                     'width' => 400,
                                     'height' =>270
                                 ],
-            
+
 
                                 'action'=>[
                                     'type' => 'postback',
@@ -730,8 +791,8 @@ class SettingController extends Controller
                                         'width' => 400,
                                         'height' =>270
                                     ],
-                
-    
+
+
                                     'action'=>[
                                         'type' => 'postback',
                                         'label' => '聯絡安親班',
@@ -806,4 +867,6 @@ class SettingController extends Controller
         return $result;
     }
 
+
 }
+

@@ -24,7 +24,7 @@
             <div class="login d-flex align-items-center py-5">
                 <div class="container">
                     <div class="row">
-                            
+
                         <div class="col-lg-7 col-xl-6 mx-auto">
                         @if(session()->has('login_success_msg'))
                             <div class="alert alert-success mb-5" name="alert_msg">
@@ -36,10 +36,12 @@
                                 {{ session()->get('login_error_msg') }}
                             </div>
                         @endif
-                            <h3 class="">{{ config('app.name', 'Laravel') }}</h3> <br>
+                            <div class="mb-5">
+                            <h3 class="text-primary">{{ config('app.name', 'Laravel') }}</h3>
+                            </div>
                             <form method="POST" action="{{ route('login') }}">
                                 @csrf
-                                <div class="form-group mb-3">
+                                {{--<div class="form-group mb-3">
 
                                     <input id="email" type="email" placeholder="{{ __('E-Mail Address') }}" class="form-control @error('email') is-invalid @enderror  rounded-pill border-0 shadow-sm px-4" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
@@ -48,7 +50,31 @@
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
+                                </div>--}}
+
+                                <div class="form-group mb-3">
+
+                                <input id="PID" type="text" placeholder="平台序號" class="form-control @error('PID') is-invalid @enderror  rounded-pill border-0 shadow-sm px-4" name="PID" value="{{ old('PID') }}" required autocomplete="PID" autofocus>
+
+                                @error('PID')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                                 </div>
+
+
+                                <div class="form-group mb-3">
+
+                                    <input id="account" type="text" placeholder="帳號" class="form-control @error('account') is-invalid @enderror  rounded-pill border-0 shadow-sm px-4" name="account" value="{{ old('account') }}" required autocomplete="account" autofocus>
+
+                                    @error('account')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
                                 <div class="form-group mb-3">
 
                                     <input id="password" type="password" placeholder="{{ __('Password') }}" class="form-control @error('password') is-invalid @enderror rounded-pill border-0 shadow-sm px-4" name="password" required autocomplete="current-password"><br>
@@ -79,17 +105,17 @@
                                 </button>
 
 
-                                <div class="text-center d-flex justify-content-between mt-4">
+                                {{--<div class="text-center d-flex justify-content-between mt-4">
                                     <p><a href="{{ route('register') }}" class="font-italic text-muted"> <u>{{ __('Register') }}</u></a></p>
 
                                 </div>
-                                    @if (Route::has('password.request'))
+                                   @if (Route::has('password.request'))
                                     <div class="form-group mb-3">
                                         <a class="font-italic text-muted" href="{{ route('password.request') }}">
                                             <u>{{ __('Forgot Your Password?') }}</u>
                                         </a>
                                     </div>
-                                    @endif
+                                    @endif--}}
                             </form>
                         </div>
                     </div>
@@ -170,3 +196,4 @@
 </div>--}}
 
 @endsection
+

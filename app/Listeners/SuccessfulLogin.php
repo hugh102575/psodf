@@ -8,6 +8,8 @@ use Auth;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\role;
+use App\Models\School;
+
 class SuccessfulLogin
 {
     /**
@@ -43,6 +45,14 @@ class SuccessfulLogin
             $user->save();
         }
         $school = Auth::user()->school;
+        /*if($school->PID==null){
+            $PID=strval("s").strval(rand(10000,99999));
+            while(School::where('PID',$PID)->exists()) {
+                $PID=strval("s").strval(rand(10000,99999));
+            }
+            $school->PID=$PID;
+            $school->save();
+        }*/
         if($school->in_msg==null || $school->out_msg==null){
             $school->in_msg="您的孩子@Name已經到班囉!";
             $school->out_msg="您的孩子@Name已經下課囉!";

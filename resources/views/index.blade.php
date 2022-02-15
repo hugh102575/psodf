@@ -20,7 +20,8 @@
                         $dayofweek_ = date('w', strtotime($t1));
                         $dayofweek =' ('.'星期' . ['日', '一', '二', '三', '四', '五', '六'][$dayofweek_].')';
                         @endphp
-                        現在時間: {{$t1}}{{$dayofweek}}{{--&nbsp;&nbsp;{{$t2}}--}}
+                        現在時間: {{$t1}}{{$dayofweek}}{{--&nbsp;&nbsp;{{$t2}}--}}<hr>
+                        <span class="">您的安親班<span class="bg-primary text-light px-1">平台序號:&nbsp;&nbsp;{{Auth::user()->school->PID}}</span>，請務必記住用來登入。<span>
                     </div>
                 </div>
             </div>

@@ -39,5 +39,17 @@ class SigninRepository
      
     }
 
+    public function getmultidata($date_array){
+        foreach($date_array as $index => $value) {
+            $signin=signin::where('created_date', '=', $value)->where('School_id',Auth::user()->School_id)->where('sign','in')->get();
+            $signout=signin::where('created_date', '=', $value)->where('School_id',Auth::user()->School_id)->where('sign','out')->get();
+            $date_array[$index]=array(
+                    'daily'=>$value,
+                    'FbBot_use'=>count($signin),
+                    'LineBot_use'=>count($signout),
+                );
+        }
+        return $date_array;
+    }
 
 }

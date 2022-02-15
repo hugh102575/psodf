@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Models\role;
+use App\Models\School;
 use Illuminate\Support\Facades\Hash;
 use Auth;
 
@@ -30,7 +31,48 @@ class UserRepository
         return $result;
 
     }
-    
+    public function app_login_v2(array $data){
+        $return=array();
+        $error_msg="";
+        $result=false;
+        $my_school=false;
+        $device_id=$data['device_id'];
+        $schools = School::all();
+        foreach($schools as $school){
+            $device_id_db=json_decode($school->device_id,true);
+            if (!empty($school->device_id) && in_array($device_id, $device_id_db)){
+                $my_school=$school;
+                break;
+            }
+        }
+        if($my_school){
+            if($my_school->Active){
+                $user = User::where('account',$data['email'])->where('School_id',$my_school->id)->first();
+                if($user){
+                    if (Hash::check($data['password'], $user->password)){
+                        $result=$user;
+                    }
+                }
+                if(!$result){
+                    $error_msg="帳號或密碼錯誤";
+                }else{
+                    if(!$user->active){
+                        $result=false;
+                        $error_msg="帳號已被停用";
+                    }
+                }
+            }else{
+                $error_msg="由於沒有繳費，您的安親班已被停用!";
+            }
+        }else{
+            $error_msg="使用非核可的裝置";
+        }
+
+        $return[0]=$result;
+        $return[1]=$error_msg;
+        return $return;
+    }
+
     public function create(array $data){
         $now = date('Y-m-d H:i:s');
         $data['School_id'] = Auth::user()->school->id;
@@ -55,6 +97,9 @@ class UserRepository
     }
     public function update_account($id,array $data){
         $user = User::find($id);
+        if(isset($data['password'])){
+            $data['password']=Hash::make($data['password']);
+        }
         return  $user ? $user->update($data) : false;
     }
     public function delete($id){
@@ -104,3 +149,4 @@ class UserRepository
 
 
 }
+

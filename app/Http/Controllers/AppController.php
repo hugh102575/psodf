@@ -38,6 +38,19 @@ class AppController extends Controller
         //array_push($return_total,$return);
         return json_encode($return);
     }
+
+    public function check_active(Request $request){
+        $active= $request->user()->school->Active;
+        if($active==1){
+            $active_boolean=true;
+        }else{
+            $active_boolean=false;
+        }
+        $return=array();
+        $return['Active']=$active_boolean;
+        return json_encode($return);
+    }
+
     public function login(Request $request){
         $user=$this->userRepo->app_login($request->all());
         $return=array();
@@ -77,6 +90,28 @@ class AppController extends Controller
         }
         return json_encode($return);
 
+    }
+    public function login_v2(Request $request){
+        $result=$this->userRepo->app_login_v2($request->all());
+        if($result[0]){
+            $user=$result[0];
+            $return['success']=true;
+            $return['user_id']=$user->id;
+            $return['api_token']=$user->api_token;
+            $return['school_name']=$user->school->School_Name;
+            $return['school_id']=$user->school->id;
+            $return['thresh']=$user->school->thresh;
+            $return['sign_mode']=$user->school->sign_mode;
+            $return['error_msg']="";
+            $return['backup_batch']=$user->school->batch;
+            $return['backup_classs']=$user->school->classs;
+            $return['backup_student']=$user->school->student;
+
+        }else{
+            $return['success']=false;
+            $return['error_msg']=$result[1];
+        }
+        return json_encode($return);
     }
     public function batch_find_class(Request $request,$id){
         $class=$request->user()->school->classs;

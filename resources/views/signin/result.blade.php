@@ -60,7 +60,7 @@
                         </div>
                         @if($classs_name=="不分班級")
                         <div class="mb-3">
-                        <span class="small">搜尋班級:</span>   
+                        <span class="small">搜尋班級:</span>
                         @foreach($all_classs as $ac)
                         <button class="btn btn-link  shadow-none small show_signed_classs" id="show_signed_classs_<?php echo $ac->id; ?>" type="button" ><small>{{$ac->Classs_Name}}</small></button>
                         <input class="hidden_object" id="show_signed_classs_value_<?php echo $ac->id; ?>" value="{{$ac->Classs_Name}}">
@@ -154,7 +154,14 @@
                                             $out_count++;
                                         }
                                         @endphp
-                                   <div>({{$count_2_display_asc}}) <span class="enlarge_text">{{$sign}}</span> {{$created_at}}<br><img class="zoom_img" src="{{$in->signin_img}}"  style="height: 5rem; width: 5rem;"><br><br></div></div>
+                                   {{--<div>({{$count_2_display_asc}}) <span class="enlarge_text">{{$sign}}</span> {{$created_at}}<br><img class="zoom_img" src="{{$in->signin_img}}"  style="height: 5rem; width: 5rem;"><br><br></div></div>--}}
+                                        <div>({{$count_2_display_asc}})
+                                         @if($sign=="簽到")
+                                         <span class="text-success">{{$sign}}</span> {{$created_at}}<br><img class="zoom_img" src="{{$in->signin_img}}"  style="height: 5rem; width: 5rem;"><br><br></div>
+                                         @elseif($sign=="簽退")
+                                         <span class="text-primary">{{$sign}}</span> {{$created_at}}<br><img class="zoom_img" src="{{$in->signin_img}}"  style="height: 5rem; width: 5rem;"><br><br></div>
+                                        @endif
+                                        </div>
                                         @php
                                         $count_2_display--;
                                         $count_2_display_asc++;
@@ -176,7 +183,7 @@
                                    <script>
                                        var st_id={!! json_encode($st->id) !!};
                                         var sign_hint=document.getElementById('sign_hint_'+st_id);
-                                        sign_hint.innerHTML="<div class=' text-success '>已簽到<br>已簽退</div>"
+                                        sign_hint.innerHTML="<div><span class='text-success'>已簽到</span><br><span class='text-primary'>已簽退</span></div>"
                                     </script>
                                    @else
                                         @if($in_count>0)
@@ -192,7 +199,7 @@
                                         <script>
                                         var st_id={!! json_encode($st->id) !!};
                                             var sign_hint=document.getElementById('sign_hint_'+st_id);
-                                            sign_hint.innerHTML="<div class=' text-success '>已簽退</div>"
+                                            sign_hint.innerHTML="<div class=' text-primary '>已簽退</div>"
                                         </script>
                                         @endif
                                     @endif
@@ -314,7 +321,13 @@
                                     {{$belong_classs->Classs_Name}}
                                     @endif
                                     </td>
-                                    <td class="text-success">{{$s_type}}</td>
+                                    <td>
+                                    @if($s_type=="簽到")
+                                    <span class="text-success">({{$s_type}})</span>
+                                    @elseif($s_type=="簽退")
+                                    <span class="text-primary">({{$s_type}})</span>
+                                    @endif
+                                    </td>
                                     <td>
                                         <div>
                                         <img class="zoom_img" src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
@@ -344,7 +357,7 @@
                 @else
                 <span class="text-success">{{$belong_sign}}筆簽到/退資料</span>
                 @endif
-                
+
                 {{--<br><br>查詢結果如下--}}
 
             </div>
@@ -377,7 +390,7 @@
                                     <tbody>
                                     @foreach($signin as $sn)
                                     @php
-                                   
+
                                     $t1=date('Y-m-d', strtotime($sn->created_at));
                                     $t2=date('H:i:s', strtotime($sn->created_at));
                                     $s_type="";
@@ -393,7 +406,13 @@
                                     <tr>
                                     <td>{{$t1}}{{$dayofweek}}</td>
                                     <td>{{$t2}}</td>
-                                    <td class="text-success">{{$s_type}}</td>
+                                    <td>
+                                    @if($s_type=="簽到")
+                                    <span class="text-success">({{$s_type}})</span>
+                                    @elseif($s_type=="簽退")
+                                    <span class="text-primary">({{$s_type}})</span>
+                                    @endif
+                                    </td>
                                     <td>
                                         <div>
                                         <img class="zoom_img" src="{{$sn->signin_img}}"  style="height: 5rem; width: 5rem;">
@@ -703,3 +722,4 @@ zoom_img.forEach(function(item,index){
 });
 </script>
 @endsection
+

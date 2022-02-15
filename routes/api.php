@@ -38,6 +38,5 @@ Route::middleware('auth:api')->post('/line/notify_queue', [AppController::class,
 Route::middleware('auth:api')->post('/profile', [AppController::class, 'profile']);
 Route::middleware('auth:api')->post('/manual_sign_check', [AppController::class, 'manual_sign_check']);
 Route::middleware('auth:api')->get('/school_all_students', [AppController::class, 'school_all_students']);
-
-
+Route::middleware('auth:api')->get('/check_active', [AppController::class, 'check_active']);
 
