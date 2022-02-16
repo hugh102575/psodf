@@ -268,11 +268,14 @@ $('.datepicker').datepicker({
 
     $('#chart_current_btn').on('click', function (e) {
         update_date=document.getElementById('chart_current').value;
+        
         //document.getElementById('myLineChart_live_div').innerHTML='';
         //canvas=document.createElement('canvas');
         //canvas.setAttribute("id", "myLineChart_live");
         //document.getElementById('myLineChart_live_div').appendChild(canvas);
-
+        if(update_date.length==0){
+            alert("請選擇查詢日期")
+        }else{
         function ajax2(){
             return $.ajax({
             type:'POST',
@@ -482,6 +485,7 @@ $('.datepicker').datepicker({
 
 
         });
+        }
     });
 
 

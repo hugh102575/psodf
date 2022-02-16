@@ -66,7 +66,7 @@
                                                      document.getElementById('admin-logout-form').submit();" >
                                         {{ __('Logout') }}
                                     </a>--}}
-                                        <button class="btn text-light my_nav_color " type="submit">{{ __('Logout') }}</button>
+                                        <button class="btn text-light my_nav_color " type="submit"><i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}</button>
                                     </form>
                             </li>
                     @endif

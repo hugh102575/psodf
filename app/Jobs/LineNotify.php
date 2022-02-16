@@ -103,13 +103,13 @@ class LineNotify implements ShouldQueue
                     $timestamp=date('Y-m-d H:i:s', $timestamp_);
                     $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$timestamp);
                 }else{
-                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$this->created_at);
+                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$this->created_at);
                 }
             }else{
                 if(isset($this->setTime)){
                     $timestamp_ = strtotime($this->setTime);
                     $timestamp=date('Y-m-d H:i:s', $timestamp_);
-                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$timestamp);
+                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$timestamp);
                 }else{
                     $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$this->created_at);
                 }

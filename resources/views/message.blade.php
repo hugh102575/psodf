@@ -257,7 +257,7 @@
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
 <script>
-document.getElementById('nav_title').innerHTML="<small>訊息傳送</small>";
+document.getElementById('nav_title').innerHTML="<small>訊息發送</small>";
 $(document).ready(function() {
     $('table.dataTable').DataTable({
         pageLength: 10,
