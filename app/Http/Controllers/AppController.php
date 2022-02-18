@@ -228,6 +228,34 @@ class AppController extends Controller
         return json_encode($return);
     }
 
+    public function notify_bind(Request $request){
+        //dd($request->all());
+        $code=$request['code'];
+        $url="https://notify-bot.line.me/oauth/token"; 
+       
+        $obj =
+                    [
+                        'grant_type' => 'authorization_code',
+                        'code' => $code,
+                        'redirect_uri' =>  'https://yes-psodf.yesinfo.com.tw/notify_bind/',
+                        'client_id' => 'gxfm4PmtJyNGiIyd63LODK',
+                        'client_secret' => 'FBBpmuSkvDqjwXEfBJ9uRIc9uTTW6Rad3z69khxrgsC'
+                        
+                    ]
+                ;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($obj));
+
+        $json_result = curl_exec($ch);
+        curl_close($ch);
+        
+        echo json_encode($json_result);
+    }
+
     public function profile(Request $request){
         $school=$request->user()->school;
         $School_id=$school->id;

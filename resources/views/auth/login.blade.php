@@ -105,8 +105,8 @@
                                 </button>
 
                                     <div class="text-center d-flex justify-content-between mt-4">
-                                        <p><a href="{{ route('register') }}" class="font-italic text-muted"> <u><small>{{ __('Register') }}</small></u></a></p>
-
+                                        {{--<p><a href="{{ route('register') }}" class="font-italic text-muted"> <u><small>{{ __('Register') }}</small></u></a></p>--}}
+                                        <p><a href="{{ route('register') }}" class="font-italic text-muted"> <u><small>立即註冊！</small></u></a></p>
                                     </div>
                                    @if (Route::has('password.request'))
                                     <div class="form-group mb-3">

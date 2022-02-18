@@ -286,6 +286,14 @@ class HomeController extends Controller
         }*/
         return view('line',['school'=>$school]);
     }
+    /*public function line_notify(){
+        $permission=$this->check_authority('line');
+        if(!$permission[0]){
+            return redirect()->route('home')->with('error_msg', $permission[1]);
+        }
+        $school=Auth::user()->school;
+        return view('line_notify',['school'=>$school]);
+    }*/
     public function signin(){
         $permission=$this->check_authority('sign');
         if(!$permission[0]){

@@ -40,6 +40,8 @@ Route::post('/app/login', [AppController::class, 'login_v2']);
 Route::post('/costom_reset_pwd', [AppController::class, 'costom_reset_pwd'])->name('costom_reset_pwd');
 Route::get('/costom_reset_pwd/{id}', [AppController::class, 'costom_reset_pwd_form'])->name('costom_reset_pwd_form');
 Route::post('/costom_reset_pwd/{id}', [AppController::class, 'costom_reset_pwd_form_post'])->name('costom_reset_pwd_form_post');
+Route::get('/notify_bind', [AppController::class, 'notify_bind']);
+
 
 Route::middleware([IsActive::class])->group(function () {
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -59,6 +61,7 @@ Route::post('/batch/store', [SettingController::class, 'batch_store'])->name('ba
 Route::post('/batch/update', [SettingController::class, 'batch_update'])->name('batch.update');
 Route::post('/batch/delete', [SettingController::class, 'batch_delete'])->name('batch.delete');
 Route::get('/line', [HomeController::class, 'line'])->name('line');
+//Route::get('/line_notify', [HomeController::class, 'line_notify'])->name('line_notify');
 Route::post('/line', [SettingController::class, 'line_update'])->name('line.update');
 Route::get('/signin', [HomeController::class, 'signin'])->name('signin.signin');
 Route::get('/signin/overview', [HomeController::class, 'signin_overview'])->name('signin.overview');

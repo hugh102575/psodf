@@ -9,7 +9,7 @@
     overflow-y: scroll;
 }
 .hr-style {
-  
+    border-top: 1px dashed #0275d8;
 }
 </style>
 @endsection
@@ -224,7 +224,7 @@
                 </div>
 
                 <div class="mt-5">
-                <hr class="bg-primary hr-style">
+                <hr class=" hr-style">
                 <div class="form-group">
                     <label  class="font-weight-bold my_nav_text enlarge_text">收款狀態</label>
                     <div class="row justify-content-center">
