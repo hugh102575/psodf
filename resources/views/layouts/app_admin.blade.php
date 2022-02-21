@@ -44,6 +44,7 @@
                 {{ config('app.name', 'Laravel') }} - 系統管理員
                 </div>
 
+                @if(session()->get('admin'))
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -56,7 +57,7 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
-                    @if(session()->get('admin'))
+                    {{--@if(session()->get('admin'))--}}
                             <li class="nav-item dropdown">
                                 
                                     <form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" class="" onsubmit="return confirm('確定要登出嗎?');">
@@ -69,9 +70,10 @@
                                         <button class="btn text-light my_nav_color " type="submit"><i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}</button>
                                     </form>
                             </li>
-                    @endif
+                    {{--@endif--}}
                     </ul>
                 </div>
+                @endif
             </div>
         </nav>
 

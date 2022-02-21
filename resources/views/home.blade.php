@@ -8,6 +8,7 @@
 
 background-image: url("{{ asset('/img/dexway-classroom-companion-ingles-uk.jpg') }}");
 background-repeat: no-repeat;
+background-position:center;
 background-attachment: fixed; 
 background-size: cover;
 background-color: rgba(255, 255, 255, 0.5);

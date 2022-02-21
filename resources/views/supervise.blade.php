@@ -33,7 +33,7 @@
 <div class="container">
     <div class="row justify-content-center">
         
-        <h1 class="bg-primary text-light text-center mb-5 font-weight-bold">{{$school->School_Name}}</h1>
+        <h1 class="my_nav_text text-center mb-5 font-weight-bold">{{$school->School_Name}}</h1>
         <div class="col-md-12">
         @foreach($student as $st)
                     @php

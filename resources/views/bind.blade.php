@@ -6,6 +6,8 @@ body {
     background-image: url("{{ asset('/img/menu2.png') }}");
     background-repeat: no-repeat;
     background-position:center;  
+    background-attachment: fixed; 
+    background-size: cover;
 }
 </style>
 @endsection
@@ -15,7 +17,7 @@ body {
     <div class="row justify-content-center">
 
         
-        <h1 class="bg-primary text-light  text-center mb-5 font-weight-bold ">{{$school->School_Name}}</h1>
+        <h1 class="my_nav_text  text-center mb-5 font-weight-bold ">{{$school->School_Name}}</h1>
         <div class="col-md-12">
             
         @if(session()->has('success_msg'))

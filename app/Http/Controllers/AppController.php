@@ -231,6 +231,10 @@ class AppController extends Controller
     public function notify_bind(Request $request){
         //dd($request->all());
         $code=$request['code'];
+        $state=$request['state'];
+        
+
+
         $url="https://notify-bot.line.me/oauth/token"; 
        
         $obj =
@@ -260,6 +264,12 @@ class AppController extends Controller
         curl_close($ch);
 
         if(isset($access_token)){
+            return redirect()->route('bind',array('school_id'=>$state,'LineID'=>"NotifyToken_".$access_token));
+        }else{
+            echo "發生錯誤";
+        }
+
+        /*if(isset($access_token)){
             echo $access_token;
             $send_url="https://notify-api.line.me/api/notify";
 
@@ -286,7 +296,7 @@ class AppController extends Controller
             echo json_encode($json_result2);
         }else{
             echo "no access_token";
-        }
+        }*/
         
         //echo json_encode($access_token);
     }
@@ -338,12 +348,18 @@ class AppController extends Controller
         if($student){
             $add_line=$this->studentRepo->add_parent_line2($student,$userId);
             if($add_line){
+                //if (!str_contains($userId, 'NotifyToken')) { 
+                    
+                
                 $message="設定成功!\n".$student->name."的家長您好，\n"."之後小朋友到班時，\n本系統會自動通知您。";
 
                 $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
                 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
                 $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
                 $push_result=$bot->pushMessage($userId,$push_build);
+                /*}else{
+                    $message="設定成功!\n".$student->name."的家長您好，\n"."之後小朋友到班時，\n本系統會自動通知您。";
+                }*/
 
                 return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('success_msg', $message);
             }else{

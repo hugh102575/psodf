@@ -379,9 +379,10 @@
                             <thead>
                                 <tr class="my_nav_color text-light">
                                     {{--<th>ID</th>--}}
-                                    <th>安親班</th>
                                     <th>平台序號</th>
-                                    <th>聯絡方式</th>
+                                    <th>安親班</th>
+                                    
+                                    <th>聯絡資料</th>
                                     <!--<th>負責人</th>
                                     <th>電話</th>-->
                                     <th>學生總數</th>
@@ -398,9 +399,15 @@
                             @foreach($schools as $school)
                                 <tr>
                                     {{--<td>{{ $school->id }}</td>--}}
-                                    <td>{{ $school->School_Name }}</td>
                                     <td>{{ $school->PID }}</td>
-                                    <td>{{ $school->admin }}<br><i class="fa fa-phone-square text-success"></i> {{ $school->phone }}</td>
+                                    <td>{{ $school->School_Name }}</td>
+                                    
+                                    @php
+                                        $info_array=array($school->PID, $school->School_Name, $school->admin, $school->phone, $school->address);
+                                        $info_array_encode=json_encode($info_array);
+                                    @endphp
+                                    {{--<td>{{ $school->admin }}<br><i class="fa fa-phone-square text-success"></i> {{ $school->phone }}<br><button type="button" class="info_btn btn btn-link text-primary atext" value="{{$address_array_encode}}">地址</button></td>--}}
+                                    <td><button type="button" class="info_btn btn btn-link text-primary atext" value="{{$info_array_encode}}"><i class="fa fa-address-card"></i> 聯絡資料</button></td>
                                     <!--<td>{{ $school->admin }}</td>
                                     <td>{{ $school->phone }}</td>-->
                                     <td>
@@ -786,6 +793,19 @@ subscribe_edit_btn.forEach(function(item,index){
 });
 }
 edit_modal_event();
+
+var info_btn=document.querySelectorAll('.info_btn');
+info_btn.forEach(function(item,index){
+    item.addEventListener('click', function(){
+        var value=JSON.parse(item.value);
+        var pid=value[0];
+        var school_name=value[1];
+        var manager=value[2];
+        var phone=value[3];
+        var address=value[4];
+        alert("平台序號: "+pid+"\n"+"安親班: "+school_name+"\n"+"聯絡人: "+manager+"\n"+"聯絡電話: "+phone+"\n"+"聯絡地址: "+address)
+    });
+});
 
 
 var datepicker_costom=document.querySelectorAll('.datepicker_costom');

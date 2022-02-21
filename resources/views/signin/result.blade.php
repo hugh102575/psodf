@@ -173,14 +173,14 @@
                                    @endforeach
                                    @if($count_2==0)
                                    {{--<div>尚未簽到</div>--}}
-                                   <script>
+                                   <script type="application/javascript">
                                        var st_id={!! json_encode($st->id) !!};
                                         var sign_hint=document.getElementById('sign_hint_'+st_id);
                                         sign_hint.innerHTML="<div class=' text-danger '>尚未簽到</div>"
                                     </script>
                                    @endif
                                    @if($in_count>0 && $out_count>0)
-                                   <script>
+                                   <script type="application/javascript">
                                        var st_id={!! json_encode($st->id) !!};
                                         var sign_hint=document.getElementById('sign_hint_'+st_id);
                                         sign_hint.innerHTML="<div><span class='text-success'>已簽到</span><br><span class='text-primary'>已簽退</span></div>"
@@ -188,7 +188,7 @@
                                    @else
                                         @if($in_count>0)
                                         {{--<div class="enlarge_text text-success font-weight-bold">已簽到</div>--}}
-                                        <script>
+                                        <script type="application/javascript">
                                         var st_id={!! json_encode($st->id) !!};
                                             var sign_hint=document.getElementById('sign_hint_'+st_id);
                                             sign_hint.innerHTML="<div class=' text-success '>已簽到</div>"
@@ -196,7 +196,7 @@
                                         @endif
                                         @if($out_count>0)
                                         {{--<div class="enlarge_text text-success font-weight-bold">已簽退</div>--}}
-                                        <script>
+                                        <script type="application/javascript">
                                         var st_id={!! json_encode($st->id) !!};
                                             var sign_hint=document.getElementById('sign_hint_'+st_id);
                                             sign_hint.innerHTML="<div class=' text-primary '>已簽退</div>"
