@@ -232,7 +232,7 @@
                                 </div>
                                 </td>
                                 <td class="message_edit_btn"><a class="my_nav_text"  href="#" data-target="#MessageModal_edit" data-toggle="modal"><i class="fas fa-pencil-alt" ></i> 編輯</a></td>
-                                <td class="message_send_btn"><a href="#"><i class="fas fa-paper-plane my_nav_text" data-target="#MessageModal_send" data-toggle="modal"></i></a></td>
+                                <td class="message_send_btn"><a class="my_nav_text" href="#" data-target="#MessageModal_send" data-toggle="modal"><i class="fas fa-paper-plane my_nav_text"></i> 發送</a></td>
                                 <td class="message_edit_id hidden_object">{{$message->id}}</td>
                             </tr>
 
@@ -346,7 +346,7 @@ var all_message={!! json_encode($all_message) !!};
 console.log('all_message',all_message)
 var message_send_btn=document.querySelectorAll('.message_send_btn');
 var message_send_id=document.querySelectorAll('.message_edit_id');
-var message_checkbox=document.querySelectorAll('#checkboxs');
+//var message_checkbox=document.querySelectorAll('#checkboxs');
 var m_id=null;
 message_send_btn.forEach(function(item,index){
     item.addEventListener('click', function(){
@@ -356,6 +356,7 @@ message_send_btn.forEach(function(item,index){
         console.log('m_id',m_id)
         var where=all_message.findIndex(x => x.id==m_id);
         if(where!=-1){
+            console.log(where)
             document.getElementById('message_update_id').value=all_message[where].id;
             document.getElementById('Message_Name_send').value=all_message[where].name;
             if(all_message[where].data!=null){

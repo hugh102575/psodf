@@ -3,11 +3,9 @@
 @section('app_css')
 <style>
 body {
-
     background-image: url("{{ asset('/img/menu2.png') }}");
     background-repeat: no-repeat;
-    background-position:center; 
-    
+    background-position:center;  
 }
 </style>
 @endsection
