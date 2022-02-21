@@ -4,6 +4,16 @@
 <link href="{{asset('vendor/collapsible-sticky-sidebar-nav-next/css/perfect-scrollbar.css')}}" rel="stylesheet">
 <link href="{{asset('vendor/collapsible-sticky-sidebar-nav-next/css/next-sidebar.css')}}" rel="stylesheet">
 <style>
+  body {
+
+background-image: url("{{ asset('/img/dexway-classroom-companion-ingles-uk.jpg') }}");
+background-repeat: no-repeat;
+background-attachment: fixed; 
+background-size: cover;
+background-color: rgba(255, 255, 255, 0.5);
+background-blend-mode: overlay;
+
+}
 .stay-open {
   display:block ;
 }
