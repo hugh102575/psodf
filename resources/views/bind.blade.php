@@ -1,11 +1,25 @@
 @extends('layouts.app_guest')
 
+@section('app_css')
+<style>
+body {
+
+    background-image: url("{{ asset('/img/menu2.png') }}");
+    background-repeat: no-repeat;
+    background-position:center; 
+    
+}
+</style>
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
 
+        
+        <h1 class="my_nav_color text-light  text-center mb-5 font-weight-bold ">{{$school->School_Name}}</h1>
         <div class="col-md-12">
-        <h1 class="my_nav_text text-center mb-5 font-weight-bold">{{$school->School_Name}}</h1>
+            
         @if(session()->has('success_msg'))
             <div class="alert alert-success mb-3" name="alert_msg">
                 {{ session()->get('success_msg') }}

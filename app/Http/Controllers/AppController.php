@@ -251,9 +251,44 @@ class AppController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($obj));
 
         $json_result = curl_exec($ch);
+        $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $access_token=null;
+        if ($resultStatus == 200) {
+            $result=json_decode($json_result,true);
+	        $access_token=$result['access_token'];
+        }
         curl_close($ch);
+
+        if(isset($access_token)){
+            echo $access_token;
+            $send_url="https://notify-api.line.me/api/notify";
+
+            $path = 'Notify/1/120/'.'2022_02_16_620c98ffd2fb17.58830293.jpg';
+            $image_path = Storage::url($path);
+            $image_url=str_replace('http://','https://',url($image_path));
+            $msg="測試簽到";
+            $obj2 =
+                    [
+                        'message' => $msg,
+                        'imageThumbnail'=> $image_url,
+                        'imageFullsize' =>$image_url
+                    ]
+                ;
+            $ch2 = curl_init();
+            $authorization = "Authorization: Bearer " . $access_token;
+            curl_setopt($ch2, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data' , $authorization ));
+            curl_setopt($ch2, CURLOPT_POST, 1);
+            curl_setopt($ch2, CURLOPT_URL, $send_url);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch2, CURLOPT_POSTFIELDS, $obj2);
+            $json_result2 = curl_exec($ch2);
+            curl_close($ch2);
+            echo json_encode($json_result2);
+        }else{
+            echo "no access_token";
+        }
         
-        echo json_encode($json_result);
+        //echo json_encode($access_token);
     }
 
     public function profile(Request $request){

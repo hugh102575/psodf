@@ -32,8 +32,9 @@
 
 <div class="container">
     <div class="row justify-content-center">
+        
+        <h1 class="my_nav_color text-light text-center mb-5 font-weight-bold">{{$school->School_Name}}</h1>
         <div class="col-md-12">
-        <h1 class="my_nav_text text-center mb-5 font-weight-bold">{{$school->School_Name}}</h1>
         @foreach($student as $st)
                     @php
                     $belong_sign=0;
