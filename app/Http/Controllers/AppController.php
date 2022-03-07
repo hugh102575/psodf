@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Crypt;
 use Validator;
 use Auth;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Redirect;
 
 class AppController extends Controller
 {
@@ -178,7 +178,7 @@ class AppController extends Controller
             $file = $request->file($new_img);
             if ($file->isValid()){
                 //if($student && $student->parent_line){
-                if($student && isset($student->parent_line_multi)){
+                if($student){
                     $date = date('Y_m_d_');
                     //$record=$this->signinRepo->find_record($id,$date);
                     //if($record){
@@ -229,44 +229,82 @@ class AppController extends Controller
     }
 
     public function notify_bind(Request $request){
-        //dd($request->all());
         $code=$request['code'];
         $state=$request['state'];
-        
-
-
-        $url="https://notify-bot.line.me/oauth/token"; 
-       
-        $obj =
-                    [
-                        'grant_type' => 'authorization_code',
-                        'code' => $code,
-                        'redirect_uri' =>  'https://yes-psodf.yesinfo.com.tw/notify_bind/',
-                        'client_id' => 'gxfm4PmtJyNGiIyd63LODK',
-                        'client_secret' => 'FBBpmuSkvDqjwXEfBJ9uRIc9uTTW6Rad3z69khxrgsC'
-                        
-                    ]
-                ;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($obj));
-
-        $json_result = curl_exec($ch);
-        $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $access_token=null;
-        if ($resultStatus == 200) {
-            $result=json_decode($json_result,true);
-	        $access_token=$result['access_token'];
+        $arr = explode('@', $state);
+        if(count($arr)==5){
+            $school_id=$arr[0];
+            $student_id=$arr[1];
+            $student=$this->studentRepo->find($student_id);
+            $client_id=$arr[2];
+            $client_secret=$arr[3];
+            $userId_official=$arr[4];
         }
-        curl_close($ch);
-
-        if(isset($access_token)){
-            return redirect()->route('bind',array('school_id'=>$state,'LineID'=>"NotifyToken_".$access_token));
+        
+        if(count($arr)!=5){
+            $message="發生例外的錯誤1";
+            return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('error_msg', $message);
         }else{
-            echo "發生錯誤";
+            $url="https://notify-bot.line.me/oauth/token"; 
+            $obj =
+                        [
+                            'grant_type' => 'authorization_code',
+                            'code' => $code,
+                            'redirect_uri' =>  'https://yes-psodf.yesinfo.com.tw/notify_bind/',
+                            'client_id' => $client_id,
+                            'client_secret' => $client_secret
+                            
+                        ]
+                    ;
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($obj));
+
+            $json_result = curl_exec($ch);
+            $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $access_token=null;
+            if ($resultStatus == 200) {
+                $result=json_decode($json_result,true);
+                $access_token=$result['access_token'];
+            }
+            curl_close($ch);
+
+            if(isset($access_token)){
+                $add_line=$this->studentRepo->add_parent_line3($student,$userId_official,$access_token);
+                if($add_line){
+                    $message="設定成功!\n".$student->name."的家長您好，\n"."之後小朋友到班時，\n本系統會自動通知您。";
+                    
+                    $send_url="https://notify-api.line.me/api/notify";
+                    $obj =
+                            [
+                                'message' => $message
+                            ]
+                        ;
+                    $ch = curl_init();
+                    $authorization = "Authorization: Bearer " . $access_token;
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data' , $authorization ));
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_URL, $send_url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $obj);
+                    $json_result2 = curl_exec($ch);
+                    curl_close($ch);
+
+                    return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId_official))->with('success_msg', $message);
+
+                }else{
+                    $message="發生例外的錯誤3";
+                    return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId_official))->with('error_msg', $message);
+                }
+                //echo json_encode($result);
+                //return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>"NotifyToken@".$access_token));
+            }else{
+                $message="發生例外的錯誤2";
+                return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId_official))->with('error_msg', $message);
+            }
         }
 
         /*if(isset($access_token)){
@@ -343,29 +381,80 @@ class AppController extends Controller
         $userId=$request['LineID'];
         $stid=$request['stid'];
         $school_id=$request['school_id'];
+        if(!str_contains($userId, 'NotifyToken')){
+            $mode="official";
+            $userId_real=$userId;
+        }else{
+            $mode="notify";
+            $arr = explode('@', $userId);
+            $userId_real = $arr[1];    
+        }
         $school=$this->schoolRepo->find($school_id);
         $student=$this->studentRepo->check_stuid($stid,$school_id);
         if($student){
-            $add_line=$this->studentRepo->add_parent_line2($student,$userId);
+            $check=false;
+            $multi_line=$student->parent_line_multi;
+            if(isset($multi_line)){
+                $multi_line_d=json_decode($multi_line,true);
+                if (in_array($userId_real, $multi_line_d)){
+                    $check=false;
+                }else{
+                    $check=true;
+                }
+            }else{
+                $check=true;
+            }
+           
+            if($check){
+                //$p_client_id="RRLsQUWlfQYbspJCJH5KTx";
+                //$p_client_secret="24xjchpNgX94Gg84wPuRfsImyejApEgWrp0yN2QS0OS";
+                $p_client_id=$school->ClientId;
+                $p_client_secret=$school->ClientSecret;
+                $state_string=$school_id."@".$student->id."@".$p_client_id."@".$p_client_secret."@".$userId_real;
+                if(isset($state_string)){
+                    return Redirect::to('https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&client_id='.$p_client_id.'&redirect_uri=https://yes-psodf.yesinfo.com.tw/notify_bind/&state='.$state_string);
+                }else{
+                    $message="發生例外的錯誤4";
+                    return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('error_msg', $message);
+                }
+            }else{
+                $message="謝謝，".$student->name."的家長，\n"."您之前已經設定成功囉";
+                return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('normal_msg', $message);
+            }
+            //return Redirect::to('https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&client_id=RRLsQUWlfQYbspJCJH5KTx&redirect_uri=https://yes-psodf.yesinfo.com.tw/notify_bind/&state=1@120@RRLsQUWlfQYbspJCJH5KTx@24xjchpNgX94Gg84wPuRfsImyejApEgWrp0yN2QS0OS');
+            
+            /*$add_line=$this->studentRepo->add_parent_line2($student,$userId_real,$mode);
             if($add_line){
-                //if (!str_contains($userId, 'NotifyToken')) { 
-                    
-                
-                $message="設定成功!\n".$student->name."的家長您好，\n"."之後小朋友到班時，\n本系統會自動通知您。";
-
-                $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
-                $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
-                $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-                $push_result=$bot->pushMessage($userId,$push_build);
-                /*}else{
+                if ($mode=="official") { 
                     $message="設定成功!\n".$student->name."的家長您好，\n"."之後小朋友到班時，\n本系統會自動通知您。";
-                }*/
+                    $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
+                    $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
+                    $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+                    $push_result=$bot->pushMessage($userId_real,$push_build);
+                }else if($mode=="notify"){
+                    $message="設定成功!\n".$student->name."的家長您好，\n"."之後小朋友到班時，\n本系統會自動通知您。";
+                    $send_url="https://notify-api.line.me/api/notify";
+                    $obj =
+                            [
+                                'message' => $message
+                            ]
+                        ;
+                    $ch = curl_init();
+                    $authorization = "Authorization: Bearer " . $userId_real;
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data' , $authorization ));
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_URL, $send_url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $obj);
+                    $json_result2 = curl_exec($ch);
+                    curl_close($ch);
+                }
 
                 return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('success_msg', $message);
             }else{
                 $message="謝謝，".$student->name."的家長，\n"."您之前已經設定成功囉";
                 return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('normal_msg', $message);
-            }
+            }*/
         }else{
             $message="查無學生資料，\n請檢查輸入是否正確";
             return redirect()->route('bind',array('school_id'=>$school_id,'LineID'=>$userId))->with('error_msg', $message);

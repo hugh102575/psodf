@@ -59,7 +59,7 @@ class LINEController extends Controller
                     $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
                     $rp_result=$bot->replyMessage($event['replyToken'],$push_build);
                     if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
-                        $result=$bot->pushMessage($userId,$push_build);
+                        //$result=$bot->pushMessage($userId,$push_build);
                     }
                     //$result=$bot->pushMessage($userId,$push_build);
                 }else if($postback_data=="contact"){
@@ -72,7 +72,7 @@ class LINEController extends Controller
                     //$push_build2 = new \LINE\LINEBot\MessageBuilder\LocationMessageBuilder($school->School_Name,$school->address,25.04395588388903, 121.52203109668106);
                     $rp_result=$bot->replyMessage($event['replyToken'],$push_build);
                     if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
-                        $result=$bot->pushMessage($userId,$push_build);
+                        //$result=$bot->pushMessage($userId,$push_build);
                     }
                     //$result=$bot->pushMessage($userId,$push_build);
                 }
@@ -83,7 +83,7 @@ class LINEController extends Controller
                     $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
                     $rp_result=$bot->replyMessage($event['replyToken'],$push_build);
                     if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
-                        $result=$bot->pushMessage($userId,$push_build);
+                        //$result=$bot->pushMessage($userId,$push_build);
                     }
                 }
                 else if($postback_data=="main_menu"){
@@ -150,11 +150,11 @@ class LINEController extends Controller
         $btn_build = new \LINE\LINEBot\MessageBuilder\TemplateBuilder\ButtonTemplateBuilder($school->School_Name,"親愛的家長您好，\n請選擇操作選項。",$thumb_nail,$actions);
         $MessageBuild = new \LINE\LINEBot\MessageBuilder\TemplateMessageBuilder("按鈕訊息回覆", $btn_build);
         if($rp_token==null){
-            $result=$bot->pushMessage($userId,$MessageBuild);
+            //$result=$bot->pushMessage($userId,$MessageBuild);
         }else{
             $rp_result=$bot->replyMessage($rp_token,$MessageBuild);
             if($rp_result->getHTTPStatus()!=200 && $rp_result->getHTTPStatus()!="200"){
-                $result=$bot->pushMessage($userId,$MessageBuild);
+                //$result=$bot->pushMessage($userId,$MessageBuild);
             }
         }
     }

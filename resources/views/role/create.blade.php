@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="form-check form-switch mb-1">
                                         <input class="form-check-input" type="checkbox" id="checkbox_line" name="authority[]" value="line">
-                                        <label class="form-check-label" for="checkbox_line">Line@串接</label>
+                                        <label class="form-check-label" for="checkbox_line">Line串接</label>
                                     </div>
                                     <div class="form-check form-switch mb-1">
                                         <input class="form-check-input" type="checkbox" id="checkbox_sys" name="authority[]" value="sys">

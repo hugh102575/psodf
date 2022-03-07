@@ -20,6 +20,26 @@
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">進階設定</h5>
                     </div>
                     <div class="card-body">
+                        {{--<div class="card py-4 px-5 mb-5">
+                            <div class="form-group row">
+                            <div class="col-sm-4" >
+                            <label for="line_mode" class="font-weight-bold my_nav_text ">LINE串接</label>
+                            </div>
+                            <div class="col-sm-6" id="line_mode">
+                                @if(Auth::user()->school->line_mode=="official")
+                                <div class="">安親班LINE@</div>
+                                @elseif(Auth::user()->school->line_mode=="notify")
+                                <div class="">安親班LINE Notify</div>
+                                @else
+                                <div class="text-danger">尚未設定</div>
+                                @endif
+
+                            </div>
+
+                            </div>
+                        </div>--}}
+
+
                         <div class="card py-4 px-5 mb-5">
                             <div class="form-group row">
                             <div class="col-sm-4" >

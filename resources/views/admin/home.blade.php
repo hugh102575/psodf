@@ -15,6 +15,48 @@
 @endsection
 
 @section('content')
+
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title  font-weight-bold my_nav_text">聯絡資料</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                
+                <div class="form-group">
+                    <label  class="font-weight-bold my_nav_text enlarge_text">平台序號</label>
+                    <input  id="info1" class="form-control"  disabled readonly>
+                </div>
+                <div class="form-group">
+                    <label  class="font-weight-bold my_nav_text enlarge_text">安親班</label>
+                    <input  id="info2" class="form-control"  disabled readonly>
+                </div>
+                <div class="form-group">
+                    <label  class="font-weight-bold my_nav_text enlarge_text">聯絡人</label>
+                    <input  id="info3" class="form-control"  disabled readonly>
+                </div>
+                <div class="form-group">
+                    <label  class="font-weight-bold my_nav_text enlarge_text">聯絡電話</label>
+                    <input  id="info4" class="form-control"  disabled readonly>
+                </div>
+                <div class="form-group">
+                    <label  class="font-weight-bold my_nav_text enlarge_text">聯絡地址</label>
+                    <input  id="info5" class="form-control"  disabled readonly>
+                </div>
+            </div>
+        </div>
+
+      </div>
+  </div>
+</div>
+
+
+
 <form action="{{ route('admin.update_plan') }}" method="POST" enctype="multipart/form-data">
 @csrf
 <div class="modal fade" id="planModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -407,7 +449,7 @@
                                         $info_array_encode=json_encode($info_array);
                                     @endphp
                                     {{--<td>{{ $school->admin }}<br><i class="fa fa-phone-square text-success"></i> {{ $school->phone }}<br><button type="button" class="info_btn btn btn-link text-primary atext" value="{{$address_array_encode}}">地址</button></td>--}}
-                                    <td><button type="button" class="info_btn btn btn-link text-primary atext" value="{{$info_array_encode}}"><i class="fa fa-address-card"></i> 聯絡資料</button></td>
+                                    <td><button type="button" class="info_btn btn btn-link text-primary atext" value="{{$info_array_encode}}" data-target="#infoModal" data-toggle="modal"><i class="fa fa-address-card"></i> 聯絡資料</button></td>
                                     <!--<td>{{ $school->admin }}</td>
                                     <td>{{ $school->phone }}</td>-->
                                     <td>
@@ -803,7 +845,12 @@ info_btn.forEach(function(item,index){
         var manager=value[2];
         var phone=value[3];
         var address=value[4];
-        alert("平台序號: "+pid+"\n"+"安親班: "+school_name+"\n"+"聯絡人: "+manager+"\n"+"聯絡電話: "+phone+"\n"+"聯絡地址: "+address)
+        document.getElementById('info1').value=pid
+        document.getElementById('info2').value=school_name
+        document.getElementById('info3').value=manager
+        document.getElementById('info4').value=phone
+        document.getElementById('info5').value=address
+        //alert("平台序號: "+pid+"\n"+"安親班: "+school_name+"\n"+"聯絡人: "+manager+"\n"+"聯絡電話: "+phone+"\n"+"聯絡地址: "+address)
     });
 });
 

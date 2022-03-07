@@ -48,87 +48,121 @@ class LineNotify implements ShouldQueue
      */
     public function handle()
     {
-        /*if(isset($this->school->LineChannelAccessToken) && isset($this->school->LineChannelSecret))
-        if(isset($this->student->parent_line)){
-            $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($this->school->LineChannelAccessToken);
-            $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $this->school->LineChannelSecret]);
-            $MessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
+        $mode="notify";
+        
+        if($mode=="official"){
+            if(isset($this->school->LineChannelAccessToken) && isset($this->school->LineChannelSecret))
+            if(isset($this->student->parent_line_multi)){
+                $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($this->school->LineChannelAccessToken);
+                $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $this->school->LineChannelSecret]);
+                $MessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
 
-            if($this->sign=="in"){
-                $message="[簽到] 您的孩子".$this->student->name."已經到班囉!";
-            }else{
-                $message="[簽退] 您的孩子".$this->student->name."已經下課囉!";
-            }
-
-            $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-
-            //$url=str_replace('http://','https://',url($this->image_path));
-            $ngrok="https://1d7c-111-241-75-55.ngrok.io";
-            $url=str_replace('http://psodf.local',$ngrok,url($this->image_path));
-            $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
-
-            $MessageBuilder->add($push_build1);
-            $MessageBuilder->add($push_build2);
-
-            $result=$bot->pushMessage($this->student->parent_line,$MessageBuilder);
-
-        }*/
-
-        if(isset($this->school->LineChannelAccessToken) && isset($this->school->LineChannelSecret))
-        if(isset($this->student->parent_line_multi)){
-            $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($this->school->LineChannelAccessToken);
-            $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $this->school->LineChannelSecret]);
-            $MessageBuilder = new \LINE\LINEBot\MessageBuilder\MultiMessageBuilder();
-
-            if($this->sign=="in"){
-                //$message="您的孩子".$this->student->name."已經到班囉!";
-                $msg=$this->school->in_msg;
-                $msg=str_replace("@Name",$this->student->name,$msg);
-                $msg=str_replace("@School",$this->school->School_Name,$msg);
-                $msg=str_replace("@Phone",$this->school->phone,$msg);
-                $message=$msg;
-            }else{
-                //$message="您的孩子".$this->student->name."已經下課囉!";
-                $msg=$this->school->out_msg;
-                $msg=str_replace("@Name",$this->student->name,$msg);
-                $msg=str_replace("@School",$this->school->School_Name,$msg);
-                $msg=str_replace("@Phone",$this->school->phone,$msg);
-                $message=$msg;
-            }
-
-            $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-            if($this->sign=="in"){
-                if(isset($this->setTime)){
-                    $timestamp_ = strtotime($this->setTime);
-                    $timestamp=date('Y-m-d H:i:s', $timestamp_);
-                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$timestamp);
+                if($this->sign=="in"){
+                    //$message="您的孩子".$this->student->name."已經到班囉!";
+                    $msg=$this->school->in_msg;
+                    $msg=str_replace("@Name",$this->student->name,$msg);
+                    $msg=str_replace("@School",$this->school->School_Name,$msg);
+                    $msg=str_replace("@Phone",$this->school->phone,$msg);
+                    $message=$msg;
                 }else{
-                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$this->created_at);
+                    //$message="您的孩子".$this->student->name."已經下課囉!";
+                    $msg=$this->school->out_msg;
+                    $msg=str_replace("@Name",$this->student->name,$msg);
+                    $msg=str_replace("@School",$this->school->School_Name,$msg);
+                    $msg=str_replace("@Phone",$this->school->phone,$msg);
+                    $message=$msg;
                 }
-            }else{
-                if(isset($this->setTime)){
-                    $timestamp_ = strtotime($this->setTime);
-                    $timestamp=date('Y-m-d H:i:s', $timestamp_);
-                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$timestamp);
+
+                $push_build1 = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+                if($this->sign=="in"){
+                    if(isset($this->setTime)){
+                        $timestamp_ = strtotime($this->setTime);
+                        $timestamp=date('Y-m-d H:i:s', $timestamp_);
+                        $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$timestamp);
+                    }else{
+                        $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽到時間: \n".$this->created_at);
+                    }
                 }else{
-                    $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$this->created_at);
+                    if(isset($this->setTime)){
+                        $timestamp_ = strtotime($this->setTime);
+                        $timestamp=date('Y-m-d H:i:s', $timestamp_);
+                        $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$timestamp);
+                    }else{
+                        $push_build_time = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("簽退時間: \n".$this->created_at);
+                    }
                 }
+
+                $url=str_replace('http://','https://',url($this->image_path));
+                //$ngrok="https://ca04-61-220-205-150.ngrok.io";
+                //$url=str_replace('http://a.local',$ngrok,url($this->image_path));
+                $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
+
+                $MessageBuilder->add($push_build1);
+                $MessageBuilder->add($push_build_time);
+                $MessageBuilder->add($push_build2);
+
+                $parent_line_multi=json_decode($this->student->parent_line_multi);
+                foreach($parent_line_multi as $parent_line){
+                    $result=$bot->pushMessage($parent_line,$MessageBuilder);
+                }
+
             }
+        }elseif($mode=="notify"){
+            if(isset($this->student->parent_line_multi_notify)){
+                if($this->sign=="in"){
+                    //$message="您的孩子".$this->student->name."已經到班囉!";
+                    $msg=$this->school->in_msg;
+                    $msg=str_replace("@Name",$this->student->name,$msg);
+                    $msg=str_replace("@School",$this->school->School_Name,$msg);
+                    $msg=str_replace("@Phone",$this->school->phone,$msg);
+                    $message=$msg;
+                    if(isset($this->setTime)){
+                        $timestamp_ = strtotime($this->setTime);
+                        $timestamp=date('Y-m-d H:i:s', $timestamp_);
+                        $message=$message."\n\n"."簽到時間: \n".$timestamp;
+                    }else{
+                        $message=$message."\n\n"."簽到時間: \n".$this->created_at;
+                    }
+                }else{
+                    //$message="您的孩子".$this->student->name."已經下課囉!";
+                    $msg=$this->school->out_msg;
+                    $msg=str_replace("@Name",$this->student->name,$msg);
+                    $msg=str_replace("@School",$this->school->School_Name,$msg);
+                    $msg=str_replace("@Phone",$this->school->phone,$msg);
+                    $message=$msg;
+                    if(isset($this->setTime)){
+                        $timestamp_ = strtotime($this->setTime);
+                        $timestamp=date('Y-m-d H:i:s', $timestamp_);
+                        $message=$message."\n\n"."簽退時間: \n".$timestamp;
+                    }else{
+                        $message=$message."\n\n"."簽退時間: \n".$this->created_at;
+                    }
+                }
+                $image_url=str_replace('http://','https://',url($this->image_path));
+                $send_url="https://notify-api.line.me/api/notify";
+                $obj2 =
+                        [
+                            'message' => $message,
+                            'imageThumbnail'=> $image_url,
+                            'imageFullsize' =>$image_url
+                        ]
+                    ;
+                
 
-            $url=str_replace('http://','https://',url($this->image_path));
-            //$ngrok="https://ca04-61-220-205-150.ngrok.io";
-            //$url=str_replace('http://a.local',$ngrok,url($this->image_path));
-            $push_build2 = new \LINE\LINEBot\MessageBuilder\ImageMessageBuilder($url,$url);
-
-            $MessageBuilder->add($push_build1);
-            $MessageBuilder->add($push_build_time);
-            $MessageBuilder->add($push_build2);
-
-            $parent_line_multi=json_decode($this->student->parent_line_multi);
-            foreach($parent_line_multi as $parent_line){
-                $result=$bot->pushMessage($parent_line,$MessageBuilder);
+                $parent_line_multi_notify=json_decode($this->student->parent_line_multi_notify);
+                foreach($parent_line_multi_notify as $parent_line){
+                    $ch2 = curl_init();
+                    $authorization = "Authorization: Bearer " . $parent_line;
+                    curl_setopt($ch2, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data' , $authorization ));
+                    curl_setopt($ch2, CURLOPT_POST, 1);
+                    curl_setopt($ch2, CURLOPT_URL, $send_url);
+                    curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch2, CURLOPT_POSTFIELDS, $obj2);
+                    $json_result2 = curl_exec($ch2);
+                    curl_close($ch2);
+                }
+         
             }
-
         }
     }
 }

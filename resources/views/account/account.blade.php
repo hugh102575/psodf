@@ -78,7 +78,7 @@
                                                         @break
                                                     @case("line")
                                                         @php
-                                                            $authority_per="LINE@串接";
+                                                            $authority_per="LINE串接";
                                                         @endphp
                                                         @break
                                                     @case("sys")

@@ -39,7 +39,10 @@ class school extends Model
         'in_msg',
         'out_msg',
         'admin',
-        'Active'
+        'Active',
+        'line_mode',
+        'ClientId',
+        'ClientSecret'
     ];
 
     public function User(){

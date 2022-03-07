@@ -63,6 +63,7 @@ Route::post('/batch/delete', [SettingController::class, 'batch_delete'])->name('
 Route::get('/line', [HomeController::class, 'line'])->name('line');
 //Route::get('/line_notify', [HomeController::class, 'line_notify'])->name('line_notify');
 Route::post('/line', [SettingController::class, 'line_update'])->name('line.update');
+//Route::post('/line_notify', [SettingController::class, 'line_notify_update'])->name('line_notify.update');
 Route::get('/signin', [HomeController::class, 'signin'])->name('signin.signin');
 Route::get('/signin/overview', [HomeController::class, 'signin_overview'])->name('signin.overview');
 Route::post('/signin/update_chart', [HomeController::class, 'update_chart']);

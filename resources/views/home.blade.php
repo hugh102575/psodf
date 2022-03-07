@@ -210,7 +210,7 @@ background-blend-mode: overlay;
           <span class="icon-holder">
           <i class="fab fa-line "></i>
           </span>
-          <span class="title">LINE@串接</span>
+          <span class="title">LINE串接</span>
           <span class="arrow">
             <i class="fas fa-angle-right"></i>
           </span>
@@ -235,7 +235,7 @@ background-blend-mode: overlay;
 
 
             <a class="nav-link dropdown-toggle" href="#">
-              <span><a href="{{route('line')}}" class="{{ (preg_match('(line)', Route::currentRouteName()) === 1) ? 'bg-primary  ' : '' }}">安親班LINE@</a></span>
+              <span><a href="{{route('line')}}" class="{{ (preg_match('(line)', Route::currentRouteName()) === 1) ? 'bg-primary  ' : '' }}">安親班LINE串接</a></span>
             </a>
           </li>
         </ul>

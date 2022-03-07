@@ -450,16 +450,42 @@ class SettingController extends Controller
 
     }
 
+    public function line_notify_update(Request $request){
+        //dd($request->all());
+        $school = Auth::user()->school;
+        $current_mode=$school->line_mode;
+        $school->ClientId = isset($request['Linedisbtn']) ? null : $request['ClientId'];
+        $school->ClientSecret = isset($request['Linedisbtn']) ? null : $request['ClientSecret'];
+        $school->line_mode = isset($request['Linedisbtn']) ? null : "notify";
+        
+        if(isset($request['Linedisbtn'])){
+            $school->save();
+            $test_result='已斷開LINE Notify連接！';
+            return redirect()->route('line_notify')->with('success_msg', $test_result);
+        }else{
+            if(isset($current_mode)){
+                return redirect()->route('line_notify')->with('error_msg', "安親班LINE@正在串接，請先解除");
+            }else{
+            $school->save();
+            $test_result='LINE Notify串接成功！';
+            return redirect()->route('line_notify')->with('success_msg', $test_result);
+            }
+        }
+    }
     public function line_update(Request $request){
         //dd($request->all());
         $school = Auth::user()->school;
+        //$current_mode=$school->line_mode;
         $LineChannelAccessToken_db=$school->LineChannelAccessToken;
 
         $school->LineID = isset($request['Linedisbtn']) ? null : $request['LineID'];
         $school->LineChannelSecret = isset($request['Linedisbtn']) ? null : $request['LineChannelSecret'];
         $school->LineChannelAccessToken = isset($request['Linedisbtn']) ? null : $request['LineChannelAccessToken'];
+        $school->ClientId = isset($request['Linedisbtn']) ? null : $request['ClientId'];
+        $school->ClientSecret = isset($request['Linedisbtn']) ? null : $request['ClientSecret'];
         if(isset($request['Linedisbtn'])){
             $school->LineChannelName=null;
+            //$school->line_mode=null;
             $school->save();
             //if($school->id==2){
                 $test_result='已斷開LINE@連接！';
@@ -472,8 +498,11 @@ class SettingController extends Controller
         }else{
             $LineChannelName=$this->get_LineChannelName($request['LineChannelAccessToken']);
             if(isset($LineChannelName)){
-
+                if(isset($current_mode)){
+                    return redirect()->route('line')->with('error_msg', "安親班LINE Notify正在串接，請先解除");
+                }else{
                 $school->LineChannelName=$LineChannelName;
+                //$school->line_mode="official";
                 $school->save();
                 //if($school->id==2){
                     $test_result='LINE@串接成功！';
@@ -482,6 +511,7 @@ class SettingController extends Controller
                 //}else{
                     //return redirect()->route('line')->with('success_msg', 'LINE@串接成功！');
                 //}
+                }
 
             }else{
                 return redirect()->route('line')->with('error_msg', '輸入資料有誤，查無資料！');
@@ -580,9 +610,10 @@ class SettingController extends Controller
         }
 
 
-
-        $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
-        $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
+        //if($school->line_mode=="official"){
+            //$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($school->LineChannelAccessToken);
+            //$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $school->LineChannelSecret]);
+        //}
         $return =array();
         foreach($stu_array as $key =>$value){
             if(isset($value)){
@@ -596,9 +627,29 @@ class SettingController extends Controller
                 $msg=str_replace("@Phone",$school->phone,$msg);
                 $message=$msg;
 
-                $push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-                $result=$bot->pushMessage($value,$push_build);
-                $return['status']=$result->getHTTPStatus();
+                //if($school->line_mode=="official"){
+                    //$push_build = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+                    //$result=$bot->pushMessage($value,$push_build);
+                    //$return['status']=$result->getHTTPStatus();
+                //}else if($school->line_mode=="notify"){
+                    $send_url="https://notify-api.line.me/api/notify";
+                    $obj =
+                            [
+                                'message' => $message
+                            ]
+                        ;
+                    $ch = curl_init();
+                    $authorization = "Authorization: Bearer " . $value;
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data' , $authorization ));
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_URL, $send_url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $obj);
+                    $json_result = curl_exec($ch);
+                    $resultStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    curl_close($ch);
+                    $return['status']=$resultStatus;
+                //}
                 //$return['status']=200;
                 //return redirect()->route('message')->with('success_msg', '訊息已發送！');
             }else{

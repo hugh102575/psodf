@@ -60,14 +60,35 @@
 
                 <div class="card shadow-sm">
                     <div class="card-header d-flex flex-row" >
-                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">安親班LINE@</h5>
+                        <h5 class="font-weight-bold text-success mr-5 my_nav_text">安親班LINE串接</h5>
                     </div>
                     <div class="card-body">
                     @if ($school->LineChannelSecret == null || $school->LineChannelAccessToken == null)
                     <form action="{{ route('line.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                         <div class="table-responsive">
-                            <p class="mb-3">請將<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>的資訊填入，來完成串接</p>
+                            <p class="mb-3">請將<a href="https://notify-bot.line.me/my/services/" target="_blank">LINE Notify</a>的資訊填入，來完成串接，可以<span class="text-success">「免費」</span>推送訊息喔！</p>
+                            <p>Callback URL請填寫<span class="small text-light my_nav_color">https://yes-psodf.yesinfo.com.tw/notify_bind/<span></p>
+                            <table class="table table-bordered overflow-auto">
+
+                            <tbody>
+                                <tr>
+                                <th scope="row">Client ID<font color="#FF0000">*</font></th>
+                                <td><input type="text" class="form-control" placeholder="Client ID" id="ClientId" name="ClientId" required="required" ></td>
+                                </tr>
+                                <tr>
+                                <th scope="row">Client Secret<font color="#FF0000">*</font></th>
+                                <td><input type="text" class="form-control" placeholder="Client Secret" id="ClientSecret" name="ClientSecret" required="required"></td>
+                                </tr>
+                               
+                               
+                                
+                            </tbody>
+                            </table>
+
+                            <hr>
+
+                            <p class="mb-3">請將<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>的資訊填入，來完成串接。<br><br>(由於是在LINE Notify推播，因此不用擔心有額外的費用喔！)</p>
                             <table class="table table-bordered overflow-auto">
 
                             <tbody>
@@ -84,9 +105,9 @@
                                 <td><input type="text" class="form-control" placeholder="Channel access token" id="LineChannelAccessToken" name="LineChannelAccessToken" required="required"></td>
                                 </tr>
                                 <tr>
-                                <th scope="row">連接狀態</th>
+                                {{--<th scope="row">連接狀態</th>
                                 <td><button id="Linebtn" name="Linebtn" type="submit" class="btn my_nav_color text-white">連接</button></td>
-                                </tr>
+                                </tr>--}}
                                 <!--<tr>
                                 <td><input type="text" class="form-control" placeholder="格式以@開頭" id="LineID" name="LineID" ></td>
                                 <td><input type="text" class="form-control" placeholder="Channel secret" id="LineChannelSecret" name="LineChannelSecret" ></td>
@@ -95,13 +116,14 @@
                                 </tr>-->
                             </tbody>
                             </table>
+                            <button id="Linebtn" name="Linebtn" type="submit" class="form-control btn my_nav_color text-white">連接</button>
                         </div>
                     </form>
                     @else
-                    <form action="{{ route('line.update') }}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('確定要斷開LINE@連接嗎?\nLine@與簽到等相關功能將無法使用。');">
+                    <form action="{{ route('line.update') }}" method="POST" enctype="multipart/form-data" onsubmit="return confirm('確定要斷開連接嗎?\nLine@與簽到等相關功能將無法使用。');">
                     @csrf
                     
-                    <span class="small d-flex justify-content-center">請於<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>設定，若您已經設定請忽略此訊息</span>
+                    <span class="small d-flex justify-content-center">請於<a href="https://developers.line.biz/console" target="_blank">LINE@後台</a>設定webhook，若您已經設定請忽略此訊息</span>
 
                     <div class="card p-3 mb-5">
                         <div class="">您的webhook網址為:&nbsp;&nbsp;<br><span id="my_webhook_url" class="small text-light my_nav_color">{{URL::to('/')}}/callback/{{Auth::user()->api_token}}</span><br><button id="copy_webhook_btn" type="button" class="btn btn-light text-secondary shadow-sm"><small><i class="far fa-copy"></i> 複製</small></button></div>
@@ -111,11 +133,19 @@
 
                         <tbody>
                             <tr>
+                                <th scope="row">Client ID<font color="#FF0000">*</font></th>
+                                <td><input type="text" class="form-control" placeholder="Client ID" value="{{$school->ClientId}}" required="required" disabled></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Client Secret<font color="#FF0000">*</font></th>
+                                <td><input type="password" class="form-control" placeholder="Client Secret" value="{{$school->ClientSecret}}" required="required" disabled></td>
+                            </tr>
+                            <tr>
                             <th scope="row">LINE@名稱</th>
                             <td class="enlarge_text">{{$school->LineChannelName}}</td>
                             </tr>
                             <tr>
-                            <th scope="row">LINE ID (邀請碼)</th>
+                            <th scope="row">LINE@ ID (邀請碼)</th>
                             <td class="enlarge_text">{{$school->LineID}}</td>
                             </tr>
                             {{--<tr>
@@ -131,7 +161,7 @@
                             </td>
                             </tr>--}}
                             <tr>
-                            <th scope="row">QR Code (掃描加入)</th>
+                            <th scope="row">LINE@ QR Code (掃描加入)</th>
                             <td><div id="qr_div" class="p-3 "><div class="" id="qrcode"></div><button type="button" id="qr_download" class="btn btn-link"><small><u><i class="fas fa-download"></i> 按我下載</u></small></button></div></td>
                             </tr>
                             <tr>
@@ -161,7 +191,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 <script src="{{asset('vendor/copy-paste-select-jqlipboard/copy-paste-select-jqlipboard/src/jQlipboard.js')}}"></script>
 <script>
-document.getElementById('nav_title').innerHTML="<small>LINE@串接</small>";
+document.getElementById('nav_title').innerHTML="<small>安親班LINE串接</small>";
 var school={!! json_encode($school) !!};
 if(school.LineChannelSecret!=null && school.LineChannelAccessToken!=null){
     var bot_id=(school.LineID).replace("@", "");

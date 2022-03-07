@@ -108,19 +108,19 @@
                                     @if($roles->Role_Name=='安親班管理員')
                                     <div class="form-check form-switch mb-1">
                                         <input class="form-check-input" type="checkbox" id="checkbox_line" name="authority[]" value="line" checked disabled>
-                                        <label class="form-check-label" for="checkbox_line">LINE@串接</label>
+                                        <label class="form-check-label" for="checkbox_line">LINE串接</label>
                                         <input type="hidden" name="authority[]" value="line" />
                                     </div>
                                     @else
                                     <div class="form-check form-switch mb-1">
                                         <input class="form-check-input" type="checkbox" id="checkbox_line" name="authority[]" value="line" checked>
-                                        <label class="form-check-label" for="checkbox_line">LINE@串接</label>
+                                        <label class="form-check-label" for="checkbox_line">LINE串接</label>
                                     </div>
                                     @endif
                                     @else
                                     <div class="form-check form-switch mb-1">
                                     <input class="form-check-input" type="checkbox" id="checkbox_line" name="authority[]" value="line">
-                                    <label class="form-check-label" for="checkbox_line">LINE@串接</label>
+                                    <label class="form-check-label" for="checkbox_line">LINE串接</label>
                                     </div>
                                     @endif
 
@@ -179,7 +179,7 @@
                                     </div>
                                     <div class="form-check form-switch mb-1">
                                         <input class="form-check-input" type="checkbox" id="checkbox_line" name="authority[]" value="line">
-                                        <label class="form-check-label" for="checkbox_line">Line@串接</label>
+                                        <label class="form-check-label" for="checkbox_line">Line串接</label>
                                     </div>
                                     <div class="form-check form-switch mb-1">
                                         <input class="form-check-input" type="checkbox" id="checkbox_sys" name="authority[]" value="sys">
@@ -210,7 +210,7 @@
                                     </div>
                                     <div class="form-check form-switch mb-1">
                                         <input class="form-check-input" type="checkbox" id="checkbox_line" name="authority[]" value="line">
-                                        <label class="form-check-label" for="checkbox_line">Line@串接</label>
+                                        <label class="form-check-label" for="checkbox_line">Line串接</label>
                                     </div>
                                     <div class="form-check form-switch mb-1">
                                         <input class="form-check-input" type="checkbox" id="checkbox_sys" name="authority[]" value="sys">

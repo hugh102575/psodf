@@ -490,19 +490,52 @@
                                     <td>{{ $student->STU_id }}</td>
                                     <td>{{$student->classs->Classs_Name}}</td>
                                     <td>
-                                        @if($student->parent_line_multi==null)
-                                        <span class="text-danger">尚未加入</span>
-                                        @else
-                                        @php
-                                        $parent_count=count(json_decode($student->parent_line_multi));
-                                        @endphp
-                                        <span class="text-success">已加入 {{$parent_count}}位</span>
-                                          {{--@if(Auth::user()->school->LineChannelAccessToken!=null && Auth::user()->school->LineChannelSecret!=null)
-                                          @foreach(json_decode($student->parent_line_multi) as $parent_name)
-                                          <div><small class="text-secondary">{{$parent_name}}</small></div>
-                                          @endforeach
-                                          @endif--}}
+                                        @if($student->parent_line_multi_notify==null)
+                                            <span class="text-danger">尚未加入</span>
+                                            @else
+                                            @php
+                                            $parent_count=count(json_decode($student->parent_line_multi_notify));
+                                            @endphp
+                                            <span class="text-success">已加入 {{$parent_count}}位</span>
                                         @endif
+                                        {{--@if($student->parent_line_multi==null)
+                                            <span class="text-danger">尚未加入</span>
+                                            @else
+                                            @php
+                                            $parent_count=count(json_decode($student->parent_line_multi));
+                                            @endphp
+                                            <span class="text-success">已加入 {{$parent_count}}位</span>
+                                        @endif--}}
+                                        {{--@if(Auth::user()->school->line_mode=="official")
+                                            @if($student->parent_line_multi==null)
+                                            <span class="text-danger">尚未加入</span>
+                                            @else
+                                            @php
+                                            $parent_count=count(json_decode($student->parent_line_multi));
+                                            @endphp
+                                            <span class="text-success">已加入 {{$parent_count}}位</span>--}}
+                                            {{--@if(Auth::user()->school->LineChannelAccessToken!=null && Auth::user()->school->LineChannelSecret!=null)
+                                            @foreach(json_decode($student->parent_line_multi) as $parent_name)
+                                            <div><small class="text-secondary">{{$parent_name}}</small></div>
+                                            @endforeach
+                                            @endif--}}
+                                        {{--   @endif
+                                        @elseif(Auth::user()->school->line_mode=="notify")
+                                            @if($student->parent_line_multi_notify==null)
+                                            <span class="text-danger">尚未加入</span>
+                                            @else
+                                            @php
+                                            $parent_count=count(json_decode($student->parent_line_multi_notify));
+                                            @endphp
+                                            <span class="text-success">已加入 {{$parent_count}}位</span>
+                                            @endif
+                                        @else
+                                        <span class="text-danger">(請先設定LINE串接)</span>
+                                        @endif--}}
+
+
+                                        
+                                    
                                     </td>
                                     <td>
                                     @if($student->profile!=null)

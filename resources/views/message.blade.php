@@ -114,6 +114,7 @@
                             <textarea  id="Message_Data_send" name="Message_Data" class="form-control" rows="6"  style="width: 300px;" ></textarea>
                         </div>
                     </div>
+              
                     <div>
                         <p class="mb-3  " style="font-size:15px;color:#ff0000";>*家長若未加入，則無法勾選</p>
 
@@ -139,29 +140,63 @@
                                     <div id="checkboxs">
                                     @foreach($all_student as $j => $i)
                                         @if($i->Classs_id == $value->id)
-                                        {{--@if(is_null($i->parent_line))
-                                        <p>
-                                        <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)" disabled='disabled'>
-                                        <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
-                                        </p>
+                                            @if(is_null($i->parent_line_multi_notify))
+                                            <p>
+                                            <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi_notify}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)" disabled='disabled'>
+                                            <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                            </p>
+                                            @else
+                                            <p>
+                                            <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi_notify}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)">
+                                            <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                            </p>
+                                            @endif
+                                            {{--@if(is_null($i->parent_line_multi))
+                                            <p>
+                                            <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)" disabled='disabled'>
+                                            <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                            </p>
+                                            @else
+                                            <p>
+                                            <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)">
+                                            <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                            </p>
+                                            @endif--}}
+
+                                        {{--@if(Auth::user()->school->line_mode=="official")
+                                        
+                                            @if(is_null($i->parent_line_multi))
+                                            <p>
+                                            <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)" disabled='disabled'>
+                                            <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                            </p>
+                                            @else
+                                            <p>
+                                            <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)">
+                                            <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                            </p>
+                                            @endif
+
+                                        @elseif(Auth::user()->school->line_mode=="notify")
+                                            @if(is_null($i->parent_line_multi_notify))
+                                            <p>
+                                            <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi_notify}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)" disabled='disabled'>
+                                            <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                            </p>
+                                            @else
+                                            <p>
+                                            <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi_notify}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)">
+                                            <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
+                                            </p>
+                                            @endif
                                         @else
-                                        <p>
-                                        <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)">
-                                        <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
-                                        </p>
+                                            <p>
+                                            <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)" disabled='disabled'>
+                                            <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label><small class="text-danger"> (請先設定LINE串接)</small>
+                                            </p>
                                         @endif--}}
 
-                                        @if(is_null($i->parent_line_multi))
-                                        <p>
-                                        <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)" disabled='disabled'>
-                                        <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
-                                        </p>
-                                        @else
-                                        <p>
-                                        <input class="checknum_<?php echo $key; ?>" type="checkbox" id="student_<?php echo $i->STU_id;?>" name="student_<?php echo $i->STU_id; ?>"  value="{{$i->parent_line_multi}}" onclick="setAll('all_<?php echo $key; ?>',<?php echo $key; ?>)">
-                                        <label for="student_<?php echo $i->STU_id;?>" >{{$i->name}}</label>
-                                        </p>
-                                        @endif
+
                                         @endif
                                     @endforeach
                                     </div>
