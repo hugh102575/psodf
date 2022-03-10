@@ -646,6 +646,7 @@ $('.datepicker_costom').datepicker({
 	});
 
 var schools={!! json_encode($schools) !!};
+console.log(schools)
 var subscribes={!! json_encode($subscribes) !!};
 
 var school_edit_id=document.querySelectorAll('.school_edit_id');
@@ -880,6 +881,7 @@ change_active_btn.forEach(function(item,index){
         var match_form=change_active_form[index]
         var current_active=change_active_value[index].value
         var ac_id=school_edit_id[index].innerHTML;
+        console.log(schools)
         var where=schools.findIndex(x => x.id==ac_id);
         if(where!=-1){
             if(current_active==1){
@@ -991,12 +993,7 @@ query_btn.addEventListener("click", function() {
                         q_info.innerHTML="查詢範圍: "+st+" 至 "+due;
                         document.getElementById('query_info').appendChild(q_info);
                         for (var i = 0; i < data.length; i++) {
-                            /*
-                            $value_array=array($school->id, $subscribe->id);
-                            $value_array_encode=json_encode($value_array);
-                            <button class="subscribe_edit_btn btn btn-link text-primary atext" value="{{$value_array_encode}}" data-target="#subscribeEditModal" data-toggle="modal"><u>{{$subscribe->order_id}}</u><br>
-
-                            */
+                           
                             var tr = document.createElement("tr");
                             var td1 = document.createElement("td");
                                 var td1_id=data[i].id

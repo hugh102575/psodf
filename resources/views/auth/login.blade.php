@@ -12,6 +12,10 @@
     background-size: cover;
     background-position: center center
 }
+.int-box {
+    display: table-cell; vertical-align: middle;
+}
+.ext-box { display: table; width:100%;}
 </style>
 @endsection
 
@@ -103,9 +107,13 @@
                                  <button type="submit" class="btn btn-primary my_nav_color btn-block text-uppercase mb-5 rounded-pill shadow-sm">
                                     {{ __('Login') }}
                                 </button>
-
-                                    <div class="text-center d-flex justify-content-between mt-4">
-                                        {{--<p><a href="{{ route('register') }}" class="font-italic text-muted"> <u><small>{{ __('Register') }}</small></u></a></p>--}}
+                                    
+                                <hr class="">
+                                <div class="text-center ext-box">
+                                
+                                    <div class="int-box">
+                                    
+                                    <div class="mt-4">
                                         <p><a href="{{ route('register') }}" class="font-italic text-muted"> <u><small>立即註冊！</small></u></a></p>
                                     </div>
                                    @if (Route::has('password.request'))
@@ -115,6 +123,8 @@
                                         </a>
                                     </div>
                                     @endif
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>

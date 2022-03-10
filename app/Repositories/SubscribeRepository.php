@@ -57,13 +57,24 @@ class SubscribeRepository
         }
         return $test_order_id;
     }
-    public function query_due($query_date,$query_weeks){
-        $from_date = strtotime($query_date);
-        $due_date_= strtotime("+".strval($query_weeks)." week", $from_date);
+    public function query_due($query_date,$query_weeks,$exclude_school){
+        $from_date_ = strtotime($query_date);
+        $due_date_= strtotime("+".strval($query_weeks)." week", $from_date_);
+        $from_date =date('Y-m-d', $from_date_);
         $due_date=date('Y-m-d', $due_date_);
         $return=array();
-        $return[0]=subscribe::whereBetween('ended_date', [$from_date, $due_date])->get();
-        $return[1]=strval(date('Y-m-d', $from_date));
+        $querys=subscribe::whereBetween('ended_date', [$from_date, $due_date])->get();
+        $querys_a=array();
+        foreach($querys as $index=>$query){
+            if(in_array($query->School_id, $exclude_school)){
+                //unset($querys[$index]);
+            }else{
+                array_push($querys_a,$query);
+            }
+        }
+        $return[0]=$querys_a;
+        //$return[1]=strval(date('Y-m-d', $from_date));
+        $return[1]=strval($from_date);
         $return[2]=strval($due_date);
         //return subscribe::whereBetween('ended_date', [$from_date, $due_date])->get();   
         return $return;

@@ -19,7 +19,23 @@ class StudentRepository
     public function store(array $data,$classs,$classs_id,$count){
         $now = date('Y-m-d H:i:s');
         $data['School_id']=Auth::user()->School_id;
-        $STU_id =strval(Auth::user()->School_id)
+
+        $STU_num="";
+        $degit=6;
+        for($i=0; $i<$degit; $i++){
+            $STU_num=$STU_num.strval(rand(0,9));
+        }
+        $STU_id=strval(Auth::user()->School_id).strval($STU_num);
+        while(student::where('STU_id',$STU_id)->exists()) {
+            $STU_num="";
+            $degit=6;
+            for($i=0; $i<$degit; $i++){
+                $STU_num=$STU_num.strval(rand(0,9));
+            }
+            $STU_id=strval(Auth::user()->School_id).strval($STU_num);
+        }
+
+        /*$STU_id =strval(Auth::user()->School_id)
                 .strval($classs->batch->id)
                 .strval($classs_id)
                 .strval($random_num=strval(rand(1000,9999)));
@@ -28,7 +44,8 @@ class StudentRepository
                 .strval($classs->batch->id)
                 .strval($classs_id)
                 .strval($random_num=strval(rand(1000,9999)));
-        }
+        }*/
+
         $data['STU_id']=$STU_id;
         //$data['Batch_id']=$batch_id;
         $data['Classs_id']=$classs_id;

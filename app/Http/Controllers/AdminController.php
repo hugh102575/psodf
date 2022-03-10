@@ -21,10 +21,11 @@ class AdminController extends Controller
     protected $messageRepo;
     protected $schoolRepo;
     protected $subscribeRepo;
+    protected $exclude_school=array(2,3,4,5,6,7,8,9,10,11,12);
 
     public function __construct(ClasssRepository $classsRepo,StudentRepository $studentRepo,MessageRepository $messageRepo,SigninRepository $signinRepo,SchoolRepository $schoolRepo,SubscribeRepository $subscribeRepo)
     {
-       
+        //$this->exclude_school=array();
         $this->classsRepo=$classsRepo;
         $this->studentRepo=$studentRepo;
         $this->signinRepo=$signinRepo;
@@ -91,17 +92,20 @@ class AdminController extends Controller
     
     public function home(){
         $today=date('Y-m-d');
-        $exclude_school=array(1,2,3,4,5,6,7,8,9,10);
-        $exclude_school=array();
+        $exclude_school=$this->exclude_school;
+        //$exclude_school=array();
         $schools=$this->schoolRepo->list_all();
+        $schools_a=array();
         foreach($schools as $index=>$school){
             if(in_array($school->id, $exclude_school)){
-                unset($schools[$index]);
+                //unset($schools[$index]);
+            }else{
+                array_push($schools_a,$school);
             }
         }
         $subscribes=$this->subscribeRepo->list_all();
 
-        return view('admin.home',['schools'=>$schools,'subscribes'=>$subscribes,'today'=>$today]);
+        return view('admin.home',['schools'=>$schools_a,'subscribes'=>$subscribes,'today'=>$today]);
     }
 
     public function logout(Request $request){
@@ -195,7 +199,9 @@ class AdminController extends Controller
         }
     }
     public function query_due(Request $request){
-        $result=$this->subscribeRepo->query_due($request['query_date'],$request['query_weeks']);
+        $exclude_school=$this->exclude_school;
+        //$exclude_school=array();
+        $result=$this->subscribeRepo->query_due($request['query_date'],$request['query_weeks'],$exclude_school);
         return json_encode($result);
     }
 }

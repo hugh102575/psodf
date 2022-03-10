@@ -51,11 +51,14 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {   //$test=123;
+    {   
         $now = date('Y-m-d H:i:s');
         return view('index',['now'=>$now]);
-        //return view('index');
     }
+    /*public function document1(){
+        $pdf_path=url('document1.pdf');
+        return response()->file($pdf_path);
+    }*/
     public function check_authority($permission){
         $allow=false;
         $page="?";

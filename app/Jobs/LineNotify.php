@@ -12,6 +12,7 @@ use App\Models\student;
 use App\Models\school;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class LineNotify implements ShouldQueue
 {
@@ -159,7 +160,40 @@ class LineNotify implements ShouldQueue
                     curl_setopt($ch2, CURLOPT_RETURNTRANSFER, 1);
                     curl_setopt($ch2, CURLOPT_POSTFIELDS, $obj2);
                     $json_result2 = curl_exec($ch2);
+
+                    $resultStatus = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
                     curl_close($ch2);
+                    if ($resultStatus == 200) {
+                        $today=date('Y-m-d');
+
+                        $signin=array();
+                            $signin['School_id']=$this->school->id;
+                            $signin['Classs_id']=$this->student->classs->id;
+                            $signin['Student_id']=$this->student->id;
+                            $signin['Classs_Name']=$this->student->classs->Classs_Name;
+                            $signin['Student_Name']=$this->student->name;
+                            $signin['sign']=$this->sign;
+                            $signin['signin_img']=$this->image_path;
+                            if(isset($this->setTime)){
+                                $timestamp_ = strtotime($this->setTime);
+                                $timestamp=date('Y-m-d', $timestamp_);
+                                $signin['created_date']=$timestamp;
+                            }else{
+                                //$signin['created_date']=$today;
+                                $timestamp_ = strtotime($this->created_at);
+                                $timestamp=date('Y-m-d', $timestamp_);
+                                $signin['created_date']=$timestamp;
+                            }
+                            if(isset($this->setTime)){
+                                $timestamp_ = strtotime($this->setTime);
+                                $timestamp=date('Y-m-d H:i:s', $timestamp_);
+                                $signin['created_at']=$timestamp;
+                            }else{
+                                $signin['created_at']=$this->created_at;
+                            }
+                        //$this->signinRepo->store($signin);
+                        DB::table('signin')->insert($signin);
+                    }
                 }
          
             }

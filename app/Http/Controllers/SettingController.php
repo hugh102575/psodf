@@ -488,7 +488,7 @@ class SettingController extends Controller
             //$school->line_mode=null;
             $school->save();
             //if($school->id==2){
-                $test_result='已斷開LINE@連接！';
+                $test_result='已斷開連接！';
                 $rich_menu_result=$this->del_rich_menu($school,$LineChannelAccessToken_db);
                 return redirect()->route('line')->with('success_msg', $test_result);
             //}else{
@@ -498,20 +498,20 @@ class SettingController extends Controller
         }else{
             $LineChannelName=$this->get_LineChannelName($request['LineChannelAccessToken']);
             if(isset($LineChannelName)){
-                if(isset($current_mode)){
+                /*if(isset($current_mode)){
                     return redirect()->route('line')->with('error_msg', "安親班LINE Notify正在串接，請先解除");
-                }else{
+                }else{*/
                 $school->LineChannelName=$LineChannelName;
                 //$school->line_mode="official";
                 $school->save();
                 //if($school->id==2){
-                    $test_result='LINE@串接成功！';
+                    $test_result='串接成功！';
                     $rich_menu_result=$this->add_rich_menu($school,$request['LineChannelAccessToken']);
                     return redirect()->route('line')->with('success_msg', $test_result);
                 //}else{
                     //return redirect()->route('line')->with('success_msg', 'LINE@串接成功！');
                 //}
-                }
+                //}
 
             }else{
                 return redirect()->route('line')->with('error_msg', '輸入資料有誤，查無資料！');

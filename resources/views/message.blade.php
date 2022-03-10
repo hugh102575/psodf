@@ -100,12 +100,12 @@
 <form name="message_send_form" action="{{ route('message.send') }}" method="POST" enctype="multipart/form-data" >
 @csrf
     <div class="modal fade" id="MessageModal_send" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+    <div class="modal-dialog modal-dialog-centered  " role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="container-fluid">
-                    <div class="form-group row">
-                        <div class="col">
+                    {{--<div class="form-group row">
+                        <div class="col mb-3">
                             <label for="Message_Name" class="font-weight-bold my_nav_text enlarge_text">範本名稱</label>
                             <input class="form-control" id="Message_Name_send" type="text" name="Message_Name"  required="required" value="" maxlength="30" style="width: 300px;" readonly>
                         </div>
@@ -113,9 +113,19 @@
                             <label for="Message_Data" class="font-weight-bold my_nav_text enlarge_text">訊息格式</label>
                             <textarea  id="Message_Data_send" name="Message_Data" class="form-control" rows="6"  style="width: 300px;" ></textarea>
                         </div>
+                    </div>--}}
+                    <div class="form-group ">
+                        
+                            <label for="Message_Name" class="font-weight-bold my_nav_text enlarge_text">範本名稱</label>
+                            <input class="form-control" id="Message_Name_send" type="text" name="Message_Name"  required="required" value="" maxlength="30"  readonly>
                     </div>
-              
-                    <div>
+                    <div class="form-group ">   
+                            <label for="Message_Data" class="font-weight-bold my_nav_text enlarge_text">訊息格式</label>
+                            <textarea  id="Message_Data_send" name="Message_Data" class="form-control" rows="6"   ></textarea>
+                        
+                    </div>
+                    <hr>
+                    <div class="">
                         <p class="mb-3  " style="font-size:15px;color:#ff0000";>*家長若未加入，則無法勾選</p>
 
                     </div>
@@ -123,7 +133,7 @@
                         <div id="accordion">
                             @foreach($school_classs as $key => $value)
                             @if(count($value->student)!=0)
-                            <div class="card ">
+                            <div class="card text-center">
                                 <div class="card-header" id='heading<?php echo $key; ?>'>
                                 <h5 class="mb-0 collapsed">
                                     <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse<?php echo $key; ?>" aria-expanded="false" aria-controls="collapse<?php echo $key; ?>">

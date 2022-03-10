@@ -59,15 +59,20 @@
             <div class="col-md-8">
 
                 <div class="card shadow-sm">
-                    <div class="card-header d-flex flex-row" >
+                    {{--<div class="card-header d-flex flex-row" >--}}
+                    <div class="card-header" >
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">安親班LINE串接</h5>
+                        <div class="text-secondary small">包含LINE@和LINE Notify</div>
+                        <div class="float-right">
+                        <button type="button" class="btn btn-primary text-light" onclick=" window.open('{{url("/document1.pdf")}}','_blank')">教學手冊請點我</button>
+                        </div>
                     </div>
                     <div class="card-body">
                     @if ($school->LineChannelSecret == null || $school->LineChannelAccessToken == null)
                     <form action="{{ route('line.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                         <div class="table-responsive">
-                            <p class="mb-3">請將<a href="https://notify-bot.line.me/my/services/" target="_blank">LINE Notify</a>的資訊填入，來完成串接，可以<span class="text-success">「免費」</span>推送訊息喔！</p>
+                            <p class="mb-3">請將<a href="https://notify-bot.line.me/my/services/" target="_blank">LINE Notify</a>的資訊填入，來完成串接，可以<span class="">「免費」</span>推送訊息喔！</p>
                             <p>Callback URL請填寫<span class="small text-light my_nav_color">https://yes-psodf.yesinfo.com.tw/notify_bind/<span></p>
                             <table class="table table-bordered overflow-auto">
 
@@ -93,7 +98,7 @@
 
                             <tbody>
                                 <tr>
-                                <th scope="row">Line Channel ID<font color="#FF0000">*</font></th>
+                                <th scope="row">Bot basic ID<font color="#FF0000">*</font></th>
                                 <td><input type="text" class="form-control" placeholder="格式以@開頭" id="LineID" name="LineID" required="required" ></td>
                                 </tr>
                                 <tr>

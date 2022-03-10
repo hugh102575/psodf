@@ -74,10 +74,26 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);*/
 
-        $PID=strval("s").strval(rand(10000,99999));
+        $PID_num="";
+        $degit=5;
+        for($i=0; $i<$degit; $i++){
+            $PID_num=$PID_num.strval(rand(0,9));
+        }
+        $PID=strval("s").strval($PID_num);
+        while(School::where('PID',$PID)->exists()) {
+            $PID_num="";
+            $degit=5;
+            for($i=0; $i<$degit; $i++){
+                $PID_num=$PID_num.strval(rand(0,9));
+            }
+            $PID=strval("s").strval($PID_num);
+        }
+
+
+        /*$PID=strval("s").strval(rand(10000,99999));
         while(School::where('PID',$PID)->exists()) {
             $PID=strval("s").strval(rand(10000,99999));
-        }
+        }*/
 
 
         $now = date('Y-m-d H:i:s');

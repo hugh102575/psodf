@@ -18,6 +18,7 @@ use Validator;
 use Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use DB;
 
 class AppController extends Controller
 {
@@ -196,7 +197,7 @@ class AppController extends Controller
                             $now = date('Y-m-d H:i:s');
                             LineNotify::dispatch($school,$student,$image_path,$sign,$now,$setTime);
                             $return['status']="successed";
-
+                            /*
                             $signin=array();
                             $signin['School_id']=$School_id;
                             $signin['Classs_id']=$classs->id;
@@ -219,7 +220,7 @@ class AppController extends Controller
                             }else{
                                 $signin['created_at']=$now;
                             }
-                            $this->signinRepo->store($signin);
+                            $this->signinRepo->store($signin);*/
                         }
                     //}
                 }
