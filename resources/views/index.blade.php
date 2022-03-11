@@ -22,6 +22,8 @@
                         @endphp
                         現在時間: {{$t1}}{{$dayofweek}}{{--&nbsp;&nbsp;{{$t2}}--}}<hr>
                         <span class="">您的安親班<span class="bg-primary text-light px-1">平台序號:&nbsp;&nbsp;{{Auth::user()->school->PID}}</span>，請務必記住用來登入。<span>
+                        <button type="button" class="btn btn-link" onclick=" window.open('{{url("/downloadPID")}}','_blank')"><small><u><i class="fas fa-download"></i> 按我下載</u></small></button>
+
                     </div>
                 </div>
             </div>

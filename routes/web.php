@@ -46,6 +46,7 @@ Route::get('/notify_bind', [AppController::class, 'notify_bind']);
 Route::middleware([IsActive::class])->group(function () {
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 //Route::get('/document1', [HomeController::class, 'document1'])->name('document1');
+Route::get('/downloadPID', [HomeController::class, 'downloadPID'])->name('downloadPID');
 Route::get('/basic', [HomeController::class, 'basic'])->name('basic');
 Route::post('/basic', [SettingController::class, 'basic_update'])->name('basic.update');
 Route::get('/classs', [HomeController::class, 'classs'])->name('classs.classs');

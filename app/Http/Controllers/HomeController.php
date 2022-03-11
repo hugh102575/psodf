@@ -447,5 +447,13 @@ class HomeController extends Controller
         curl_close($ch);
         return $result;
     }
+    public function downloadPID(){
+        $school=Auth::user()->school;
+        $contents = $school->School_Name."的平台序號為: ".$school->PID;
+        $filename = '平台序號.txt';
+        return response()->streamDownload(function () use ($contents) {
+            echo $contents;
+        }, $filename);
+    }
 }
 
