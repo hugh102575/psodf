@@ -28,7 +28,7 @@
             </div>
 
             <div class="col-md-8" >
-                <div id="myLineChart_live_div" class="border p-3 shadow">
+                <div id="myLineChart_live_div" class="border p-3 shadow bg-light">
                 <canvas id="myLineChart_live" class=""></canvas>
                 <canvas id="myLineChart_live2" ></canvas>
                 </div>
@@ -59,12 +59,13 @@ $('.datepicker').datepicker({
       todayHighlight: true
 	});
 
+    var today = {!! json_encode($today) !!};
     var date_result = {!! json_encode($date_result) !!};
     console.log('date_result',date_result);
 
     var ctx = document.getElementById("myLineChart_live");
     var myLineChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: [
                     date_result['-5']['daily'],
@@ -138,25 +139,29 @@ $('.datepicker').datepicker({
                 xAxes: [{
                     ticks: {
                         userCallback: function(item) {
-                            item=item.replace(/-0+/g, '-'); 
-                            item=item.substring(5)
-                            item=item.replace("-", "/");
+                            if(item==today){
+                                item="今天"
+                            }else{
+                                item=item.replace(/-0+/g, '-'); 
+                                item=item.substring(5)
+                                item=item.replace("-", "/");
+                            }
                             return item;
                         }
                     },
                     gridLines: {
-                    lineWidth:[1,1,1,1,1,3,1,1,1,1,1],
+                    /*lineWidth:[1,1,1,1,1,3,1,1,1,1,1],
                     color: ['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)',
                              'rgba(255, 0, 0, 0.5)'   ,
                             'rgba(0, 0, 0, 0.1)'   ,'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)']
-                    }
+                    */}
                 }]
             }
         }
     });
     var ctx2 = document.getElementById("myLineChart_live2");
     var myLineChart2 = new Chart(ctx2, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: [
                     date_result['-5']['daily'],
@@ -249,18 +254,22 @@ $('.datepicker').datepicker({
                 xAxes: [{
                     ticks: {
                         userCallback: function(item) {
-                            item=item.replace(/-0+/g, '-'); 
-                            item=item.substring(5)
-                            item=item.replace("-", "/");
+                            if(item==today){
+                                item="今天"
+                            }else{
+                                item=item.replace(/-0+/g, '-'); 
+                                item=item.substring(5)
+                                item=item.replace("-", "/");
+                            }
                             return item;
                         }
                     },
                     gridLines: {
-                    lineWidth:[1,1,1,1,1,3,1,1,1,1,1],
+                    /*lineWidth:[1,1,1,1,1,3,1,1,1,1,1],
                     color: ['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)',
                              'rgba(255, 0, 0, 0.5)'   ,
                             'rgba(0, 0, 0, 0.1)'   ,'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0.1)']
-                    }
+                    */}
                 }]
             }
         }

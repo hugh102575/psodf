@@ -55,6 +55,10 @@ class SchoolRepository
         return School::where('id','=',$id)->update(array('School_Name' => $data));
     }
 
+    public function update_device_id($id,$device_id){
+        return School::where('id','=',$id)->update(array('device_id' => $device_id));
+    }
+
 
 
 }

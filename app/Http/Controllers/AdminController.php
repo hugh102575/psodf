@@ -21,7 +21,7 @@ class AdminController extends Controller
     protected $messageRepo;
     protected $schoolRepo;
     protected $subscribeRepo;
-    protected $exclude_school=array(2,3,4,5,6,7,8,9,10,11,12);
+    protected $exclude_school=array(3,4,5,6,7,8,9,10,11,12,13);
 
     public function __construct(ClasssRepository $classsRepo,StudentRepository $studentRepo,MessageRepository $messageRepo,SigninRepository $signinRepo,SchoolRepository $schoolRepo,SubscribeRepository $subscribeRepo)
     {
@@ -203,5 +203,22 @@ class AdminController extends Controller
         //$exclude_school=array();
         $result=$this->subscribeRepo->query_due($request['query_date'],$request['query_weeks'],$exclude_school);
         return json_encode($result);
+    }
+    public function update_device_id(Request $request){
+        $school_id=$request['school_id'];
+        $device_id=$request['device_id'];
+        $school=$this->schoolRepo->find($school_id);
+        $school->device_id=$device_id;
+        if($school->isDirty('device_id')){
+            $result=$this->schoolRepo->update_device_id($school_id,$device_id);
+            if($result){
+                return redirect()->route('admin.home')->with('success_msg', "更新成功！".$school->School_Name."已更新裝置");
+            }else{
+                return redirect()->route('admin.home')->with('error_msg', "更新失敗！".$school->School_Name."更新裝置失敗");
+            }
+        }else{
+            return redirect()->route('admin.home')->with('normal_msg', $school->School_Name."的裝置沒有進行更動");
+        }
+      
     }
 }

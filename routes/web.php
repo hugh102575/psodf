@@ -110,6 +110,7 @@ Route::middleware([IsAdmin::class])->group(function () {
     Route::post('/management/update_subscribe', [AdminController::class, 'update_subscribe'])->name('admin.update_subscribe');
     Route::post('/management/{id}/change_active', [AdminController::class, 'change_active'])->name('admin.change_active');
     Route::post('/management/query_due', [AdminController::class, 'query_due'])->name('admin.query_due');
+    Route::post('/management/update_device_id', [AdminController::class, 'update_device_id'])->name('admin.update_device_id');
 
 }); 
 

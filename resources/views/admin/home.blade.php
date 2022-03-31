@@ -2,6 +2,8 @@
 
 @section('app_css')
 <link href="{{asset('vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
+<link href="{{asset('vendor/bootstrap-tagsinput-latest/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css">
 <style>
 .pre-scrollable {
@@ -11,10 +13,50 @@
 .hr-style {
     border-top: 1px dashed #0275d8;
 }
+
 </style>
 @endsection
 
 @section('content')
+
+<form action="{{ route('admin.update_device_id') }}" method="POST" enctype="multipart/form-data">
+@csrf
+<div class="modal fade" id="deviceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title  font-weight-bold my_nav_text">裝置管理</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="form-group hidden_object">
+                    <input  id="d_school_id" class="form-control" name="school_id" >
+                </div>
+                <div class="form-group">
+                    <label  class="font-weight-bold my_nav_text enlarge_text">裝置序號</label>
+                    <div><small class="text-secondary">說明：要加入後app才能登入，請以["device_id_1","device_id_2","device_id_3"]之格式來編輯。</small>
+                    </div>
+
+                    <textarea   id="device_id"  class="form-control mt-3" rows="4" name="device_id" placeholder='["device_id_1","device_id_2","device_id_3"]'></textarea>
+                    </div>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <div class="form-group">
+                    <div class="float-right">
+                    <a href="#" class="btn btn-secondary" id="device_modal_cancel">取消</a>
+                    <button type="submit" class="btn text-light my_nav_color">更新</button>
+                    </div>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+</form>
 
 <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -430,6 +472,7 @@
                                     <th>學生總數</th>
                                     <th>簽到退總數</th>
                                     <th >訂單管理</th>
+                                    
                                     <!--<th>方案</th>-->
                                     <th>操作</th>
                                     <th>停用/啟用</th>
@@ -550,6 +593,7 @@
                                         </div>
                                         
                                     </td>
+                                   
                                     <!--<td>-->
                                         {{--@if($school->id==1)
                                         月繳
@@ -581,7 +625,10 @@
                                         @endif--}}
                                     <!--</td>-->
                                     <td>
+                                    <div class="d-flex flex-column">
                                     <button class="subscribe_create_btn btn btn-link atext" data-target="#subscribeModal" data-toggle="modal"><i class="fas fa-plus"></i> 新增訂單</button>
+                                    <button class="device_edit_btn btn btn-link atext" data-target="#deviceModal" data-toggle="modal"><i class="fa fa-mobile" aria-hidden="true"></i> 裝置管理</button>
+                                    </div>
                                     {{--<a href="#" class="subscribe_create_btn" data-target="#subscribeModal" data-toggle="modal"><i class="fas fa-plus"></i> 新增訂單</a>--}}
                                        {{--<a href="#" class="subscribe_create_btn" data-target="#subscribeModal" data-toggle="modal">新增收款</a><br>
                                        <a href="#" class="plan_edit_btn" data-target="#planModal" data-toggle="modal">變更方案</a>
@@ -625,6 +672,9 @@
 
 <!-- Page level custom scripts -->
 <script src="{{asset('js/demo/datatables-demo.js')}}"></script>
+
+<script src="{{asset('vendor/bootstrap-tagsinput-latest/dist/bootstrap-tagsinput.min.js')}}"></script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.zh-CN.min.js"></script>
@@ -689,6 +739,36 @@ subscribe_create_btn.forEach(function(item,index){
             document.getElementById('s_school_plan').value="none";
             document.getElementById('s_school_ended_date').value="";
             document.getElementById('s_school_price').value="";
+        }else{
+            alert('發生錯誤!')
+        }
+    });
+});
+
+
+var device_edit_btn=document.querySelectorAll('.device_edit_btn');
+device_edit_btn.forEach(function(item,index){
+    item.addEventListener('click', function(){
+        var school_id=school_edit_id[index].innerHTML;
+        var where=schools.findIndex(x => x.id==school_id);
+        if(where!=-1){
+            document.getElementById('d_school_id').value=schools[where].id;
+            /*if(schools[where].device_id!=null){
+                var device_id_obj=JSON.parse(schools[where].device_id) 
+                var device_id_str=""
+                for (const [key, value] of Object.entries(device_id_obj)) {
+                    if(key != Object.keys(device_id_obj).length-1){
+                        device_id_str=device_id_str+value+","
+                    }else{
+                        device_id_str=device_id_str+value
+                    }
+                }
+                document.getElementById('device_id').value=device_id_str
+            }else{
+                document.getElementById('device_id').value=null
+            }*/
+            document.getElementById('device_id').value=schools[where].device_id
+
         }else{
             alert('發生錯誤!')
         }
@@ -910,6 +990,9 @@ $('#subscribe_modal_cancel').click(function() {
 });
 $('#subscribeEdit_modal_cancel').click(function() {
     $('#subscribeEditModal').modal('hide');
+});
+$('#device_modal_cancel').click(function() {
+    $('#deviceModal').modal('hide');
 });
 
 

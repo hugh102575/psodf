@@ -105,7 +105,8 @@ class RegisterController extends Controller
             'address' => $data['address'],
             //'create_from' => $data['email'],
             'create_from' => $data['account'],
-            'created_at' =>  $now
+            'created_at' =>  $now,
+            'latest_profile' =>  $now
         ]);
         //$my_school = School::where('create_from',$data['account'])->first();
         $my_school = School::where('PID',$PID)->first();

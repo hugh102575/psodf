@@ -64,7 +64,7 @@
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">安親班LINE串接</h5>
                         <div class="text-secondary small">包含LINE@和LINE Notify</div>
                         <div class="float-right">
-                        <button type="button" class="btn btn-primary text-light" onclick=" window.open('{{url("/document1.pdf")}}','_blank')">教學手冊請點我</button>
+                        <button type="button" class="btn btn-primary text-light" onclick=" window.open('{{url("/document1.pdf")}}','_blank')"><i class="fa fa-book" aria-hidden="true"></i> 教學手冊請點我</button>
                         </div>
                     </div>
                     <div class="card-body">

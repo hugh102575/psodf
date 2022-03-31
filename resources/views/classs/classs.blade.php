@@ -380,7 +380,7 @@
 <div class="container pb-5">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm" >
                     <div class="card-header d-flex flex-row" >
                         <h5 class="font-weight-bold text-success mr-5 my_nav_text">班級資料</h5>
                         <div class="d-flex  float-right  ml-auto" >

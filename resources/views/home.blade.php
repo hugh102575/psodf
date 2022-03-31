@@ -34,6 +34,9 @@ background-blend-mode: overlay;
     padding:0;
     cursor: pointer;
 }
+.card{
+    border-radius: 3%;
+}
 </style>
 @yield('css')
 @endsection
@@ -364,7 +367,10 @@ background-blend-mode: overlay;
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                  <a class="dropdown-item" href="{{route('self_profile')}}">
+                                    <a class="dropdown-item" href="{{route('home')}}">
+                                       回首頁
+                                    </a>   
+                                    <a class="dropdown-item" href="{{route('self_profile')}}">
                                        個人資料更改
                                     </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"

@@ -19,6 +19,9 @@ use Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use DB;
+use File;
+use ZipArchive;
+
 
 class AppController extends Controller
 {
@@ -113,6 +116,7 @@ class AppController extends Controller
             $return['backup_batch']=$user->school->batch;
             $return['backup_classs']=$user->school->classs;
             $return['backup_student']=$user->school->student;
+            $return['latest_profile']=$user->school->latest_profile;
 
         }else{
             $return['success']=false;
@@ -344,6 +348,7 @@ class AppController extends Controller
         $school=$request->user()->school;
         $School_id=$school->id;
         $id=$request['id'];
+        $profile_time=$request['profile_time'];
         $student=$this->studentRepo->find($id);
 
         $new_img="image";
@@ -351,16 +356,23 @@ class AppController extends Controller
         $return['status']="failed";
         if ($request->hasFile($new_img)){
             $file = $request->file($new_img);
+            $origin_name=$request->file($new_img)->getClientOriginalName();
             if ($file->isValid()){
                 if($student){
                     $date = date('Y_m_d_');
                     $extension = $file->getClientOriginalExtension();
                     $path = 'Profile/' .$School_id. '/'. $id . '/'.$date. uniqid('', true) . '.' . $extension;
+                    //$path = 'Profile/' .$School_id. '/'. $id . '/'.$origin_name;
+
                     $result=Storage::disk('public')->put($path, $request->file($new_img)->get());
                     if(Storage::disk('public')->exists($path))
                         $image_path = Storage::url($path);
 
                     if($result && $image_path){
+                        
+                        if(isset($profile_time)){
+                            $school->update(array('latest_profile'=>$profile_time)) ;
+                        }
                         $this->studentRepo->profile($id,$image_path);
                         $return['status']="successed";
                     }
@@ -528,6 +540,11 @@ class AppController extends Controller
         return json_encode($return);
     }
 
+    public function check_latest_profile(Request $request){
+        $return=array();
+        $return['latest_profile']=$request->user()->school->latest_profile;
+        return json_encode($return);
+    }
     public function school_all_students(Request $request){
         $students=$request->user()->school->student;
         return $students;
@@ -602,6 +619,129 @@ class AppController extends Controller
             return redirect()->route('login')->with('login_error_msg', '密碼更新失敗');
         }
         
+    }
+
+    public function download_backup(Request $request){
+
+        $school_id= $request->user()->school->id;
+        $school_id_str=strval($school_id);
+        /*$path = 'Profile/1/120/'.'2022_03_14_622ebc26b12915.42976068.jpg';
+        $image_path=url('storage/'.$path);
+        
+        $filename = 'temp-image.jpg';
+        $tempImage = tempnam(sys_get_temp_dir(), $filename);
+        copy($image_path, $tempImage);
+
+        return response()->download($tempImage, $filename);*/
+
+
+      
+        //$pathtest = 'Profile/1/120/'.'2022_03_14_622ebc26b12915.42976068.jpg';
+
+        
+        $source_path = '/Profile/' . $school_id_str;
+        $zip      = new ZipArchive;
+        $filename ='Student_Profile@' . $school_id_str . '.zip';
+        $zip_path=Storage::url($filename);
+       
+        
+        $oldfile = public_path($zip_path);
+        if(file_exists($oldfile)){
+            Storage::disk('public')->delete($filename);
+        }
+        if ($zip->open(public_path($zip_path), ZipArchive::CREATE) === TRUE) {
+            $this->addContent($zip, public_path(Storage::url($source_path)));
+            $zip->close();
+            return response()->download(public_path($zip_path));
+        }
+        
+  
+
+
+       
+
+       
+
+
+
+       
+    }
+
+    private function addContent(\ZipArchive $zip, string $path)
+    {
+        /** @var SplFileInfo[] $files */
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $path,
+                \FilesystemIterator::FOLLOW_SYMLINKS
+            ),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+    
+        //$test_array=array();
+        while ($iterator->valid()) {
+            if (!$iterator->isDot()) {
+                $filePath = $iterator->getPathName();
+                $relativePath = substr($filePath, strlen($path) + 1);
+                $student=$this->studentRepo->find($relativePath);
+                /*if($student){
+                    $relativePath_rename =$student->name."@".$relativePath;
+                    if (!$iterator->isDir()) {
+                        $db_path="/storage/Profile/".strval($student->School_id)."/".$relativePath;
+                        $relativePath_prev=strtok($relativePath_rename, '/');
+                        $real_name=$student->name;
+                        if($db_path==$student->profile){
+                            array_push($test_array,$relativePath_prev."/".$real_name.".jpg");
+                        }else{
+                            $counter=1;
+                            $check_name=$relativePath_prev."/".$real_name."_".strval($counter).".jpg";
+                            while($zip->locateName($check_name) !== false){
+                                $counter++;
+                                $check_name=$relativePath_prev."/".$real_name."_".strval($counter).".jpg";
+                            }
+                            array_push($test_array,$check_name);
+                        }
+                        
+                    }else{
+                        if ($relativePath_rename !== false) {
+                            array_push($test_array,$relativePath_rename);
+                        }
+                    }
+                }*/
+                
+
+                $student=$this->studentRepo->find($relativePath);
+                if($student){
+                    $relativePath_rename =$student->name."@".$relativePath;
+
+                    if (!$iterator->isDir()) {
+                        //$zip->addFile($filePath, $relativePath_rename);
+                        $db_path="/storage/Profile/".strval($student->School_id)."/".$relativePath;
+                        $relativePath_prev=strtok($relativePath_rename, '/');
+                        $real_name=$student->name;
+                        if($db_path==$student->profile){
+                            //array_push($test_array,$relativePath_prev."/".$real_name.".jpg");
+                            $zip->addFile($filePath, $relativePath_prev."/".$real_name.".jpg");
+                        }else{
+                            $counter=1;
+                            $check_name=$relativePath_prev."/".$real_name."_".strval($counter).".jpg";
+                            while($zip->locateName($check_name) !== false){
+                                $counter++;
+                                $check_name=$relativePath_prev."/".$real_name."_".strval($counter).".jpg";
+                            }
+                            //array_push($test_array,$check_name);
+                            $zip->addFile($filePath, $check_name);
+                        }
+                    } else {
+                        if ($relativePath_rename !== false) {
+                            $zip->addEmptyDir($relativePath_rename);
+                        }
+                    }
+                }
+            }
+            $iterator->next();
+        }
+        //return $test_array;
     }
 
 }

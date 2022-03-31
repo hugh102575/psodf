@@ -42,7 +42,8 @@ class school extends Model
         'Active',
         'line_mode',
         'ClientId',
-        'ClientSecret'
+        'ClientSecret',
+        'latest_profile'
     ];
 
     public function User(){
